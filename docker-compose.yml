@@ -7,9 +7,9 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword123
-      MYSQL_DATABASE: eecs4413_app_db
-      MYSQL_USER: appuser
-      MYSQL_PASSWORD: apppassword123
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
     command: --default-authentication-plugin=mysql_native_password
     ports:
       - "3307:3306"
