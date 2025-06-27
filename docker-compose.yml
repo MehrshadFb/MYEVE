@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: eecs4413-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword123
+      MYSQL_DATABASE: eecs4413_app_db
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppassword123
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - eecs4413-network
+
+  # Optional: phpMyAdmin for database management
+  # phpmyadmin:
+  #   image: phpmyadmin/phpmyadmin
+  #   container_name: eecs4413-phpmyadmin
+  #   restart: always
+  #   ports:
+  #     - "8080:80"
+  #   environment:
+  #     PMA_HOST: mysql
+  #     PMA_PORT: 3306
+  #     PMA_USER: root
+  #     PMA_PASSWORD: rootpassword123
+  #   depends_on:
+  #     - mysql
+  #   networks:
+  #     - eecs4413-network
+
+volumes:
+  mysql_data:
+
+networks:
+  eecs4413-network:
+    driver: bridge
