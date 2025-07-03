@@ -1,15 +1,15 @@
 const sequelize = require("../config/database");
-const User = require("./User");
+const UserModel = require("./User");
 
-// Define associations here if you have relationships between models
-// Example: User.hasMany(Post); Post.belongsTo(User);
+// Initialize models
+const User = UserModel(sequelize);
+
+// Define associations here if needed in the future
+// Example: User.hasMany(Order); Order.belongsTo(User);
 
 const db = {
   sequelize,
   User,
-  // Add other models here as you create them
-  // Post: require('./Post'),
-  // Comment: require('./Comment'),
 };
 
 // Sync all models
@@ -18,11 +18,9 @@ const syncDatabase = async (force = false) => {
     await sequelize.authenticate();
     console.log("✅ Database connected successfully");
 
-    // Sync all models
-    await sequelize.sync({ force }); // force: true will drop tables if they exist
+    await sequelize.sync({ force }); // Drops & recreates tables if force = true
     console.log("✅ Database synced - all tables created");
 
-    // Optional: Add some initial data
     if (force) {
       await seedDatabase();
     }
@@ -32,17 +30,35 @@ const syncDatabase = async (force = false) => {
   }
 };
 
-// Optional: Function to seed initial data
+// Optional: Seed initial data (with hashed passwords)
 const seedDatabase = async () => {
+  const bcrypt = require("bcrypt");
+
   try {
     const userCount = await User.count();
-
     if (userCount === 0) {
-      await User.bulkCreate([
-        { name: "John Doe", email: "john@example.com" },
-        { name: "Jane Smith", email: "jane@example.com" },
-        { name: "Bob Johnson", email: "bob@example.com" },
+      const users = await Promise.all([
+        {
+          username: "admin",
+          email: "admin@estore.com",
+          password: await bcrypt.hash("admin123", 10),
+          role: "admin",
+        },
+        {
+          username: "john_doe",
+          email: "john@example.com",
+          password: await bcrypt.hash("password123", 10),
+          role: "customer",
+        },
+        {
+          username: "jane_smith",
+          email: "jane@example.com",
+          password: await bcrypt.hash("mypassword", 10),
+          role: "customer",
+        },
       ]);
+
+      await User.bulkCreate(users);
       console.log("✅ Database seeded with initial users");
     }
   } catch (error) {
@@ -50,4 +66,4 @@ const seedDatabase = async () => {
   }
 };
 
-module.exports = { db, syncDatabase };
+module.exports = { db, User, syncDatabase };

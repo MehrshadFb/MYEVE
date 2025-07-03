@@ -1,50 +1,54 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../config/database");
+const bcrypt = require("bcrypt");
+const { v4: uuidv4 } = require("uuid");
 
-const User = sequelize.define(
-  "User",
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-    },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: true,
-        len: [2, 100],
+module.exports = (sequelize) => {
+  const User = sequelize.define(
+    "User",
+    {
+      id: {
+        type: DataTypes.UUID,
+        defaultValue: uuidv4,
+        primaryKey: true,
+      },
+      username: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+        validate: {
+          len: [3, 50],
+        },
+      },
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+        validate: {
+          isEmail: true,
+        },
+      },
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      role: {
+        type: DataTypes.ENUM("admin", "customer"),
+        allowNull: false,
+        defaultValue: "customer",
       },
     },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-      validate: {
-        isEmail: true,
-        notEmpty: true,
+    {
+      hooks: {
+        beforeCreate: async (user) => {
+          user.password = await bcrypt.hash(user.password, 10);
+        },
       },
-    },
-    age: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      validate: {
-        min: 1,
-        max: 120,
-      },
-    },
-    isActive: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true,
-    },
-  },
-  {
-    // Table options
-    tableName: "users",
-    timestamps: true, // This adds createdAt and updatedAt automatically
-    underscored: false, // Use camelCase instead of snake_case
-  }
-);
+    }
+  );
 
-module.exports = User;
+  User.prototype.validatePassword = async function (password) {
+    return await bcrypt.compare(password, this.password);
+  };
+
+  return User;
+};

@@ -20,15 +20,17 @@ const startServer = async () => {
   }
 };
 
-// Handle graceful shutdown
-process.on("SIGINT", async () => {
-  console.log("\n🛑 Shutting down server...");
-  process.exit(0);
-});
-
-process.on("SIGTERM", async () => {
-  console.log("\n🛑 Shutting down server...");
-  process.exit(0);
-});
+app
+  .listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+  })
+  .on("error", (err) => {
+    if (err.code === "EADDRINUSE") {
+      console.error(`❌ Port ${PORT} is already in use`);
+      process.exit(1);
+    } else {
+      console.error("❌ Server error:", err);
+    }
+  });
 
 startServer();
