@@ -19,4 +19,22 @@ export const signIn = async (credentials) => {
   return response.data;
 };
 
+export const getAllUsers = async () => {
+  const response = await api.get("/users", {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  });
+  return response.data;
+};
+
+export const deleteUserById = async (id) => {
+  const response = await api.delete(`/users/${id}`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  });
+  return response.data;
+};
+
 export default api;
