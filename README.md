@@ -139,29 +139,8 @@ npm run lint     # Run ESLint
 
 ## 🗄️ Database Management
 
-### Using phpMyAdmin (Optional)
 
-Uncomment the phpMyAdmin service in `docker-compose.yml`:
-
-```yaml
-phpmyadmin:
-  image: phpmyadmin/phpmyadmin
-  container_name: eecs4413-phpmyadmin
-  restart: always
-  ports:
-    - "8080:80"
-  environment:
-    PMA_HOST: mysql
-    PMA_PORT: 3306
-    PMA_USER: root
-    PMA_PASSWORD: rootpassword123
-  depends_on:
-    - mysql
-  networks:
-    - eecs4413-network
-```
-
-Then start it with:
+Start it with:
 ```bash
 docker-compose up -d
 ```
@@ -213,21 +192,3 @@ docker-compose up -d mysql
 - The backend will automatically restart when you make changes (nodemon)
 - The frontend will hot-reload when you make changes (Vite)
 - Check the browser console and terminal for error messages
-
-## 📚 Technologies Used
-
-- **Frontend**: React, Vite, Axios, React Router
-- **Backend**: Node.js, Express, Sequelize, MySQL
-- **Database**: MySQL 8.0 (Docker)
-- **Authentication**: JWT, bcrypt
-- **Development**: nodemon, ESLint
-
-## 🤝 Contributing
-
-1. Make sure all tests pass
-2. Follow the existing code style
-3. Update documentation as needed
-
-## 📝 License
-
-This project is for EECS4413 coursework. 
