@@ -9,22 +9,14 @@ const api = axios.create({
   },
 });
 
-export const fetchUsers = async () => {
-  try {
-    const response = await api.get("/users");
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+export const signUp = async (userData) => {
+  const response = await api.post("/signup", userData);
+  return response.data;
 };
 
-export const createUser = async (userData) => {
-  try {
-    const response = await api.post("/users", userData);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+export const signIn = async (credentials) => {
+  const response = await api.post("/signin", credentials);
+  return response.data;
 };
 
 export default api;
