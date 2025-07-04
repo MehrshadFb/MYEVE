@@ -18,23 +18,6 @@ services:
     networks:
       - eecs4413-network
 
-  # Optional: phpMyAdmin for database management
-  # phpmyadmin:
-  #   image: phpmyadmin/phpmyadmin
-  #   container_name: eecs4413-phpmyadmin
-  #   restart: always
-  #   ports:
-  #     - "8080:80"
-  #   environment:
-  #     PMA_HOST: mysql
-  #     PMA_PORT: 3306
-  #     PMA_USER: root
-  #     PMA_PASSWORD: rootpassword123
-  #   depends_on:
-  #     - mysql
-  #   networks:
-  #     - eecs4413-network
-
 volumes:
   mysql_data:
 
