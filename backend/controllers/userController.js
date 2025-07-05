@@ -1,7 +1,7 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const { Sequelize } = require("sequelize");
-const { User } = require("../models");
+const { User, Address } = require("../models");
 
 const JWT_SECRET = process.env.JWT_SECRET || "yourSecretKey";
 
@@ -57,7 +57,14 @@ const signIn = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
   try {
-    const users = await User.findAll();
+    const users = await User.findAll({
+      include: [
+        {
+          model: Address,
+          as: "addresses",
+        },
+      ],
+    });
     return res.status(200).json(users);
   } catch (err) {
     console.error("getAllUsers error:", err);
