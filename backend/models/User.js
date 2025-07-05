@@ -30,6 +30,15 @@ module.exports = (sequelize) => {
       password: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+          len: [8, 100],
+          hasSpecialChar(value) {
+            const specialChars = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+            if (!specialChars.test(value)) {
+              throw new Error('Password must contain at least one special character');
+            }
+          }
+        },
       },
       role: {
         type: DataTypes.ENUM("admin", "customer"),
