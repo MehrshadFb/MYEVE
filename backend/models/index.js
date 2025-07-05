@@ -1,15 +1,23 @@
 const sequelize = require("../config/database");
 const UserModel = require("./User");
+const AddressModel = require("./Address");
 
 // Initialize models
 const User = UserModel(sequelize);
+const Address = AddressModel(sequelize);
 
-// Define associations here if needed in the future
-// Example: User.hasMany(Order); Order.belongsTo(User);
+// Association: One User hasMany Addresses
+User.hasMany(Address, {
+  foreignKey: "userId",
+  as: "addresses",
+  onDelete: "CASCADE",
+});
+Address.belongsTo(User, { foreignKey: "userId" });
 
 const db = {
   sequelize,
   User,
+  Address,
 };
 
 // Sync all models
@@ -30,40 +38,4 @@ const syncDatabase = async (force = false) => {
   }
 };
 
-// Optional: Seed initial data (with hashed passwords)
-const seedDatabase = async () => {
-  const bcrypt = require("bcrypt");
-
-  try {
-    const userCount = await User.count();
-    if (userCount === 0) {
-      const users = await Promise.all([
-        {
-          username: "admin",
-          email: "admin@estore.com",
-          password: await bcrypt.hash("admin123", 10),
-          role: "admin",
-        },
-        {
-          username: "john_doe",
-          email: "john@example.com",
-          password: await bcrypt.hash("password123", 10),
-          role: "customer",
-        },
-        {
-          username: "jane_smith",
-          email: "jane@example.com",
-          password: await bcrypt.hash("mypassword", 10),
-          role: "customer",
-        },
-      ]);
-
-      await User.bulkCreate(users);
-      console.log("✅ Database seeded with initial users");
-    }
-  } catch (error) {
-    console.error("❌ Error seeding database:", error);
-  }
-};
-
-module.exports = { db, User, syncDatabase };
+module.exports = { db, syncDatabase, User, Address };

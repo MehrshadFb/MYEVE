@@ -84,6 +84,7 @@ function UsersList() {
             <th>Username</th>
             <th>Email</th>
             <th>Role</th>
+            <th>Addresses</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -93,6 +94,18 @@ function UsersList() {
               <td>{user.username}</td>
               <td>{user.email}</td>
               <td>{user.role}</td>
+              <td>
+                {user.addresses && user.addresses.length > 0 ? (
+                  user.addresses.map((address) => (
+                    <div key={address.id}>
+                      {address.street}, {address.city}, {address.province},{" "}
+                      {address.country}, {address.zip}
+                    </div>
+                  ))
+                ) : (
+                  <span>No addresses</span>
+                )}
+              </td>
               <td>
                 <button
                   onClick={() => handleDelete(user.id)}
