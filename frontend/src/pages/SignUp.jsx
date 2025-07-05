@@ -31,33 +31,57 @@ function SignUp() {
     <div>
       <h2>Sign Up</h2>
       {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <input
-          name="username"
+      
+      
+      <div>
+        <form>
+          <p>
+            <input
+          name="Username"
+          type="Username"
           placeholder="Username"
           onChange={handleChange}
           required
         />
-        <input
-          name="email"
-          type="email"
+          </p>
+        </form>
+      </div>
+      <div>
+        <form>
+          <p>
+            <input
+          name="Email"
+          type="Email"
           placeholder="Email"
           onChange={handleChange}
           required
         />
-        <input
+          </p>
+        </form>
+      </div>
+      <div>
+        <form>
+          <p>
+            <input
           name="password"
           type="password"
           placeholder="Password"
           onChange={handleChange}
           required
         />
-        <select name="role" onChange={handleChange}>
+          </p>
+        </form>
+      </div>
+      <div>
+        <form>
+          <p>
+            <select name="role" onChange={handleChange}>
           <option value="customer">Customer</option>
           <option value="admin">Admin</option>
         </select>
-        <button type="submit">Sign Up</button>
-      </form>
+          </p>
+        </form>
+      </div>
       <p>
         Already have an account? <a href="/signin">Sign in</a>
       </p>
