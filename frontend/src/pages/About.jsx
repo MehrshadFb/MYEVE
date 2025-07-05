@@ -9,30 +9,30 @@ function About() {
         top: 0,
         left: 0,
         right: 0,
-        padding: "20px 40px",
+        padding: "10px 40px",
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
         backgroundColor: "rgba(255, 255, 255, 0.95)",
         backdropFilter: "blur(10px)",
         zIndex: 1000,
-        boxShadow: "0 2px 20px rgba(0,0,0,0.1)"
+        boxShadow: "0 20px 20px rgba(0,0,0,0.1)"
       }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-          <Link to="/" style={{ textDecoration: "none" }}>
-            <h1 style={{ 
-              fontSize: "1.8rem", 
-              fontWeight: "700", 
-              color: "#1e293b",
-              margin: 0
-            }}>
-              MYEVE
-            </h1>
-          </Link>
+                  <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+            <Link to="/" style={{ textDecoration: "none" }}>
+              <h1 style={{ 
+                fontSize: "1.8rem", 
+                fontWeight: "700", 
+                color: "#1e293b",
+                margin: 0
+              }}>
+                MYEVE
+              </h1>
+            </Link>
           <nav style={{ display: "flex", gap: "30px" }}>
             <Link to="/featured" style={{ color: "#64748b", textDecoration: "none", fontWeight: "500" }}>Featured</Link>
             <Link to="/vehicles" style={{ color: "#64748b", textDecoration: "none", fontWeight: "500" }}>Vehicles</Link>
-            <Link to="/about" style={{ color: "#3b82f6", textDecoration: "none", fontWeight: "500" }}>About</Link>
+            <Link to="/about" style={{ color: "#64748b", textDecoration: "none", fontWeight: "500" }}>About</Link>
           </nav>
         </div>
         <Link 
@@ -69,7 +69,7 @@ function About() {
         width: "100vw",
         marginLeft: "calc(-50vw + 50%)"
       }}>
-        <div style={{ padding: "0 40px", width: "100%" }}>
+        <div style={{ padding: "0 0px", width: "100%" }}>
           <h1 style={{
             fontSize: "3.5rem",
             fontWeight: "800",
@@ -92,7 +92,7 @@ function About() {
 
       {/* About Content */}
       <section style={{
-        padding: "80px 40px",
+        padding: "80px 0px",
         backgroundColor: "white",
         width: "100vw",
         marginLeft: "calc(-50vw + 50%)"
@@ -102,7 +102,9 @@ function About() {
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))",
             gap: "60px",
-            alignItems: "center"
+            alignItems: "center",
+            padding: "0 40px",
+            boxSizing: "border-box"
           }}>
             <div>
               <h2 style={{
@@ -156,62 +158,9 @@ function About() {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section style={{
-        padding: "80px 40px",
-        backgroundColor: "#f1f5f9",
-        width: "100vw",
-        marginLeft: "calc(-50vw + 50%)"
-      }}>
-        <div style={{ width: "100%" }}>
-          <h2 style={{
-            fontSize: "2.5rem",
-            fontWeight: "700",
-            textAlign: "center",
-            marginBottom: "60px",
-            color: "#1e293b"
-          }}>
-            Our Impact
-          </h2>
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-            gap: "40px"
-          }}>
-            {[
-              { number: "10,000+", label: "EVs Sold", icon: "🚗" },
-              { number: "50+", label: "Manufacturers", icon: "🏭" },
-              { number: "100,000+", label: "Tons CO2 Saved", icon: "🌍" },
-              { number: "99%", label: "Customer Satisfaction", icon: "⭐" }
-            ].map((stat, index) => (
-              <div key={index} style={{
-                textAlign: "center",
-                padding: "40px 20px",
-                backgroundColor: "white",
-                borderRadius: "16px",
-                boxShadow: "0 4px 20px rgba(0,0,0,0.1)"
-              }}>
-                <div style={{ fontSize: "3rem", marginBottom: "15px" }}>{stat.icon}</div>
-                <div style={{
-                  fontSize: "2.5rem",
-                  fontWeight: "700",
-                  color: "#3b82f6",
-                  marginBottom: "10px"
-                }}>{stat.number}</div>
-                <div style={{
-                  fontSize: "1.1rem",
-                  color: "#64748b",
-                  fontWeight: "500"
-                }}>{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Team Section */}
       <section style={{
-        padding: "80px 40px",
+        padding: "80px 0px",
         backgroundColor: "white",
         width: "100vw",
         marginLeft: "calc(-50vw + 50%)"
@@ -229,56 +178,76 @@ function About() {
           <div style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-            gap: "40px"
+            gap: "40px",
+            padding: "0 40px",
+            boxSizing: "border-box"
           }}>
             {[
               {
-                name: "Sarah Johnson",
-                role: "CEO & Founder",
-                bio: "Passionate about sustainable transportation and making EVs accessible to everyone."
+                name: "Hamzah Alhafi",
+                role: "Electrical Engineer",
+                bio: "Bio",
+                link: "https://www.linkedin.com/in/hamzah-alhafi/",
+                image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face"
               },
               {
-                name: "Michael Chen",
-                role: "Head of Technology",
-                bio: "Leading our digital platform development and customer experience innovation."
+                name: "Mehrshad Farahbakhsh",
+                role: "Role",
+                bio: "bio",
+                link: "https://github.com/MehrshadFb",
+                image: "https://avatars.githubusercontent.com/u/104742319?v=4"
               },
               {
-                name: "Emily Rodriguez",
-                role: "Head of Partnerships",
-                bio: "Building relationships with leading EV manufacturers and expanding our network."
+                name: "Jason Darulo",
+                role: "Role",
+                bio: "bio",
+                link: "https://www.youtube.com/watch?v=pBI3lc18k8Q",
+                image: "https://www.jasonderulo.com/sites/g/files/g2000017781/files/styles/800_800/public/2024-02/JasonDerulo_NuKing.jpg?itok=_50MZVBq"
+              },
+              {
+                name: "Helena Kamali",
+                role: "Role",
+                bio: "bio",
+                link: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                image: "link"
               }
             ].map((member, index) => (
-              <div key={index} style={{
-                textAlign: "center",
-                padding: "40px 20px",
-                backgroundColor: "#f8fafc",
-                borderRadius: "16px",
-                transition: "all 0.3s ease"
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.transform = "translateY(-8px)";
-                e.target.style.boxShadow = "0 20px 40px rgba(0,0,0,0.1)";
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.transform = "translateY(0)";
-                e.target.style.boxShadow = "none";
-              }}
+              <a 
+                href={member.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ textDecoration: "none" }}
+                key={index}
               >
                 <div style={{
-                  width: "80px",
-                  height: "80px",
-                  borderRadius: "50%",
-                  backgroundColor: "#3b82f6",
-                  margin: "0 auto 20px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: "white",
-                  fontSize: "2rem",
-                  fontWeight: "600"
-                }}>
-                  {member.name.charAt(0)}
-                </div>
+                  textAlign: "center",
+                  padding: "40px 20px",
+                  backgroundColor: "#f8fafc",
+                  borderRadius: "16px",
+                  transition: "all 0.3s ease",
+                  cursor: "pointer"
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.transform = "translateY(-8px)";
+                  e.target.style.boxShadow = "0 20px 40px rgba(0,0,0,0.1)";
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = "translateY(0)";
+                  e.target.style.boxShadow = "none";
+                }}
+                >
+                <img 
+                  src={member.image}
+                  alt={`${member.name} profile`}
+                  style={{
+                    width: "80px",
+                    height: "80px",
+                    borderRadius: "50%",
+                    margin: "0 auto 20px",
+                    display: "block",
+                    objectFit: "cover"
+                  }}
+                />
                 <h3 style={{
                   fontSize: "1.5rem",
                   fontWeight: "600",
@@ -294,7 +263,8 @@ function About() {
                   color: "#64748b",
                   lineHeight: "1.6"
                 }}>{member.bio}</p>
-              </div>
+                </div>
+              </a>
             ))}
           </div>
         </div>

@@ -9,28 +9,28 @@ function Featured() {
         top: 0,
         left: 0,
         right: 0,
-        padding: "20px 40px",
+        padding: "10px 40px",
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
         backgroundColor: "rgba(255, 255, 255, 0.95)",
         backdropFilter: "blur(10px)",
         zIndex: 1000,
-        boxShadow: "0 2px 20px rgba(0,0,0,0.1)"
+        boxShadow: "0 20px 20px rgba(0,0,0,0.1)"
       }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-          <Link to="/" style={{ textDecoration: "none" }}>
-            <h1 style={{ 
-              fontSize: "1.8rem", 
-              fontWeight: "700", 
-              color: "#1e293b",
-              margin: 0
-            }}>
-              MYEVE
-            </h1>
-          </Link>
+                  <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+            <Link to="/" style={{ textDecoration: "none" }}>
+              <h1 style={{ 
+                fontSize: "1.8rem", 
+                fontWeight: "700", 
+                color: "#1e293b",
+                margin: 0
+              }}>
+                MYEVE
+              </h1>
+            </Link>
           <nav style={{ display: "flex", gap: "30px" }}>
-            <Link to="/featured" style={{ color: "#3b82f6", textDecoration: "none", fontWeight: "500" }}>Featured</Link>
+            <Link to="/featured" style={{ color: "#64748b", textDecoration: "none", fontWeight: "500" }}>Featured</Link>
             <Link to="/vehicles" style={{ color: "#64748b", textDecoration: "none", fontWeight: "500" }}>Vehicles</Link>
             <Link to="/about" style={{ color: "#64748b", textDecoration: "none", fontWeight: "500" }}>About</Link>
           </nav>
@@ -69,7 +69,7 @@ function Featured() {
         width: "100vw",
         marginLeft: "calc(-50vw + 50%)"
       }}>
-        <div style={{ padding: "0 40px", width: "100%" }}>
+        <div style={{ padding: "0 0px", width: "100%" }}>
           <h1 style={{
             fontSize: "3.5rem",
             fontWeight: "800",
@@ -92,12 +92,12 @@ function Featured() {
 
       {/* Featured Content */}
       <section style={{
-        padding: "80px 20px",
+        padding: "80px 0px",
         backgroundColor: "white",
         width: "100vw",
         marginLeft: "calc(-50vw + 50%)"
       }}>
-        <div style={{ width: "100%", padding: "0 20px" }}>
+        <div style={{ width: "100%", padding: "0 0px" }}>
           <h2 style={{
             fontSize: "2.5rem",
             fontWeight: "700",
@@ -112,7 +112,9 @@ function Featured() {
             gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
             gap: "40px",
             width: "100%",
-            maxWidth: "100%"
+            maxWidth: "100%",
+            padding: "0 40px",
+            boxSizing: "border-box"
           }}>
             {[
               {
