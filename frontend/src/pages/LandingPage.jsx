@@ -62,7 +62,7 @@ function LandingPage() {
             color: "#1e293b",
             margin: 0
           }}>
-            EV buttplugs
+            MYEVE
           </h1>
           <nav style={{ display: "flex", gap: "30px" }}>
             <Link to="/featured" style={{ color: "#64748b", textDecoration: "none", fontWeight: "500" }}>Featured</Link>
