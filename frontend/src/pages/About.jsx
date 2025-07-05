@@ -26,7 +26,7 @@ function About() {
               color: "#1e293b",
               margin: 0
             }}>
-              EV buttplugs
+              MYEVE
             </h1>
           </Link>
           <nav style={{ display: "flex", gap: "30px" }}>

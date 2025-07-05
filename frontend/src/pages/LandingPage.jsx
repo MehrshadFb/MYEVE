@@ -46,14 +46,14 @@ function LandingPage() {
         top: 0,
         left: 0,
         right: 0,
-        padding: "20px 40px",
+        padding: "10px 40px",
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
         backgroundColor: "rgba(255, 255, 255, 0.95)",
         backdropFilter: "blur(10px)",
         zIndex: 1000,
-        boxShadow: "0 2px 20px rgba(0,0,0,0.1)"
+        boxShadow: "0 20px 20px rgba(0,0,0,0.1)"
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
           <h1 style={{ 
@@ -104,7 +104,7 @@ function LandingPage() {
         width: "100vw",
         marginLeft: "calc(-50vw + 50%)"
       }}>
-        <div style={{ padding: "0 40px", width: "100%" }}>
+        <div style={{width: "100%" }}>
           <h1 style={{
             fontSize: "3.5rem",
             fontWeight: "800",
@@ -178,12 +178,12 @@ function LandingPage() {
 
       {/* Features Section */}
       <section style={{
-        padding: "80px 20px",
+        padding: "80px 0px",
         backgroundColor: "white",
         width: "100vw",
         marginLeft: "calc(-50vw + 50%)"
       }}>
-        <div style={{ width: "100%", padding: "0 20px" }}>
+        <div style={{ width: "100%"}}>
           <h2 style={{
             fontSize: "2.5rem",
             fontWeight: "700",
@@ -195,11 +195,11 @@ function LandingPage() {
           </h2>
           <div style={{
               display: "flex",
-              flexWrap: "wrap",
               gap: "40px",
               justifyContent: "center", // Forces true centering
               width: "100%",
-              padding: "0 0px",
+              padding: "0 40px",
+              boxSizing: "border-box"
           }}>
             {[
               {
@@ -259,12 +259,12 @@ function LandingPage() {
 
       {/* Featured Vehicles Section */}
       <section id="vehicles" style={{
-        padding: "80px 20px",
+        padding: "80px 0px",
         backgroundColor: "#f1f5f9",
         width: "100vw",
         marginLeft: "calc(-50vw + 50%)"
       }}>
-        <div style={{ width: "100%", padding: "0 20px" }}>
+        <div style={{ width: "100%" }}>
           <h2 style={{
             fontSize: "2.5rem",
             fontWeight: "700",
@@ -281,7 +281,6 @@ function LandingPage() {
             justifyContent: "center",
             gap: "10px",
             marginBottom: "40px",
-            flexWrap: "wrap"
           }}>
             {categories.map(category => (
               <button
@@ -309,7 +308,9 @@ function LandingPage() {
             gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
             gap: "30px",
             width: "100%",
-            maxWidth: "100%"
+            maxWidth: "100%",
+            padding: "0 40px",
+            boxSizing: "border-box"
           }}>
             {featuredVehicles.map(vehicle => (
               <div key={vehicle.id} style={{
@@ -396,7 +397,7 @@ function LandingPage() {
 
       {/* CTA Section */}
       <section style={{
-        padding: "80px 40px",
+        padding: "80px 0px",
         background: "linear-gradient(135deg, #1e293b 0%, #334155 100%)",
         color: "white",
         textAlign: "center",
@@ -448,7 +449,7 @@ function LandingPage() {
 
       {/* Footer */}
       <footer style={{
-        padding: "40px 40px",
+        padding: "40px 0px",
         backgroundColor: "#1e293b",
         color: "white",
         width: "100vw",
