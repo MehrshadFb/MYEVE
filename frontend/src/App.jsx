@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Welcome from "./pages/Welcome";
+import LandingPage from "./pages/LandingPage";
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -32,7 +33,7 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={<Navigate to={isLoggedIn ? "/welcome" : "/signin"} />}
+          element={<LandingPage />}
         />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
