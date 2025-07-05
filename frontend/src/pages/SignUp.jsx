@@ -31,31 +31,53 @@ function SignUp() {
     <div>
       <h2>Sign Up</h2>
       {error && <p style={{ color: "red" }}>{error}</p>}
+      
+      
       <form onSubmit={handleSubmit}>
-        <input
-          name="username"
-          placeholder="Username"
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="email"
-          type="email"
-          placeholder="Email"
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="password"
-          type="password"
-          placeholder="Password"
-          onChange={handleChange}
-          required
-        />
-        <select name="role" onChange={handleChange}>
-          <option value="customer">Customer</option>
-          <option value="admin">Admin</option>
-        </select>
+        <div>
+          <p>
+            <input
+              name="username"
+              type="text"
+              placeholder="Username"
+              value={formData.username}
+              onChange={handleChange}
+              required
+            />
+          </p>
+        </div>
+        <div>
+          <p>
+            <input
+              name="email"
+              type="email"
+              placeholder="Email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </p>
+        </div>
+        <div>
+          <p>
+            <input
+              name="password"
+              type="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </p>
+        </div>
+        <div>
+          <p>
+            <select name="role" value={formData.role} onChange={handleChange}>
+              <option value="customer">Customer</option>
+              <option value="admin">Admin</option>
+            </select>
+          </p>
+        </div>
         <button type="submit">Sign Up</button>
       </form>
       <p>
