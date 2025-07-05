@@ -92,12 +92,12 @@ function Featured() {
 
       {/* Featured Content */}
       <section style={{
-        padding: "80px 40px",
+        padding: "80px 20px",
         backgroundColor: "white",
         width: "100vw",
         marginLeft: "calc(-50vw + 50%)"
       }}>
-        <div style={{ width: "100%" }}>
+        <div style={{ width: "100%", padding: "0 20px" }}>
           <h2 style={{
             fontSize: "2.5rem",
             fontWeight: "700",
@@ -109,9 +109,10 @@ function Featured() {
           </h2>
           <div style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
             gap: "40px",
-            width: "100%"
+            width: "100%",
+            maxWidth: "100%"
           }}>
             {[
               {

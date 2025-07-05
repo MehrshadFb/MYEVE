@@ -178,12 +178,12 @@ function LandingPage() {
 
       {/* Features Section */}
       <section style={{
-        padding: "80px 40px",
+        padding: "80px 20px",
         backgroundColor: "white",
         width: "100vw",
         marginLeft: "calc(-50vw + 50%)"
       }}>
-        <div style={{ width: "100%" }}>
+        <div style={{ width: "100%", padding: "0 20px" }}>
           <h2 style={{
             fontSize: "2.5rem",
             fontWeight: "700",
@@ -194,10 +194,12 @@ function LandingPage() {
             Why Choose Electric?
           </h2>
           <div style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-            gap: "40px",
-            width: "100%"
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "40px",
+              justifyContent: "center", // Forces true centering
+              width: "100%",
+              padding: "0 0px",
           }}>
             {[
               {
@@ -239,14 +241,15 @@ function LandingPage() {
               >
                 <div style={{ fontSize: "3rem", marginBottom: "20px" }}>{feature.icon}</div>
                 <h3 style={{
-                  fontSize: "1.5rem",
+                  fontSize: "1.3rem",
                   fontWeight: "600",
                   marginBottom: "15px",
                   color: "#1e293b"
                 }}>{feature.title}</h3>
                 <p style={{
                   color: "#64748b",
-                  lineHeight: "1.6"
+                  lineHeight: "1.6",
+                  fontSize: "0.95rem"
                 }}>{feature.description}</p>
               </div>
             ))}
@@ -256,12 +259,12 @@ function LandingPage() {
 
       {/* Featured Vehicles Section */}
       <section id="vehicles" style={{
-        padding: "80px 40px",
+        padding: "80px 20px",
         backgroundColor: "#f1f5f9",
         width: "100vw",
         marginLeft: "calc(-50vw + 50%)"
       }}>
-        <div style={{ width: "100%" }}>
+        <div style={{ width: "100%", padding: "0 20px" }}>
           <h2 style={{
             fontSize: "2.5rem",
             fontWeight: "700",
@@ -303,9 +306,10 @@ function LandingPage() {
           {/* Vehicle Grid */}
           <div style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
             gap: "30px",
-            width: "100%"
+            width: "100%",
+            maxWidth: "100%"
           }}>
             {featuredVehicles.map(vehicle => (
               <div key={vehicle.id} style={{

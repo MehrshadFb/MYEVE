@@ -33,55 +33,53 @@ function SignUp() {
       {error && <p style={{ color: "red" }}>{error}</p>}
       
       
-      <div>
-        <form>
+      <form onSubmit={handleSubmit}>
+        <div>
           <p>
             <input
-          name="Username"
-          type="Username"
-          placeholder="Username"
-          onChange={handleChange}
-          required
-        />
+              name="username"
+              type="text"
+              placeholder="Username"
+              value={formData.username}
+              onChange={handleChange}
+              required
+            />
           </p>
-        </form>
-      </div>
-      <div>
-        <form>
+        </div>
+        <div>
           <p>
             <input
-          name="Email"
-          type="Email"
-          placeholder="Email"
-          onChange={handleChange}
-          required
-        />
+              name="email"
+              type="email"
+              placeholder="Email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
           </p>
-        </form>
-      </div>
-      <div>
-        <form>
+        </div>
+        <div>
           <p>
             <input
-          name="password"
-          type="password"
-          placeholder="Password"
-          onChange={handleChange}
-          required
-        />
+              name="password"
+              type="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
           </p>
-        </form>
-      </div>
-      <div>
-        <form>
+        </div>
+        <div>
           <p>
-            <select name="role" onChange={handleChange}>
-          <option value="customer">Customer</option>
-          <option value="admin">Admin</option>
-        </select>
+            <select name="role" value={formData.role} onChange={handleChange}>
+              <option value="customer">Customer</option>
+              <option value="admin">Admin</option>
+            </select>
           </p>
-        </form>
-      </div>
+        </div>
+        <button type="submit">Sign Up</button>
+      </form>
       <p>
         Already have an account? <a href="/signin">Sign in</a>
       </p>

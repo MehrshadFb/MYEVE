@@ -137,12 +137,12 @@ function Vehicles() {
 
       {/* Vehicles Grid */}
       <section style={{
-        padding: "80px 40px",
+        padding: "80px 20px",
         backgroundColor: "white",
         width: "100vw",
         marginLeft: "calc(-50vw + 50%)"
       }}>
-        <div style={{ width: "100%" }}>
+        <div style={{ width: "100%", padding: "0 20px" }}>
           <h2 style={{
             fontSize: "2.5rem",
             fontWeight: "700",
@@ -154,9 +154,10 @@ function Vehicles() {
           </h2>
           <div style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
             gap: "30px",
-            width: "100%"
+            width: "100%",
+            maxWidth: "100%"
           }}>
             {allVehicles.map(vehicle => (
               <div key={vehicle.id} style={{
@@ -194,7 +195,7 @@ function Vehicles() {
                     marginBottom: "8px"
                   }}>
                     <h3 style={{
-                      fontSize: "1.5rem",
+                      fontSize: "1.3rem",
                       fontWeight: "600",
                       color: "#1e293b"
                     }}>{vehicle.name}</h3>
@@ -210,7 +211,8 @@ function Vehicles() {
                   <p style={{
                     color: "#64748b",
                     marginBottom: "16px",
-                    lineHeight: "1.5"
+                    lineHeight: "1.5",
+                    fontSize: "0.9rem"
                   }}>{vehicle.specs}</p>
                   <div style={{
                     display: "flex",
