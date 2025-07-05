@@ -1,10 +1,12 @@
 const sequelize = require("../config/database");
 const UserModel = require("./User");
 const AddressModel = require("./Address");
+const VehicleModel = require("./Vehicle");
 
 // Initialize models
 const User = UserModel(sequelize);
 const Address = AddressModel(sequelize);
+const Vehicle = VehicleModel(sequelize);
 
 // Association: One User hasMany Addresses
 User.hasMany(Address, {
@@ -18,6 +20,7 @@ const db = {
   sequelize,
   User,
   Address,
+  Vehicle,
 };
 
 // Sync all models
@@ -38,4 +41,4 @@ const syncDatabase = async (force = false) => {
   }
 };
 
-module.exports = { db, syncDatabase, User, Address };
+module.exports = { db, syncDatabase, User, Address, Vehicle };
