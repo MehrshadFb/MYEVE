@@ -198,7 +198,7 @@ function About() {
                 image: "https://avatars.githubusercontent.com/u/104742319?v=4"
               },
               {
-                name: "Jason Darulo",
+                name: "Jason Derulo",
                 role: "Role",
                 bio: "bio",
                 link: "https://www.youtube.com/watch?v=pBI3lc18k8Q",
