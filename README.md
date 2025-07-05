@@ -2,31 +2,38 @@
 
 A full-stack web application built with React (frontend) and Node.js/Express (backend) with MySQL database.
 
-## 🚀 Quick Start
-
 ### Prerequisites
 
 - **Node.js** (v16 or higher)
 - **Docker** and **Docker Compose** (for MySQL database)
 - **Git**
 
-### Project Structure
+## Instructions
 
-```
-eecs4413/
-├── backend/          # Node.js/Express API server
-├── frontend/         # React application
-├── docker-compose.yml # MySQL database configuration
-└── README.md         # This file
-```
+### 1. Database Setup
 
-## 📋 Setup Instructions
+#### Option A: Using Docker (Recommended)
 
-### 1. Clone and Install Dependencies
+1. **Start MySQL Database:**
+   ```bash
+   # From the project root directory
+   docker-compose up -d mysql
+   ```
+
+2. **Verify Database Setup:**
+   ```bash
+   # Check if the container is running
+   docker ps
+   
+   # Check database logs
+   docker logs eecs4413-mysql
+   ```
+
+### 2. Clone and Install Dependencies
 
 ```bash
 # Clone the repository (if not already done)
-git clone <repository-url>
+git clone https://github.com/MehrshadFb/eecs4413.git
 cd eecs4413
 
 # Install backend dependencies
@@ -34,11 +41,11 @@ cd backend
 npm install
 
 # Install frontend dependencies
-cd ../frontend
+cd frontend
 npm install
-```
 
-### 2. Environment Configuration
+
+### 3. Environment Configuration
 
 **Important:** You need to create two `.env` files for the application to work properly.
 
@@ -64,33 +71,6 @@ DB_HOST=localhost
 DB_PORT=3307
 ```
 
-### 3. Database Setup
-
-#### Option A: Using Docker (Recommended)
-
-1. **Start MySQL Database:**
-   ```bash
-   # From the project root directory
-   docker-compose up -d mysql
-   ```
-
-2. **Verify Database Setup:**
-   ```bash
-   # Check if the container is running
-   docker ps
-   
-   # Check database logs
-   docker logs eecs4413-mysql
-   ```
-
-#### Option B: Using Local MySQL
-
-If you prefer to use a local MySQL installation:
-
-1. Install MySQL on your system
-2. Create a database named `eecs4413_db`
-3. Update the `.env` file with your local MySQL credentials
-
 ### 3. Start the Application
 
 #### Start Backend Server
@@ -113,13 +93,13 @@ npm run dev
 
 The frontend application will start on `http://localhost:5173`
 
-## 🌐 Accessing the Application
+## Accessing the Application
 
 - **Frontend**: http://localhost:5173
 - **Backend API**: http://localhost:3001
 - **Database**: MySQL on localhost:3307
 
-## 📁 Available Scripts
+## Available Scripts
 
 ### Backend Scripts
 ```bash
@@ -137,7 +117,7 @@ npm run preview  # Preview production build
 npm run lint     # Run ESLint
 ```
 
-## 🗄️ Database Management
+## Database Management
 
 
 Start it with:
@@ -164,7 +144,7 @@ docker-compose down -v
 docker-compose up -d mysql
 ```
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
