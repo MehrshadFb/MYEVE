@@ -9,6 +9,9 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Welcome from "./pages/Welcome";
 import LandingPage from "./pages/LandingPage";
+import Featured from "./pages/Featured";
+import Vehicles from "./pages/Vehicles";
+import About from "./pages/About";
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -35,6 +38,9 @@ function App() {
           path="/"
           element={<LandingPage />}
         />
+        <Route path="/featured" element={<Featured />} />
+        <Route path="/vehicles" element={<Vehicles />} />
+        <Route path="/about" element={<About />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route

@@ -65,9 +65,9 @@ function LandingPage() {
             EV buttplugs
           </h1>
           <nav style={{ display: "flex", gap: "30px" }}>
-            <a href="#featured" style={{ color: "#64748b", textDecoration: "none", fontWeight: "500" }}>Featured</a>
-            <a href="#vehicles" style={{ color: "#64748b", textDecoration: "none", fontWeight: "500" }}>Vehicles</a>
-            <a href="#about" style={{ color: "#64748b", textDecoration: "none", fontWeight: "500" }}>About</a>
+            <Link to="/featured" style={{ color: "#64748b", textDecoration: "none", fontWeight: "500" }}>Featured</Link>
+            <Link to="/vehicles" style={{ color: "#64748b", textDecoration: "none", fontWeight: "500" }}>Vehicles</Link>
+            <Link to="/about" style={{ color: "#64748b", textDecoration: "none", fontWeight: "500" }}>About</Link>
           </nav>
         </div>
         <Link 
