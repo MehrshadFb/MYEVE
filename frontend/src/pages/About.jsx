@@ -75,18 +75,8 @@ function About() {
             fontWeight: "800",
             marginBottom: "20px"
           }}>
-            About EVStore
+            About MYEVE
           </h1>
-          <p style={{
-            fontSize: "1.3rem",
-            marginBottom: "40px",
-            opacity: 0.9,
-            maxWidth: "600px",
-            marginLeft: "auto",
-            marginRight: "auto"
-          }}>
-            Leading the charge towards a sustainable future with electric vehicles.
-          </p>
         </div>
       </section>
 
