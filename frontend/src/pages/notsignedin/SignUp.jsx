@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { signUp } from "../services/api";
+import { signUp } from "../../services/api";
 
 function SignUp() {
   const [formData, setFormData] = useState({
@@ -63,11 +63,14 @@ function SignUp() {
             <input
               name="password"
               type="password"
-              placeholder="Password"
+              placeholder="Password (min 8 chars + special character)"
               value={formData.password}
               onChange={handleChange}
               required
             />
+            <small style={{ color: "#6b7280", fontSize: "12px", marginTop: "4px", display: "block" }}>
+              Must be at least 8 characters and include a special character (!@#$%^&*)
+            </small>
           </p>
         </div>
         <div>

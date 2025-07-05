@@ -5,6 +5,8 @@ const {
   signIn,
   getAllUsers,
   deleteUserById,
+  updateProfile,
+  refreshToken,
 } = require("../controllers/userController");
 const {
   createAddress,
@@ -19,6 +21,7 @@ const router = express.Router();
 // Public routes
 router.post("/signup", signUp);
 router.post("/signin", signIn);
+router.post("/refresh", refreshToken);
 
 // Admin-only routes
 router.get("/users", authenticateToken, authorizeRole("admin"), getAllUsers);
@@ -30,6 +33,7 @@ router.delete(
 );
 
 // User-specific routes
+router.put("/profile", authenticateToken, updateProfile);
 router.post("/addresses", authenticateToken, createAddress);
 router.get("/addresses", authenticateToken, getAllAddresses);
 router.get("/addresses/:userId", authenticateToken, getAllAddressesByUserId); // Assuming this function is defined in addressController.js

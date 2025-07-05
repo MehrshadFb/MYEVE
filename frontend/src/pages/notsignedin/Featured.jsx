@@ -1,63 +1,10 @@
 import { Link } from "react-router-dom";
+import Header from "../../components/Header";
 
 function Featured() {
   return (
     <div style={{ minHeight: "100vh", backgroundColor: "#f8fafc", width: "100vw", overflowX: "hidden" }}>
-      {/* Header */}
-      <header style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        padding: "10px 40px",
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        backgroundColor: "rgba(255, 255, 255, 0.95)",
-        backdropFilter: "blur(10px)",
-        zIndex: 1000,
-        boxShadow: "0 20px 20px rgba(0,0,0,0.1)"
-      }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-            <Link to="/" style={{ textDecoration: "none" }}>
-              <h1 style={{ 
-                fontSize: "1.8rem", 
-                fontWeight: "700", 
-                color: "#1e293b",
-                margin: 0
-              }}>
-                MYEVE
-              </h1>
-            </Link>
-          <nav style={{ display: "flex", gap: "30px" }}>
-            <Link to="/featured" style={{ color: "#64748b", textDecoration: "none", fontWeight: "500" }}>Featured</Link>
-            <Link to="/vehicles" style={{ color: "#64748b", textDecoration: "none", fontWeight: "500" }}>Vehicles</Link>
-            <Link to="/about" style={{ color: "#64748b", textDecoration: "none", fontWeight: "500" }}>About</Link>
-          </nav>
-        </div>
-        <Link 
-          to="/signin" 
-          style={{
-            background: "#3b82f6",
-            color: "white",
-            padding: "12px 24px",
-            borderRadius: "8px",
-            textDecoration: "none",
-            fontWeight: "600",
-            transition: "all 0.3s ease"
-          }}
-          onMouseEnter={(e) => {
-            e.target.style.background = "#2563eb";
-            e.target.style.transform = "translateY(-2px)";
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.background = "#3b82f6";
-            e.target.style.transform = "translateY(0)";
-          }}
-        >
-          Sign In
-        </Link>
-      </header>
+      <Header />
 
       {/* Content */}
       <section style={{

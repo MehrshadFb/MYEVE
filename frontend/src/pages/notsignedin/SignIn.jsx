@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { signIn } from "../services/api";
+import { useAuth } from "../../context/AuthContext";
+import { signIn } from "../../services/api";
 
 function SignIn() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -16,9 +18,8 @@ function SignIn() {
     e.preventDefault();
     try {
       const data = await signIn(formData);
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-      navigate("/welcome");
+      login(data.token, data.refreshToken, data.user);
+      navigate("/manage");
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");
     }

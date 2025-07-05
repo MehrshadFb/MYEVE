@@ -5,7 +5,7 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     // Check if admin already exists
     const existingAdmin = await queryInterface.sequelize.query(
-      `SELECT * FROM "Users" WHERE email = 'admin@myeve.com'`,
+      `SELECT * FROM "Users" WHERE email = 'myeveadmin@gmail.com'`,
       { type: Sequelize.QueryTypes.SELECT }
     );
 
@@ -24,7 +24,7 @@ module.exports = {
       }]);
       
       console.log('✅ Admin account created successfully!');
-      console.log('📧 Email: admin@myeve.com');
+      console.log('📧 Email: myeveadmin@gmail.com');
       console.log('🔑 Password: Admin123!');
     } else {
       console.log('ℹ️  Admin account already exists');
@@ -32,6 +32,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('Users', { email: 'admin@myeve.com' });
+    await queryInterface.bulkDelete('Users', { email: 'myeveadmin@gmail.com' });
   }
 }; 
