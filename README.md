@@ -27,6 +27,12 @@ A full-stack web application built with React (frontend) and Node.js/Express (ba
    docker logs eecs4413-mysql
    ```
 
+   **Login**
+   ```
+   docker exec -it eecs4413-mysql mysql -u eecsuser -p
+   ```
+   Enter the password (eecspassword123)
+
 ### 2. Clone and Install Dependencies
 
 ```bash
