@@ -12,8 +12,6 @@ A full-stack web application built with React (frontend) and Node.js/Express (ba
 
 ### 1. Database Setup
 
-#### Option A: Using Docker (Recommended)
-
 1. **Start MySQL Database:**
    ```bash
    # From the project root directory
