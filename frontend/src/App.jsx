@@ -10,11 +10,12 @@ import SignIn from "./pages/notsignedin/SignIn";
 import SignUp from "./pages/notsignedin/SignUp";
 import Manage from "./pages/signedin/Manage";
 import Profile from "./pages/signedin/Profile";
+import AddVehicle from "./pages/signedin/AddVehicle";
 import LandingPage from "./pages/notsignedin/LandingPage";
 import Featured from "./pages/notsignedin/Featured";
 import Vehicles from "./pages/notsignedin/Vehicles";
 import About from "./pages/notsignedin/About";
-import AuthStatus from "./components/AuthStatus";
+
 
 function AppRoutes() {
   const { isAuthenticated, loading } = useAuth();
@@ -35,7 +36,6 @@ function AppRoutes() {
 
   return (
     <Router>
-      <AuthStatus />
       <Routes>
         <Route
           path="/"
@@ -53,6 +53,10 @@ function AppRoutes() {
         <Route
           path="/profile"
           element={isAuthenticated ? <Profile /> : <Navigate to="/signin" />}
+        />
+        <Route
+          path="/add-vehicle"
+          element={isAuthenticated ? <AddVehicle /> : <Navigate to="/signin" />}
         />
       </Routes>
     </Router>

@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import UsersList from "./UsersList";
 import AddressList from "./AddressList";
+import Header from "../../components/Header";
 
 function Manage() {
   const { user, logout } = useAuth();
@@ -20,15 +21,18 @@ function Manage() {
     <div style={{ 
       minHeight: "100vh", 
       backgroundColor: "#f8fafc", 
+      padding: "40px 0",
       width: "100%"
     }}>
+      <Header />
       <div style={{
         width: "100%",
         margin: "0 auto",
         backgroundColor: "white",
         borderRadius: "16px",
-        padding: "40px 0",
-        boxShadow: "0 4px 20px rgba(0,0,0,0.1)"
+        padding: "80px 0",
+        boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+        marginTop: "100px"
       }}>
         <div style={{
           display: "flex",
@@ -106,8 +110,41 @@ function Manage() {
               padding: "0 40px",
               boxSizing: "border-box"
             }}>
-              Manage users and view system information.
+              Manage users, vehicles, and view system information.
             </p>
+            
+            <div style={{
+              padding: "0 40px",
+              marginBottom: "30px",
+              boxSizing: "border-box"
+            }}>
+              <button 
+                onClick={() => navigate("/add-vehicle")}
+                style={{
+                  background: "#059669",
+                  color: "white",
+                  padding: "12px 24px",
+                  borderRadius: "8px",
+                  border: "none",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                  fontSize: "1rem",
+                  transition: "all 0.3s ease",
+                  marginBottom: "20px"
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.background = "#047857";
+                  e.target.style.transform = "translateY(-2px)";
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = "#059669";
+                  e.target.style.transform = "translateY(0)";
+                }}
+              >
+                Add Vehicles
+              </button>
+            </div>
+            
             <UsersList />
           </div>
         )}

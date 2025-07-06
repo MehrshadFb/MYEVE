@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
-import { useNavigate } from "react-router-dom";
 import { updateProfile, createAddress } from "../../services/api";
+import Header from "../../components/Header";
 
 function Profile() {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
+  const { user } = useAuth();
   
   const [profileData, setProfileData] = useState({
     username: user?.username || "",
@@ -100,10 +99,7 @@ function Profile() {
     }
   };
 
-  const handleLogout = () => {
-    logout();
-    navigate("/signin");
-  };
+
 
   if (!user) {
     return <div>Loading...</div>;
@@ -113,21 +109,21 @@ function Profile() {
     <div style={{ 
       minHeight: "100vh", 
       backgroundColor: "#f8fafc", 
-      padding: "120px 20px 40px 20px",
-      width: "100%"
+      padding: "40px 0",
+      width: "100%",
+      overflow: "hidden"
     }}>
+      <Header />
       <div style={{
         width: "100%",
         margin: "0 auto",
         backgroundColor: "white",
         borderRadius: "16px",
         padding: "40px",
-        boxShadow: "0 4px 20px rgba(0,0,0,0.1)"
+        boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+        marginTop: "0px"
       }}>
         <div style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
           marginBottom: "40px",
           paddingBottom: "20px",
           borderBottom: "2px solid #e2e8f0"
@@ -149,30 +145,6 @@ function Profile() {
               Manage your account information and addresses
             </p>
           </div>
-          <button 
-            onClick={handleLogout}
-            style={{
-              background: "#ef4444",
-              color: "white",
-              padding: "12px 24px",
-              borderRadius: "8px",
-              border: "none",
-              fontWeight: "600",
-              cursor: "pointer",
-              fontSize: "1rem",
-              transition: "all 0.3s ease"
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.background = "#dc2626";
-              e.target.style.transform = "translateY(-2px)";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.background = "#ef4444";
-              e.target.style.transform = "translateY(0)";
-            }}
-          >
-            Logout
-          </button>
         </div>
 
         {message.text && (
@@ -226,7 +198,7 @@ function Profile() {
                     fontSize: "14px",
                     backgroundColor: "white",
                     color: "#1e293b",
-                    width: "100%",
+                    width: "50%",
                     boxSizing: "border-box"
                   }}
                 />
@@ -254,7 +226,7 @@ function Profile() {
                     fontSize: "14px",
                     backgroundColor: "white",
                     color: "#1e293b",
-                    width: "100%",
+                    width: "50%",
                     boxSizing: "border-box"
                   }}
                 />
@@ -283,7 +255,7 @@ function Profile() {
                     fontSize: "14px",
                     backgroundColor: "white",
                     color: "#1e293b",
-                    width: "100%",
+                    width: "50%",
                     boxSizing: "border-box"
                   }}
                 />
@@ -312,7 +284,7 @@ function Profile() {
                     fontSize: "14px",
                     backgroundColor: "white",
                     color: "#1e293b",
-                    width: "100%",
+                    width: "50%",
                     boxSizing: "border-box"
                   }}
                 />
@@ -344,7 +316,7 @@ function Profile() {
                     fontSize: "14px",
                     backgroundColor: "white",
                     color: "#1e293b",
-                    width: "100%",
+                    width: "50%",
                     boxSizing: "border-box"
                   }}
                 />
@@ -412,7 +384,7 @@ function Profile() {
                     fontSize: "14px",
                     backgroundColor: "white",
                     color: "#1e293b",
-                    width: "100%",
+                    width: "50%",
                     boxSizing: "border-box"
                   }}
                 />
@@ -442,7 +414,7 @@ function Profile() {
                     fontSize: "14px",
                     backgroundColor: "white",
                     color: "#1e293b",
-                    width: "100%",
+                    width: "50%",
                     boxSizing: "border-box"
                   }}
                 />
@@ -472,7 +444,7 @@ function Profile() {
                     fontSize: "14px",
                     backgroundColor: "white",
                     color: "#1e293b",
-                    width: "100%",
+                    width: "50%",
                     boxSizing: "border-box"
                   }}
                 />
@@ -502,7 +474,7 @@ function Profile() {
                     fontSize: "14px",
                     backgroundColor: "white",
                     color: "#1e293b",
-                    width: "100%",
+                    width: "50%",
                     boxSizing: "border-box"
                   }}
                 />
@@ -532,7 +504,7 @@ function Profile() {
                     fontSize: "14px",
                     backgroundColor: "white",
                     color: "#1e293b",
-                    width: "100%",
+                    width: "50%",
                     boxSizing: "border-box"
                   }}
                 />
@@ -561,7 +533,7 @@ function Profile() {
                     fontSize: "14px",
                     backgroundColor: "white",
                     color: "#1e293b",
-                    width: "100%",
+                    width: "50%",
                     boxSizing: "border-box"
                   }}
                 />
