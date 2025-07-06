@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { useEffect } from "react";
 import UsersList from "./UsersList";
 import AddressList from "./AddressList";
 import Header from "../../components/Header";
@@ -8,6 +9,13 @@ function Manage() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
+  // Redirect customers to main page
+  useEffect(() => {
+    if (user && user.role === "customer") {
+      navigate("/");
+    }
+  }, [user, navigate]);
+
   const handleLogout = () => {
     logout();
     navigate("/signin");
@@ -15,6 +23,11 @@ function Manage() {
 
   if (!user) {
     return <div>Loading...</div>;
+  }
+
+  // Don't render anything for customers as they will be redirected
+  if (user.role === "customer") {
+    return null;
   }
 
   return (

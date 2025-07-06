@@ -189,7 +189,6 @@ function Vehicles() {
                   <option value="truck">Truck</option>
                   <option value="sports">Sports</option>
                   <option value="luxury">Luxury</option>
-                  <option value="electric">Electric</option>
                 </select>
               </div>
               <div>

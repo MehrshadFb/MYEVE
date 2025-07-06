@@ -10,6 +10,7 @@ function AddVehicle() {
   const [vehicleData, setVehicleData] = useState({
     brand: "",
     modelName: "",
+    type: "",
     price: "",
     range: "",
     horsepower: "",
@@ -30,7 +31,7 @@ function AddVehicle() {
     setIsSubmitting(true);
 
     // Validate required fields
-    if (!vehicleData.brand || !vehicleData.modelName || !vehicleData.price || !vehicleData.range || !vehicleData.horsepower) {
+    if (!vehicleData.brand || !vehicleData.modelName || !vehicleData.type || !vehicleData.price || !vehicleData.range || !vehicleData.horsepower) {
       setMessage({ type: "error", text: "Please fill in all required fields" });
       setIsSubmitting(false);
       return;
@@ -59,6 +60,7 @@ function AddVehicle() {
       const response = await createVehicle({
         brand: vehicleData.brand,
         modelName: vehicleData.modelName,
+        type: vehicleData.type,
         price: parseFloat(vehicleData.price),
         range: parseInt(vehicleData.range),
         horsepower: parseInt(vehicleData.horsepower),
@@ -71,6 +73,7 @@ function AddVehicle() {
       setVehicleData({
         brand: "",
         modelName: "",
+        type: "",
         price: "",
         range: "",
         horsepower: "",
@@ -279,6 +282,42 @@ function AddVehicle() {
                   boxSizing: "border-box"
                 }}
               />
+            </div>
+
+            <div>
+              <label style={{
+                display: "block",
+                marginBottom: "6px",
+                fontWeight: "500",
+                color: "#374151",
+                fontSize: "14px"
+              }}>
+                Type *
+              </label>
+              <select
+                name="type"
+                value={vehicleData.type}
+                onChange={handleChange}
+                required
+                style={{
+                  padding: "12px",
+                  borderRadius: "8px",
+                  border: "1px solid #d1d5db",
+                  fontSize: "14px",
+                  backgroundColor: "white",
+                  color: "#1e293b",
+                  width: "100%",
+                  boxSizing: "border-box",
+                  cursor: "pointer"
+                }}
+              >
+                <option value="">Select vehicle type</option>
+                <option value="sedan">Sedan</option>
+                <option value="suv">SUV</option>
+                <option value="truck">Truck</option>
+                <option value="sports">Sports</option>
+                <option value="luxury">Luxury</option>
+              </select>
             </div>
 
             <div>

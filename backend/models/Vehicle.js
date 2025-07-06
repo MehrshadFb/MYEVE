@@ -22,6 +22,14 @@ module.exports = (sequelize) => {
         len: [1, 100],
       },
     },
+    type: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        len: [1, 50],
+      },
+      comment: "Vehicle type (e.g., Sedan, SUV, Truck, Hatchback)",
+    },
     price: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,

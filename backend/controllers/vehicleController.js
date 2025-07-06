@@ -3,11 +3,11 @@ const { Vehicle } = require("../models");
 
 // Create a new vehicle
 const createVehicle = async (req, res) => {
-  const { brand, modelName, price, range, horsepower, picture } = req.body;
+  const { brand, modelName, type, price, range, horsepower, picture } = req.body;
   
-  if (!brand || !modelName || !price || !range || !horsepower) {
+  if (!brand || !modelName || !type || !price || !range || !horsepower) {
     return res.status(400).json({ 
-      message: "Missing required fields: brand, modelName, price, range, and horsepower are required" 
+      message: "Missing required fields: brand, modelName, type, price, range, and horsepower are required" 
     });
   }
 
@@ -15,6 +15,7 @@ const createVehicle = async (req, res) => {
     const vehicle = await Vehicle.create({
       brand,
       modelName,
+      type,
       price,
       range,
       horsepower,
@@ -63,7 +64,7 @@ const getVehicleById = async (req, res) => {
 // Update vehicle
 const updateVehicle = async (req, res) => {
   const { id } = req.params;
-  const { brand, modelName, price, range, horsepower, picture } = req.body;
+  const { brand, modelName, type, price, range, horsepower, picture } = req.body;
   
   try {
     const vehicle = await Vehicle.findByPk(id);
@@ -74,6 +75,7 @@ const updateVehicle = async (req, res) => {
     await vehicle.update({
       brand,
       modelName,
+      type,
       price,
       range,
       horsepower,
