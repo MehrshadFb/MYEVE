@@ -183,21 +183,21 @@ function About() {
               {
                 name: "Mehrshad Farahbakhsh",
                 role: "Role",
-                bio: "bio",
+                bio: "Bio",
                 link: "https://github.com/MehrshadFb",
                 image: "https://avatars.githubusercontent.com/u/104742319?v=4"
               },
               {
-                name: "Jason Derulo",
-                role: "Role",
-                bio: "bio",
+                name: "Jason Mai",
+                role: "Electrical Engineer",
+                bio: "Bio",
                 link: "https://www.youtube.com/watch?v=pBI3lc18k8Q",
-                image: "https://www.jasonderulo.com/sites/g/files/g2000017781/files/styles/800_800/public/2024-02/JasonDerulo_NuKing.jpg?itok=_50MZVBq"
+                image: "https://iq.wiki/cdn-cgi/image/width=1920,quality=70/https://ipfs.everipedia.org/ipfs/QmfHhmi69k6nas2DveECihxrQisdH9Xp6SQvZS9Cz9QqGp"
               },
               {
                 name: "Helena Kamali",
                 role: "Role",
-                bio: "bio",
+                bio: "Bio",
                 link: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
                 image: "link"
               }

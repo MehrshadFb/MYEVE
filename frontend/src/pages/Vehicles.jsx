@@ -2,49 +2,56 @@ import { Link } from "react-router-dom";
 
 function Vehicles() {
   const allVehicles = [
-    {
-      id: 1,
-      name: "Tesla Model S",
-      price: "$89,990",
-      category: "Sedan",
-      specs: "396 mi range • 0-60 in 3.1s • 670 hp"
-    },
-    {
-      id: 2,
-      name: "Ford Mustang Mach-E",
-      price: "$42,995",
-      category: "SUV",
-      specs: "300 mi range • 0-60 in 3.8s • 346 hp"
-    },
-    {
-      id: 3,
-      name: "Chevrolet Bolt EUV",
-      price: "$27,495",
-      category: "Crossover",
-      specs: "247 mi range • 0-60 in 7.0s • 200 hp"
-    },
-    {
-      id: 4,
-      name: "Rivian R1T",
-      price: "$73,000",
-      category: "Truck",
-      specs: "314 mi range • 0-60 in 3.0s • 835 hp"
-    },
-    {
-      id: 5,
-      name: "Lucid Air",
-      price: "$87,400",
-      category: "Sedan",
-      specs: "520 mi range • 0-60 in 2.8s • 819 hp"
-    },
-    {
-      id: 6,
-      name: "Tesla Model Y",
-      price: "$44,990",
-      category: "SUV",
-      specs: "330 mi range • 0-60 in 3.5s • 384 hp"
-    }
-  ];
+  {
+    id: 1,
+    name: "Tesla Model S",
+    price: "$89,990",
+    category: "Sedan",
+    specs: "396 mi range • 0-60 in 3.1s • 670 hp",
+    image: "https://media.ed.edmunds-media.com/tesla/model-s/2025/oem/2025_tesla_model-s_sedan_plaid_fq_oem_1_1600.jpg" 
+  },
+  {
+    id: 2,
+    name: "Ford Mustang Mach-E",
+    price: "$42,995",
+    category: "SUV",
+    specs: "300 mi range • 0-60 in 3.8s • 346 hp",
+    image: "https://cardealerstg.blob.core.windows.net/butlergroup/vehicles/1147912/pictures/7887ab3d-2691-4c4a-ba8e-99d317ff7ae8-gallery.jpg"
+  },
+  {
+    id: 3,
+    name: "Chevrolet Bolt EUV",
+    price: "$27,495",
+    category: "Crossover",
+    specs: "247 mi range • 0-60 in 7.0s • 200 hp",
+    image: "https://www.davischev.com/wp-content/uploads/2022/11/image-18_11zon-1.png"
+  },
+  {
+    id: 4,
+    name: "Rivian R1T",
+    price: "$73,000",
+    category: "Truck",
+    specs: "314 mi range • 0-60 in 3.0s • 835 hp",
+    image: "https://www.iihs.org/cdn-cgi/image/width=636/api/ratings/model-year-images/3215/"
+  },
+  {
+    id: 5,
+    name: "Lucid Air",
+    price: "$87,400",
+    category: "Sedan",
+    specs: "520 mi range • 0-60 in 2.8s • 819 hp",
+    image: "https://lucidmotors.com/media/image/jellybeans/pure.webp"
+  },
+  {
+    id: 6,
+    name: "Tesla Model Y",
+    price: "$44,990",
+    category: "SUV",
+    specs: "330 mi range • 0-60 in 3.5s • 384 hp",
+    image: "https://images.ctfassets.net/3xid768u5joa/2z0qi9r7H4JCO4MBY97n2h/670df090c1b0a58a48ba8984739b3a32/Model-Y-Colour-Guide-Header-Red_multi-coat.webp"
+  }
+];
+
 
   return (
     <div style={{ minHeight: "100vh", backgroundColor: "#f8fafc", width: "100vw", overflowX: "hidden" }}>
@@ -179,16 +186,18 @@ function Vehicles() {
                 e.target.style.boxShadow = "0 4px 20px rgba(0,0,0,0.1)";
               }}
               >
-                <div style={{
-                  height: "200px",
-                  background: `linear-gradient(45deg, #3b82f6, #8b5cf6)`,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: "white",
-                  fontSize: "2rem"
-                }}>
-                </div>
+                <div style={{ height: "200px", overflow: "hidden" }}>
+  <img
+    src={vehicle.image}
+    alt={vehicle.name}
+    style={{
+      width: "100%",
+      height: "100%",
+      objectFit: "cover"
+    }}
+  />
+</div>
+
                 <div style={{ padding: "24px" }}>
                   <div style={{
                     display: "flex",
