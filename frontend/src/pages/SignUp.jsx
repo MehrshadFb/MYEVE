@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signUp } from "../services/api";
+import '../SignInUp.css'; 
+
 
 function SignUp() {
   const [formData, setFormData] = useState({
@@ -28,6 +30,8 @@ function SignUp() {
   };
 
   return (
+    <div className="signup-page">
+       <div className="signup-box">
     <div>
       <h2>Sign Up</h2>
       {error && <p style={{ color: "red" }}>{error}</p>}
@@ -37,6 +41,7 @@ function SignUp() {
         <div>
           <p>
             <input
+              className="form-input"
               name="username"
               type="text"
               placeholder="Username"
@@ -49,6 +54,7 @@ function SignUp() {
         <div>
           <p>
             <input
+              className="form-input"
               name="email"
               type="email"
               placeholder="Email"
@@ -61,6 +67,7 @@ function SignUp() {
         <div>
           <p>
             <input
+              className="form-input"
               name="password"
               type="password"
               placeholder="Password"
@@ -72,7 +79,7 @@ function SignUp() {
         </div>
         <div>
           <p>
-            <select name="role" value={formData.role} onChange={handleChange}>
+            <select className="form-input" name="role" value={formData.role} onChange={handleChange}>
               <option value="customer">Customer</option>
               <option value="admin">Admin</option>
             </select>
@@ -83,6 +90,8 @@ function SignUp() {
       <p>
         Already have an account? <a href="/signin">Sign in</a>
       </p>
+    </div>
+    </div>
     </div>
   );
 }

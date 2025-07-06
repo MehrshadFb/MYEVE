@@ -1,0 +1,71 @@
+#root {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0;
+  text-align: center;
+}
+
+
+.signup-page {
+  height: 100vh;
+  width: 100vw;
+  background-image: url("/pattywhip.png"); 
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.signin-page {
+  height: 100vh;
+  width: 100vw;
+  background-image: url("/marlboro.png"); 
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.signup-box {
+  width: 400px;
+  padding: 2rem;
+  border-radius: 12px;
+  background-color: rgba(0, 0, 0, 0.9); 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.signup-box input,
+.signup-box button {
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  border-radius: 6px;
+  border: none;
+  font-size: 1rem;
+}
+.signup-box select {
+  width: 110%;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  border-radius: 6px;
+  border: none;
+  font-size: 1rem;
+}
+
+.signup-box button {
+  background-color: #6366f1;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  width: 110%;
+}
+
+.signup-box button:hover {
+  background-color: #4f46e5;
+}

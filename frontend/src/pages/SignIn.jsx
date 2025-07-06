@@ -25,29 +25,48 @@ function SignIn() {
   };
 
   return (
+    <div className="signin-page">
+       <div className="signup-box">
     <div>
-      <h2>Sign In</h2>
+      <h2>Sign Up</h2>
       {error && <p style={{ color: "red" }}>{error}</p>}
+      
+      
       <form onSubmit={handleSubmit}>
-        <input
-          name="email"
-          type="email"
-          placeholder="Email"
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="password"
-          type="password"
-          placeholder="Password"
-          onChange={handleChange}
-          required
-        />
+        <div>
+          <p>
+            <input
+              className="form-input"
+              name="email"
+              type="email"
+              placeholder="Email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </p>
+        </div>
+        <div>
+          <p>
+            <input
+              className="form-input"
+              name="password"
+              type="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </p>
+        </div>
+        
         <button type="submit">Sign In</button>
       </form>
       <p>
-        No account? <a href="/signup">Sign up</a>
+        No account? <a href="/signup">Sign Up</a>
       </p>
+    </div>
+    </div>
     </div>
   );
 }
