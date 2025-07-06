@@ -5,15 +5,20 @@ import {
   Navigate,
 } from "react-router-dom";
 import { useState, useEffect } from "react";
-import SignIn from "./pages/SignIn";
-import SignUp from "./pages/SignUp";
-import Welcome from "./pages/Welcome";
-import LandingPage from "./pages/LandingPage";
-import Featured from "./pages/Featured";
-import Vehicles from "./pages/Vehicles";
-import About from "./pages/About";
+import { AuthProvider, useAuth } from "./context/AuthContext";
+import SignIn from "./pages/notsignedin/SignIn";
+import SignUp from "./pages/notsignedin/SignUp";
+import Manage from "./pages/signedin/Manage";
+import Profile from "./pages/signedin/Profile";
+import AddVehicle from "./pages/signedin/AddVehicle";
+import LandingPage from "./pages/notsignedin/LandingPage";
+import Featured from "./pages/notsignedin/Featured";
+import Vehicles from "./pages/notsignedin/Vehicles";
+import About from "./pages/notsignedin/About";
 
-function App() {
+
+function AppRoutes() {
+  const { isAuthenticated, loading } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -25,11 +30,9 @@ function App() {
     return () => clearTimeout(timer);
   }, []);
 
-  if (isLoading) {
+  if (loading || isLoading) {
     return null; // Let the HTML loading state show
   }
-
-  const isLoggedIn = localStorage.getItem("token");
 
   return (
     <Router>
@@ -44,11 +47,27 @@ function App() {
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route
-          path="/welcome"
-          element={isLoggedIn ? <Welcome /> : <Navigate to="/signin" />}
+          path="/manage"
+          element={isAuthenticated ? <Manage /> : <Navigate to="/signin" />}
+        />
+        <Route
+          path="/profile"
+          element={isAuthenticated ? <Profile /> : <Navigate to="/signin" />}
+        />
+        <Route
+          path="/add-vehicle"
+          element={isAuthenticated ? <AddVehicle /> : <Navigate to="/signin" />}
         />
       </Routes>
     </Router>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <AppRoutes />
+    </AuthProvider>
   );
 }
 
