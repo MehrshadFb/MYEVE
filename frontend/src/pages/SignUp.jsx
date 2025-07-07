@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { signUp } from "../services/api";
-import '../SignInUp.css';
+import '../styles/SignInUp.css';
 
 function SignUp() {
   const [formData, setFormData] = useState({
@@ -110,14 +110,6 @@ function SignUp() {
                   onChange={handleChange}
                   required
                 />
-              </p>
-            </div>
-            <div>
-              <p>
-                <select className="form-input" name="role" value={formData.role} onChange={handleChange}>
-                  <option value="customer">Customer</option>
-                  <option value="admin">Admin</option>
-                </select>
               </p>
             </div>
             <button type="submit">Sign Up</button>

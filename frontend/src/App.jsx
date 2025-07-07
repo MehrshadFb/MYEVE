@@ -12,6 +12,8 @@ import LandingPage from "./pages/LandingPage";
 import Featured from "./pages/Featured";
 import Vehicles from "./pages/Vehicles";
 import About from "./pages/About";
+import ShoppingCart from "./pages/ShoppingCart";
+import CartNotSignedIn from "./pages/CartNotSignedIn";
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -43,6 +45,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/shoppingcart" element={<ShoppingCart />} />
         <Route
           path="/welcome"
           element={isLoggedIn ? <Welcome /> : <Navigate to="/signin" />}
