@@ -35,28 +35,57 @@ function About() {
             <Link to="/about" style={{ color: "#64748b", textDecoration: "none", fontWeight: "500" }}>About</Link>
           </nav>
         </div>
-        <Link 
-          to="/signin" 
-          style={{
-            background: "#3b82f6",
-            color: "white",
-            padding: "12px 24px",
-            borderRadius: "8px",
-            textDecoration: "none",
-            fontWeight: "600",
-            transition: "all 0.3s ease"
-          }}
-          onMouseEnter={(e) => {
-            e.target.style.background = "#2563eb";
-            e.target.style.transform = "translateY(-2px)";
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.background = "#3b82f6";
-            e.target.style.transform = "translateY(0)";
-          }}
-        >
-          Sign In
-        </Link>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+      <Link 
+        to="/signin" 
+        style={{
+         background: "#3b82f6",
+         color: "white",
+         padding: "12px 24px",
+        borderRadius: "8px",
+        textDecoration: "none",
+        fontWeight: "600",
+        transition: "all 0.3s ease"
+        }}
+      onMouseEnter={(e) => {
+        e.target.style.background = "#2563eb";
+        e.target.style.transform = "translateY(-2px)";
+      }}
+      onMouseLeave={(e) => {
+        e.target.style.background = "#3b82f6";
+        e.target.style.transform = "translateY(0)";
+      }}
+      >
+        Sign In
+      </Link>
+
+      <Link 
+        to="/ShoppingCart" 
+        style={{
+          background: "#3b82f6",
+          padding: "10px",
+          borderRadius: "8px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          transition: "all 0.3s ease"
+        }}
+        onMouseEnter={(e) => {
+          e.target.style.background = "#2563eb";
+          e.target.style.transform = "translateY(-2px)";
+        }}
+        onMouseLeave={(e) => {
+          e.target.style.background = "#3b82f6";
+          e.target.style.transform = "translateY(0)";
+        }}
+      >
+        <img 
+          src="/cart-icon.png" 
+          alt="Cart" 
+          style={{ width: "24px", height: "24px" }} 
+        />
+      </Link>
+    </div>
       </header>
 
       {/* Hero Section */}
@@ -183,21 +212,21 @@ function About() {
               {
                 name: "Mehrshad Farahbakhsh",
                 role: "Role",
-                bio: "bio",
+                bio: "Bio",
                 link: "https://github.com/MehrshadFb",
                 image: "https://avatars.githubusercontent.com/u/104742319?v=4"
               },
               {
-                name: "Jason Derulo",
-                role: "Role",
-                bio: "bio",
+                name: "Jason Mai",
+                role: "Electrical Engineer",
+                bio: "Bio",
                 link: "https://www.youtube.com/watch?v=pBI3lc18k8Q",
-                image: "https://www.jasonderulo.com/sites/g/files/g2000017781/files/styles/800_800/public/2024-02/JasonDerulo_NuKing.jpg?itok=_50MZVBq"
+                image: "https://iq.wiki/cdn-cgi/image/width=1920,quality=70/https://ipfs.everipedia.org/ipfs/QmfHhmi69k6nas2DveECihxrQisdH9Xp6SQvZS9Cz9QqGp"
               },
               {
                 name: "Helena Kamali",
                 role: "Role",
-                bio: "bio",
+                bio: "Bio",
                 link: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
                 image: "link"
               }
