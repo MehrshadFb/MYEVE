@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import useAuth from "../context/useAuth";
 
 function Header() {
   const { isAuthenticated, user, logout } = useAuth();
@@ -50,13 +50,35 @@ function Header() {
             MYEVE
           </h1>
         </Link>
-        <nav style={{ display: "flex", gap: "30px" }}>
+        <nav style={{ display: "flex", gap: "30px", alignItems: "center" }}>
           <Link to="/featured" style={{ color: "#64748b", textDecoration: "none", fontWeight: "500" }}>Featured</Link>
           <Link to="/vehicles" style={{ color: "#64748b", textDecoration: "none", fontWeight: "500" }}>Vehicles</Link>
           <Link to="/about" style={{ color: "#64748b", textDecoration: "none", fontWeight: "500" }}>About</Link>
           {isAuthenticated && (
             <Link to="/profile" style={{ color: "#64748b", textDecoration: "none", fontWeight: "500" }}>Profile</Link>
           )}
+          {/* Cart Icon */}
+          <Link to="/cart" style={{ display: "flex", alignItems: "center", marginLeft: "18px" }}>
+            <img
+              src="/cart-icon.png"
+              alt="Shopping Cart"
+              style={{
+                width: "28px",
+                height: "28px",
+                filter: "drop-shadow(0 2px 6px rgba(59,130,246,0.10))",
+                transition: "transform 0.2s, filter 0.2s",
+                cursor: "pointer"
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.transform = "scale(1.13)";
+                e.currentTarget.style.filter = "drop-shadow(0 2px 10px #3b82f6)";
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.transform = "scale(1)";
+                e.currentTarget.style.filter = "drop-shadow(0 2px 6px rgba(59,130,246,0.10))";
+              }}
+            />
+          </Link>
         </nav>
       </div>
       

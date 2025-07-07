@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { getAllVehicles } from "../../services/api";
 import Header from "../../components/Header";
 import { Link } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import useAuth from "../../context/useAuth";
 
 function Vehicles() {
   const [vehicles, setVehicles] = useState([]);

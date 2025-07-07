@@ -77,7 +77,7 @@ function LandingPage() {
           </p>
           <div style={{ display: "flex", gap: "20px", justifyContent: "center", flexWrap: "wrap" }}>
             <Link 
-              to="/signup"
+              to="/vehicles"
               style={{
                 background: "#3b82f6",
                 color: "white",
