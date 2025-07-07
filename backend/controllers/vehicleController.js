@@ -3,23 +3,22 @@ const { Vehicle } = require("../models");
 
 // Create a new vehicle
 const createVehicle = async (req, res) => {
-  const { brand, modelName, type, price, range, horsepower, picture } = req.body;
+  const { name, description, brand, model, quantity, price } = req.body;
   
-  if (!brand || !modelName || !type || !price || !range || !horsepower) {
+  if (!name || !brand || !model || !price) {
     return res.status(400).json({ 
-      message: "Missing required fields: brand, modelName, type, price, range, and horsepower are required" 
+      message: "Missing required fields: name, brand, model, and price are required" 
     });
   }
 
   try {
     const vehicle = await Vehicle.create({
+      name,
+      description,
       brand,
-      modelName,
-      type,
-      price,
-      range,
-      horsepower,
-      picture
+      model,
+      quantity: quantity || 0,
+      price
     });
     
     return res.status(201).json({
@@ -47,10 +46,10 @@ const getAllVehicles = async (req, res) => {
 
 // Get vehicle by ID
 const getVehicleById = async (req, res) => {
-  const { id } = req.params;
+  const { vid } = req.params;
   
   try {
-    const vehicle = await Vehicle.findByPk(id);
+    const vehicle = await Vehicle.findByPk(vid);
     if (!vehicle) {
       return res.status(404).json({ message: "Vehicle not found" });
     }
@@ -63,23 +62,22 @@ const getVehicleById = async (req, res) => {
 
 // Update vehicle
 const updateVehicle = async (req, res) => {
-  const { id } = req.params;
-  const { brand, modelName, type, price, range, horsepower, picture } = req.body;
+  const { vid } = req.params;
+  const { name, description, brand, model, quantity, price } = req.body;
   
   try {
-    const vehicle = await Vehicle.findByPk(id);
+    const vehicle = await Vehicle.findByPk(vid);
     if (!vehicle) {
       return res.status(404).json({ message: "Vehicle not found" });
     }
     
     await vehicle.update({
+      name,
+      description,
       brand,
-      modelName,
-      type,
-      price,
-      range,
-      horsepower,
-      picture
+      model,
+      quantity,
+      price
     });
     
     return res.status(200).json({
@@ -94,10 +92,10 @@ const updateVehicle = async (req, res) => {
 
 // Delete vehicle
 const deleteVehicle = async (req, res) => {
-  const { id } = req.params;
+  const { vid } = req.params;
   
   try {
-    const vehicle = await Vehicle.findByPk(id);
+    const vehicle = await Vehicle.findByPk(vid);
     if (!vehicle) {
       return res.status(404).json({ message: "Vehicle not found" });
     }

@@ -131,18 +131,18 @@ export const getAllVehicles = async () => {
   return response.data;
 };
 
-export const getVehicleById = async (id) => {
-  const response = await api.get(`/vehicles/${id}`);
+export const getVehicleById = async (vid) => {
+  const response = await api.get(`/vehicles/${vid}`);
   return response.data;
 };
 
-export const updateVehicle = async (id, vehicleData) => {
-  const response = await api.put(`/vehicles/${id}`, vehicleData);
+export const updateVehicle = async (vid, vehicleData) => {
+  const response = await api.put(`/vehicles/${vid}`, vehicleData);
   return response.data;
 };
 
-export const deleteVehicle = async (id) => {
-  const response = await api.delete(`/vehicles/${id}`);
+export const deleteVehicle = async (vid) => {
+  const response = await api.delete(`/vehicles/${vid}`);
   return response.data;
 };
 

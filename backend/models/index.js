@@ -2,7 +2,6 @@ const sequelize = require("../config/database");
 const UserModel = require("./User");
 const AddressModel = require("./Address");
 const VehicleModel = require("./Vehicle");
-const bcrypt = require("bcrypt");
 const { v4: uuidv4 } = require("uuid");
 
 // Initialize models
@@ -34,13 +33,11 @@ const seedDatabase = async () => {
     });
 
     if (!existingAdmin) {
-      // Create admin account
-      const hashedPassword = await bcrypt.hash("Admin123!", 10);
-      
+      // Create admin account - password will be hashed by User model hook
       await User.create({
         username: 'admin1',
         email: 'myeveadmin@gmail.com',
-        password: hashedPassword,
+        password: 'Admin123!', // Plain text - will be hashed by beforeCreate hook
         role: 'admin'
       });
       

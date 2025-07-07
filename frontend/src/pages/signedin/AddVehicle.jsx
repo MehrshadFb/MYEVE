@@ -8,13 +8,12 @@ function AddVehicle() {
   const navigate = useNavigate();
   
   const [vehicleData, setVehicleData] = useState({
+    name: "",
+    description: "",
     brand: "",
-    modelName: "",
-    type: "",
-    price: "",
-    range: "",
-    horsepower: "",
-    picture: ""
+    model: "",
+    quantity: 0,
+    price: ""
   });
 
   const [message, setMessage] = useState({ type: "", text: "" });
@@ -31,7 +30,7 @@ function AddVehicle() {
     setIsSubmitting(true);
 
     // Validate required fields
-    if (!vehicleData.brand || !vehicleData.modelName || !vehicleData.type || !vehicleData.price || !vehicleData.range || !vehicleData.horsepower) {
+    if (!vehicleData.name || !vehicleData.brand || !vehicleData.model || !vehicleData.price) {
       setMessage({ type: "error", text: "Please fill in all required fields" });
       setIsSubmitting(false);
       return;
@@ -44,40 +43,32 @@ function AddVehicle() {
       return;
     }
 
-    if (isNaN(vehicleData.range) || parseInt(vehicleData.range) <= 0) {
-      setMessage({ type: "error", text: "Range must be a positive number" });
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (isNaN(vehicleData.horsepower) || parseInt(vehicleData.horsepower) <= 0) {
-      setMessage({ type: "error", text: "Horsepower must be a positive number" });
+    if (isNaN(vehicleData.quantity) || parseInt(vehicleData.quantity) < 0) {
+      setMessage({ type: "error", text: "Quantity must be a non-negative number" });
       setIsSubmitting(false);
       return;
     }
 
     try {
       const response = await createVehicle({
+        name: vehicleData.name,
+        description: vehicleData.description,
         brand: vehicleData.brand,
-        modelName: vehicleData.modelName,
-        type: vehicleData.type,
-        price: parseFloat(vehicleData.price),
-        range: parseInt(vehicleData.range),
-        horsepower: parseInt(vehicleData.horsepower),
-        picture: vehicleData.picture || null
+        model: vehicleData.model,
+        quantity: parseInt(vehicleData.quantity),
+        price: parseFloat(vehicleData.price)
       });
       
       setMessage({ type: "success", text: response.message });
       
       // Clear form after successful submission
       setVehicleData({
+        name: "",
+        description: "",
         brand: "",
-        modelName: "",
-        type: "",
-        price: "",
-        range: "",
-        horsepower: "",
-        picture: ""
+        model: "",
+        quantity: 0,
+        price: ""
       });
       
       // Redirect to manage page after a short delay
@@ -176,7 +167,7 @@ function AddVehicle() {
               color: "#64748b",
               margin: 0
             }}>
-              Add a new electric vehicle to the inventory
+              Add a new vehicle to the inventory
             </p>
           </div>
           <button 
@@ -201,16 +192,17 @@ function AddVehicle() {
               e.target.style.transform = "translateY(0)";
             }}
           >
-            Back to Dashboard
+            ← Back
           </button>
         </div>
 
+        {/* Message Display */}
         {message.text && (
           <div style={{
-            padding: "12px 16px",
+            padding: "16px",
             borderRadius: "8px",
-            marginBottom: "20px",
-            backgroundColor: message.type === "success" ? "#f0fdf4" : "#fef2f2",
+            marginBottom: "24px",
+            backgroundColor: message.type === "success" ? "#dcfce7" : "#fee2e2",
             color: message.type === "success" ? "#059669" : "#dc2626",
             border: `1px solid ${message.type === "success" ? "#bbf7d0" : "#fecaca"}`
           }}>
@@ -222,258 +214,227 @@ function AddVehicle() {
           <div style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-            gap: "20px"
+            gap: "24px"
           }}>
+            {/* Vehicle Name */}
             <div>
               <label style={{
                 display: "block",
-                marginBottom: "6px",
-                fontWeight: "500",
+                marginBottom: "8px",
+                fontWeight: "600",
+                color: "#374151",
+                fontSize: "14px"
+              }}>
+                Vehicle Name *
+              </label>
+              <input
+                type="text"
+                name="name"
+                value={vehicleData.name}
+                onChange={handleChange}
+                placeholder="Enter vehicle name"
+                required
+                style={{
+                  width: "100%",
+                  padding: "12px 16px",
+                  borderRadius: "8px",
+                  border: "1px solid #d1d5db",
+                  fontSize: "16px",
+                  backgroundColor: "white",
+                  color: "#1e293b",
+                  boxSizing: "border-box"
+                }}
+              />
+            </div>
+
+            {/* Brand */}
+            <div>
+              <label style={{
+                display: "block",
+                marginBottom: "8px",
+                fontWeight: "600",
                 color: "#374151",
                 fontSize: "14px"
               }}>
                 Brand *
               </label>
               <input
-                name="brand"
                 type="text"
+                name="brand"
                 value={vehicleData.brand}
                 onChange={handleChange}
-                placeholder="e.g., Tesla, BMW, Audi"
+                placeholder="Enter brand name"
                 required
                 style={{
-                  padding: "12px",
+                  width: "100%",
+                  padding: "12px 16px",
                   borderRadius: "8px",
                   border: "1px solid #d1d5db",
-                  fontSize: "14px",
+                  fontSize: "16px",
                   backgroundColor: "white",
                   color: "#1e293b",
-                  width: "100%",
                   boxSizing: "border-box"
                 }}
               />
             </div>
 
+            {/* Model */}
             <div>
               <label style={{
                 display: "block",
-                marginBottom: "6px",
-                fontWeight: "500",
+                marginBottom: "8px",
+                fontWeight: "600",
                 color: "#374151",
                 fontSize: "14px"
               }}>
-                Model Name *
+                Model *
               </label>
               <input
-                name="modelName"
                 type="text"
-                value={vehicleData.modelName}
+                name="model"
+                value={vehicleData.model}
                 onChange={handleChange}
-                placeholder="e.g., Model S, i4, e-tron"
+                placeholder="Enter model name"
                 required
                 style={{
-                  padding: "12px",
+                  width: "100%",
+                  padding: "12px 16px",
                   borderRadius: "8px",
                   border: "1px solid #d1d5db",
-                  fontSize: "14px",
+                  fontSize: "16px",
                   backgroundColor: "white",
                   color: "#1e293b",
-                  width: "100%",
                   boxSizing: "border-box"
                 }}
               />
             </div>
 
+            {/* Quantity */}
             <div>
               <label style={{
                 display: "block",
-                marginBottom: "6px",
-                fontWeight: "500",
+                marginBottom: "8px",
+                fontWeight: "600",
                 color: "#374151",
                 fontSize: "14px"
               }}>
-                Type *
-              </label>
-              <select
-                name="type"
-                value={vehicleData.type}
-                onChange={handleChange}
-                required
-                style={{
-                  padding: "12px",
-                  borderRadius: "8px",
-                  border: "1px solid #d1d5db",
-                  fontSize: "14px",
-                  backgroundColor: "white",
-                  color: "#1e293b",
-                  width: "100%",
-                  boxSizing: "border-box",
-                  cursor: "pointer"
-                }}
-              >
-                <option value="">Select vehicle type</option>
-                <option value="sedan">Sedan</option>
-                <option value="suv">SUV</option>
-                <option value="truck">Truck</option>
-                <option value="sports">Sports</option>
-                <option value="luxury">Luxury</option>
-              </select>
-            </div>
-
-            <div>
-              <label style={{
-                display: "block",
-                marginBottom: "6px",
-                fontWeight: "500",
-                color: "#374151",
-                fontSize: "14px"
-              }}>
-                Price (USD) *
+                Quantity *
               </label>
               <input
-                name="price"
                 type="number"
-                step="0.01"
+                name="quantity"
+                value={vehicleData.quantity}
+                onChange={handleChange}
+                placeholder="Enter quantity"
                 min="0"
+                required
+                style={{
+                  width: "100%",
+                  padding: "12px 16px",
+                  borderRadius: "8px",
+                  border: "1px solid #d1d5db",
+                  fontSize: "16px",
+                  backgroundColor: "white",
+                  color: "#1e293b",
+                  boxSizing: "border-box"
+                }}
+              />
+            </div>
+
+            {/* Price */}
+            <div>
+              <label style={{
+                display: "block",
+                marginBottom: "8px",
+                fontWeight: "600",
+                color: "#374151",
+                fontSize: "14px"
+              }}>
+                Price *
+              </label>
+              <input
+                type="number"
+                name="price"
                 value={vehicleData.price}
                 onChange={handleChange}
-                placeholder="e.g., 75000.00"
-                required
-                style={{
-                  padding: "12px",
-                  borderRadius: "8px",
-                  border: "1px solid #d1d5db",
-                  fontSize: "14px",
-                  backgroundColor: "white",
-                  color: "#1e293b",
-                  width: "100%",
-                  boxSizing: "border-box"
-                }}
-              />
-            </div>
-
-            <div>
-              <label style={{
-                display: "block",
-                marginBottom: "6px",
-                fontWeight: "500",
-                color: "#374151",
-                fontSize: "14px"
-              }}>
-                Range (km) *
-              </label>
-              <input
-                name="range"
-                type="number"
+                placeholder="Enter price"
                 min="0"
-                value={vehicleData.range}
-                onChange={handleChange}
-                placeholder="e.g., 500"
+                step="0.01"
                 required
                 style={{
-                  padding: "12px",
+                  width: "100%",
+                  padding: "12px 16px",
                   borderRadius: "8px",
                   border: "1px solid #d1d5db",
-                  fontSize: "14px",
+                  fontSize: "16px",
                   backgroundColor: "white",
                   color: "#1e293b",
-                  width: "100%",
                   boxSizing: "border-box"
                 }}
               />
             </div>
 
-            <div>
+            {/* Description */}
+            <div style={{ gridColumn: "span 2" }}>
               <label style={{
                 display: "block",
-                marginBottom: "6px",
-                fontWeight: "500",
+                marginBottom: "8px",
+                fontWeight: "600",
                 color: "#374151",
                 fontSize: "14px"
               }}>
-                Horsepower *
+                Description
               </label>
-              <input
-                name="horsepower"
-                type="number"
-                min="0"
-                value={vehicleData.horsepower}
+              <textarea
+                name="description"
+                value={vehicleData.description}
                 onChange={handleChange}
-                placeholder="e.g., 400"
-                required
+                placeholder="Enter vehicle description"
+                rows="4"
                 style={{
-                  padding: "12px",
+                  width: "100%",
+                  padding: "12px 16px",
                   borderRadius: "8px",
                   border: "1px solid #d1d5db",
-                  fontSize: "14px",
+                  fontSize: "16px",
                   backgroundColor: "white",
                   color: "#1e293b",
-                  width: "100%",
-                  boxSizing: "border-box"
+                  boxSizing: "border-box",
+                  resize: "vertical"
                 }}
               />
-            </div>
-
-            <div style={{ gridColumn: "1 / -1" }}>
-              <label style={{
-                display: "block",
-                marginBottom: "6px",
-                fontWeight: "500",
-                color: "#374151",
-                fontSize: "14px"
-              }}>
-                Picture URL (Optional)
-              </label>
-              <input
-                name="picture"
-                type="url"
-                value={vehicleData.picture}
-                onChange={handleChange}
-                placeholder="https://example.com/vehicle-image.jpg"
-                style={{
-                  padding: "12px",
-                  borderRadius: "8px",
-                  border: "1px solid #d1d5db",
-                  fontSize: "14px",
-                  backgroundColor: "white",
-                  color: "#1e293b",
-                  width: "100%",
-                  boxSizing: "border-box"
-                }}
-              />
-              <small style={{ color: "#6b7280", fontSize: "12px", marginTop: "4px", display: "block" }}>
-                Provide a URL to an image of the vehicle
-              </small>
             </div>
           </div>
 
           <div style={{
             display: "flex",
-            gap: "15px",
-            marginTop: "30px",
-            justifyContent: "flex-end"
+            justifyContent: "flex-end",
+            gap: "16px",
+            marginTop: "32px",
+            paddingTop: "24px",
+            borderTop: "1px solid #e2e8f0"
           }}>
             <button
               type="button"
               onClick={handleBack}
               style={{
-                background: "#6b7280",
-                color: "white",
                 padding: "12px 24px",
                 borderRadius: "8px",
-                border: "none",
+                border: "1px solid #d1d5db",
+                background: "white",
+                color: "#374151",
                 fontWeight: "600",
                 cursor: "pointer",
-                fontSize: "14px",
+                fontSize: "16px",
                 transition: "all 0.3s ease"
               }}
               onMouseEnter={(e) => {
-                e.target.style.background = "#4b5563";
-                e.target.style.transform = "translateY(-1px)";
+                e.target.style.background = "#f9fafb";
+                e.target.style.borderColor = "#9ca3af";
               }}
               onMouseLeave={(e) => {
-                e.target.style.background = "#6b7280";
-                e.target.style.transform = "translateY(0)";
+                e.target.style.background = "white";
+                e.target.style.borderColor = "#d1d5db";
               }}
             >
               Cancel
@@ -482,26 +443,24 @@ function AddVehicle() {
               type="submit"
               disabled={isSubmitting}
               style={{
-                background: isSubmitting ? "#9ca3af" : "#059669",
-                color: "white",
                 padding: "12px 24px",
                 borderRadius: "8px",
                 border: "none",
+                background: isSubmitting ? "#9ca3af" : "#3b82f6",
+                color: "white",
                 fontWeight: "600",
                 cursor: isSubmitting ? "not-allowed" : "pointer",
-                fontSize: "14px",
+                fontSize: "16px",
                 transition: "all 0.3s ease"
               }}
               onMouseEnter={(e) => {
                 if (!isSubmitting) {
-                  e.target.style.background = "#047857";
-                  e.target.style.transform = "translateY(-1px)";
+                  e.target.style.background = "#2563eb";
                 }
               }}
               onMouseLeave={(e) => {
                 if (!isSubmitting) {
-                  e.target.style.background = "#059669";
-                  e.target.style.transform = "translateY(0)";
+                  e.target.style.background = "#3b82f6";
                 }
               }}
             >

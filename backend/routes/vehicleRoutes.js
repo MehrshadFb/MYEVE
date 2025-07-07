@@ -12,11 +12,11 @@ const router = express.Router();
 
 // Public routes (anyone can view vehicles)
 router.get("/vehicles", getAllVehicles);
-router.get("/vehicles/:id", getVehicleById);
+router.get("/vehicles/:vid", getVehicleById);
 
 // Admin-only routes (only admins can create, update, delete vehicles)
 router.post("/vehicles", authenticateToken, authorizeRole("admin"), createVehicle);
-router.put("/vehicles/:id", authenticateToken, authorizeRole("admin"), updateVehicle);
-router.delete("/vehicles/:id", authenticateToken, authorizeRole("admin"), deleteVehicle);
+router.put("/vehicles/:vid", authenticateToken, authorizeRole("admin"), updateVehicle);
+router.delete("/vehicles/:vid", authenticateToken, authorizeRole("admin"), deleteVehicle);
 
 module.exports = router; 

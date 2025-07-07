@@ -1,35 +1,21 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import Header from "../../components/Header";
+import { useEffect, useState } from "react";
 import { getAllVehicles } from "../../services/api";
+import Header from "../../components/Header";
+import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
 function Vehicles() {
-  const { user } = useAuth();
   const [vehicles, setVehicles] = useState([]);
   const [filteredVehicles, setFilteredVehicles] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterType, setFilterType] = useState("all");
-  const [filterStatus, setFilterStatus] = useState("all");
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchVehicles();
-  }, []);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterBrand, setFilterBrand] = useState("all");
+  const { user } = useAuth();
 
   const fetchVehicles = async () => {
     try {
       setLoading(true);
       const data = await getAllVehicles();
-      console.log("Raw vehicle data from API:", data);
-      console.log("Vehicle data type:", typeof data);
-      console.log("Is array?", Array.isArray(data));
-      if (Array.isArray(data)) {
-        console.log("Number of vehicles:", data.length);
-        if (data.length > 0) {
-          console.log("First vehicle structure:", data[0]);
-        }
-      }
       setVehicles(data);
       setFilteredVehicles(data);
     } catch (error) {
@@ -39,6 +25,10 @@ function Vehicles() {
     }
   };
 
+  useEffect(() => {
+    fetchVehicles();
+  }, []);
+
   // Filter and search vehicles
   useEffect(() => {
     let filtered = vehicles;
@@ -46,24 +36,23 @@ function Vehicles() {
     // Apply search filter
     if (searchTerm) {
       filtered = filtered.filter(vehicle =>
+        vehicle.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         vehicle.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        vehicle.modelName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        vehicle.model.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (vehicle.description && vehicle.description.toLowerCase().includes(searchTerm.toLowerCase()))
       );
     }
 
-    // Apply type filter
-    if (filterType !== "all") {
-      filtered = filtered.filter(vehicle => vehicle.type === filterType);
-    }
-
-    // Apply status filter
-    if (filterStatus !== "all") {
-      filtered = filtered.filter(vehicle => vehicle.status === filterStatus);
+    // Apply brand filter
+    if (filterBrand !== "all") {
+      filtered = filtered.filter(vehicle => vehicle.brand === filterBrand);
     }
 
     setFilteredVehicles(filtered);
-  }, [vehicles, searchTerm, filterType, filterStatus]);
+  }, [vehicles, searchTerm, filterBrand]);
+
+  // Get unique brands for filter
+  const uniqueBrands = [...new Set(vehicles.map(vehicle => vehicle.brand))];
 
   return (
     <div style={{ minHeight: "100vh", backgroundColor: "#f8fafc", width: "100vw", overflowX: "hidden" }}>
@@ -85,7 +74,7 @@ function Vehicles() {
             fontWeight: "800",
             marginBottom: "20px"
           }}>
-            All Electric Vehicles
+            All Vehicles
           </h1>
           <p style={{
             fontSize: "1.3rem",
@@ -95,7 +84,7 @@ function Vehicles() {
             marginLeft: "auto",
             marginRight: "auto"
           }}>
-            Browse our complete collection of electric vehicles from all major manufacturers.
+            Browse our complete collection of vehicles from all major manufacturers.
           </p>
         </div>
       </section>
@@ -144,7 +133,7 @@ function Vehicles() {
                 </label>
                 <input
                   type="text"
-                  placeholder="Search by make, model, or description..."
+                  placeholder="Search by name, brand, model, or description..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   style={{
@@ -167,11 +156,11 @@ function Vehicles() {
                   color: "#374151",
                   fontSize: "14px"
                 }}>
-                  Vehicle Type
+                  Brand Filter
                 </label>
                 <select
-                  value={filterType}
-                  onChange={(e) => setFilterType(e.target.value)}
+                  value={filterBrand}
+                  onChange={(e) => setFilterBrand(e.target.value)}
                   style={{
                     padding: "12px 16px",
                     borderRadius: "8px",
@@ -183,42 +172,10 @@ function Vehicles() {
                     boxSizing: "border-box"
                   }}
                 >
-                  <option value="all">All Types</option>
-                  <option value="sedan">Sedan</option>
-                  <option value="suv">SUV</option>
-                  <option value="truck">Truck</option>
-                  <option value="sports">Sports</option>
-                  <option value="luxury">Luxury</option>
-                </select>
-              </div>
-              <div>
-                <label style={{
-                  display: "block",
-                  marginBottom: "8px",
-                  fontWeight: "500",
-                  color: "#374151",
-                  fontSize: "14px"
-                }}>
-                  Status
-                </label>
-                <select
-                  value={filterStatus}
-                  onChange={(e) => setFilterStatus(e.target.value)}
-                  style={{
-                    padding: "12px 16px",
-                    borderRadius: "8px",
-                    border: "1px solid #d1d5db",
-                    fontSize: "14px",
-                    backgroundColor: "white",
-                    color: "#1e293b",
-                    width: "100%",
-                    boxSizing: "border-box"
-                  }}
-                >
-                  <option value="all">All Status</option>
-                  <option value="available">Available</option>
-                  <option value="rented">Rented</option>
-                  <option value="maintenance">Maintenance</option>
+                  <option value="all">All Brands</option>
+                  {uniqueBrands.map(brand => (
+                    <option key={brand} value={brand}>{brand}</option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -320,7 +277,7 @@ function Vehicles() {
               gap: "30px"
             }}>
               {filteredVehicles.map(vehicle => (
-                <div key={vehicle.id} style={{
+                <div key={vehicle.vid} style={{
                   backgroundColor: "white",
                   borderRadius: "16px",
                   overflow: "hidden",
@@ -339,14 +296,14 @@ function Vehicles() {
                 >
                   <div style={{
                     height: "200px",
-                    background: vehicle.picture ? `url(${vehicle.picture}) center/cover` : "linear-gradient(45deg, #3b82f6, #8b5cf6)",
+                    background: "linear-gradient(45deg, #3b82f6, #8b5cf6)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     color: "white",
                     fontSize: "2rem"
                   }}>
-                    {!vehicle.picture && `${vehicle.brand} ${vehicle.modelName}`}
+                    {vehicle.name}
                   </div>
                   <div style={{ padding: "24px" }}>
                     <div style={{
@@ -359,7 +316,7 @@ function Vehicles() {
                         fontSize: "1.3rem",
                         fontWeight: "600",
                         color: "#1e293b"
-                      }}>{vehicle.brand} {vehicle.modelName}</h3>
+                      }}>{vehicle.name}</h3>
                       <span style={{
                         padding: "4px 12px",
                         borderRadius: "20px",
@@ -368,7 +325,7 @@ function Vehicles() {
                         fontSize: "0.875rem",
                         fontWeight: "500",
                         textTransform: "capitalize"
-                      }}>{vehicle.type}</span>
+                      }}>{vehicle.brand}</span>
                     </div>
                     
                     <div style={{
@@ -380,19 +337,11 @@ function Vehicles() {
                       <span style={{
                         color: "#64748b",
                         fontSize: "0.9rem"
-                      }}>Range: {vehicle.range}km</span>
+                      }}>Model: {vehicle.model}</span>
                       <span style={{
-                        padding: "4px 8px",
-                        borderRadius: "4px",
-                        fontSize: "12px",
-                        fontWeight: "500",
-                        backgroundColor: vehicle.status === "available" ? "#dcfce7" : 
-                                         vehicle.status === "rented" ? "#fef3c7" : "#fee2e2",
-                        color: vehicle.status === "available" ? "#059669" : 
-                               vehicle.status === "rented" ? "#d97706" : "#dc2626"
-                      }}>
-                        {vehicle.status}
-                      </span>
+                        color: "#64748b",
+                        fontSize: "0.9rem"
+                      }}>Quantity: {vehicle.quantity}</span>
                     </div>
 
                     {vehicle.description && (
@@ -413,7 +362,7 @@ function Vehicles() {
                         fontSize: "1.25rem",
                         fontWeight: "700",
                         color: "#3b82f6"
-                      }}>${vehicle.price}/day</span>
+                      }}>${vehicle.price}</span>
                       <button style={{
                         padding: "8px 16px",
                         borderRadius: "8px",

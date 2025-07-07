@@ -3,10 +3,21 @@ const { v4: uuidv4 } = require("uuid");
 
 module.exports = (sequelize) => {
   const Vehicle = sequelize.define("Vehicle", {
-    id: {
+    vid: {
       type: DataTypes.UUID,
       defaultValue: uuidv4,
       primaryKey: true,
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        len: [1, 100],
+      },
+    },
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: true,
     },
     brand: {
       type: DataTypes.STRING,
@@ -15,20 +26,20 @@ module.exports = (sequelize) => {
         len: [1, 100],
       },
     },
-    modelName: {
+    model: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
         len: [1, 100],
       },
     },
-    type: {
-      type: DataTypes.STRING,
+    quantity: {
+      type: DataTypes.INTEGER,
       allowNull: false,
+      defaultValue: 0,
       validate: {
-        len: [1, 50],
+        min: 0,
       },
-      comment: "Vehicle type (e.g., Sedan, SUV, Truck, Hatchback)",
     },
     price: {
       type: DataTypes.DECIMAL(10, 2),
@@ -36,26 +47,6 @@ module.exports = (sequelize) => {
       validate: {
         min: 0,
       },
-    },
-    range: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      comment: "Range in kilometers",
-      validate: {
-        min: 0,
-      },
-    },
-    horsepower: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      validate: {
-        min: 0,
-      },
-    },
-    picture: {
-      type: DataTypes.STRING,
-      allowNull: true,
-      comment: "URL or path to vehicle image",
     },
   });
 

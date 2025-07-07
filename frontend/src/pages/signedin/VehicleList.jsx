@@ -5,17 +5,14 @@ function VehicleList() {
   const [vehicles, setVehicles] = useState([]);
   const [filteredVehicles, setFilteredVehicles] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterType, setFilterType] = useState("all");
-  const [filterStatus, setFilterStatus] = useState("all");
+  const [filterBrand, setFilterBrand] = useState("all");
   const [newVehicle, setNewVehicle] = useState({
-    make: "",
-    model: "",
-    year: "",
-    type: "sedan",
-    status: "available",
-    price: "",
+    name: "",
     description: "",
-    imageUrl: ""
+    brand: "",
+    model: "",
+    quantity: 0,
+    price: ""
   });
   const [editingId, setEditingId] = useState(null);
   const [editingData, setEditingData] = useState({});
@@ -41,28 +38,24 @@ function VehicleList() {
     // Apply search filter
     if (searchTerm) {
       filtered = filtered.filter(vehicle =>
-        vehicle.make.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        vehicle.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        vehicle.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
         vehicle.model.toLowerCase().includes(searchTerm.toLowerCase()) ||
         vehicle.description.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
-    // Apply type filter
-    if (filterType !== "all") {
-      filtered = filtered.filter(vehicle => vehicle.type === filterType);
-    }
-
-    // Apply status filter
-    if (filterStatus !== "all") {
-      filtered = filtered.filter(vehicle => vehicle.status === filterStatus);
+    // Apply brand filter
+    if (filterBrand !== "all") {
+      filtered = filtered.filter(vehicle => vehicle.brand === filterBrand);
     }
 
     setFilteredVehicles(filtered);
-  }, [vehicles, searchTerm, filterType, filterStatus]);
+  }, [vehicles, searchTerm, filterBrand]);
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (vid) => {
     try {
-      await deleteVehicle(id);
+      await deleteVehicle(vid);
       fetchVehicles();
     } catch (error) {
       console.error("Failed to delete vehicle:", error);
@@ -83,14 +76,12 @@ function VehicleList() {
       await createVehicle(newVehicle);
       fetchVehicles();
       setNewVehicle({
-        make: "",
-        model: "",
-        year: "",
-        type: "sedan",
-        status: "available",
-        price: "",
+        name: "",
         description: "",
-        imageUrl: ""
+        brand: "",
+        model: "",
+        quantity: 0,
+        price: ""
       });
     } catch (error) {
       console.error("Failed to add vehicle:", error);
@@ -98,16 +89,14 @@ function VehicleList() {
   };
 
   const handleEditVehicle = (vehicle) => {
-    setEditingId(vehicle.id);
+    setEditingId(vehicle.vid);
     setEditingData({
-      make: vehicle.make,
-      model: vehicle.model,
-      year: vehicle.year,
-      type: vehicle.type,
-      status: vehicle.status,
-      price: vehicle.price,
+      name: vehicle.name,
       description: vehicle.description,
-      imageUrl: vehicle.imageUrl
+      brand: vehicle.brand,
+      model: vehicle.model,
+      quantity: vehicle.quantity,
+      price: vehicle.price
     });
   };
 
@@ -130,6 +119,9 @@ function VehicleList() {
   const handleEditingDataChange = (field, value) => {
     setEditingData({ ...editingData, [field]: value });
   };
+
+  // Get unique brands for filter
+  const uniqueBrands = [...new Set(vehicles.map(vehicle => vehicle.brand))];
 
   return (
     <div style={{ color: "#1e293b" }}>
@@ -163,12 +155,40 @@ function VehicleList() {
               color: "#374151",
               fontSize: "14px"
             }}>
-              Make *
+              Name *
             </label>
             <input
-              name="make"
-              placeholder="Vehicle Make"
-              value={newVehicle.make}
+              name="name"
+              placeholder="Vehicle Name"
+              value={newVehicle.name}
+              onChange={handleInputChange}
+              required
+              style={{
+                padding: "12px",
+                borderRadius: "8px",
+                border: "1px solid #d1d5db",
+                fontSize: "14px",
+                backgroundColor: "white",
+                color: "#1e293b",
+                width: "100%",
+                boxSizing: "border-box"
+              }}
+            />
+          </div>
+          <div>
+            <label style={{
+              display: "block",
+              marginBottom: "6px",
+              fontWeight: "500",
+              color: "#374151",
+              fontSize: "14px"
+            }}>
+              Brand *
+            </label>
+            <input
+              name="brand"
+              placeholder="Vehicle Brand"
+              value={newVehicle.brand}
               onChange={handleInputChange}
               required
               style={{
@@ -219,15 +239,16 @@ function VehicleList() {
               color: "#374151",
               fontSize: "14px"
             }}>
-              Year *
+              Quantity *
             </label>
             <input
-              name="year"
+              name="quantity"
               type="number"
-              placeholder="Year"
-              value={newVehicle.year}
+              placeholder="Quantity"
+              value={newVehicle.quantity}
               onChange={handleInputChange}
               required
+              min="0"
               style={{
                 padding: "12px",
                 borderRadius: "8px",
@@ -248,78 +269,17 @@ function VehicleList() {
               color: "#374151",
               fontSize: "14px"
             }}>
-              Type *
-            </label>
-            <select 
-              name="type" 
-              value={newVehicle.type} 
-              onChange={handleInputChange}
-              style={{
-                padding: "12px",
-                borderRadius: "8px",
-                border: "1px solid #d1d5db",
-                fontSize: "14px",
-                backgroundColor: "white",
-                color: "#1e293b",
-                width: "100%",
-                boxSizing: "border-box"
-              }}
-            >
-              <option value="sedan">Sedan</option>
-              <option value="suv">SUV</option>
-              <option value="truck">Truck</option>
-              <option value="sports">Sports</option>
-              <option value="luxury">Luxury</option>
-              <option value="electric">Electric</option>
-            </select>
-          </div>
-          <div>
-            <label style={{
-              display: "block",
-              marginBottom: "6px",
-              fontWeight: "500",
-              color: "#374151",
-              fontSize: "14px"
-            }}>
-              Status *
-            </label>
-            <select 
-              name="status" 
-              value={newVehicle.status} 
-              onChange={handleInputChange}
-              style={{
-                padding: "12px",
-                borderRadius: "8px",
-                border: "1px solid #d1d5db",
-                fontSize: "14px",
-                backgroundColor: "white",
-                color: "#1e293b",
-                width: "100%",
-                boxSizing: "border-box"
-              }}
-            >
-              <option value="available">Available</option>
-              <option value="rented">Rented</option>
-              <option value="maintenance">Maintenance</option>
-            </select>
-          </div>
-          <div>
-            <label style={{
-              display: "block",
-              marginBottom: "6px",
-              fontWeight: "500",
-              color: "#374151",
-              fontSize: "14px"
-            }}>
               Price *
             </label>
             <input
               name="price"
               type="number"
-              placeholder="Daily Rate"
+              placeholder="Price"
               value={newVehicle.price}
               onChange={handleInputChange}
               required
+              min="0"
+              step="0.01"
               style={{
                 padding: "12px",
                 borderRadius: "8px",
@@ -362,34 +322,6 @@ function VehicleList() {
             />
           </div>
           <div style={{ gridColumn: "span 2" }}>
-            <label style={{
-              display: "block",
-              marginBottom: "6px",
-              fontWeight: "500",
-              color: "#374151",
-              fontSize: "14px"
-            }}>
-              Image URL
-            </label>
-            <input
-              name="imageUrl"
-              type="url"
-              placeholder="Vehicle image URL"
-              value={newVehicle.imageUrl}
-              onChange={handleInputChange}
-              style={{
-                padding: "12px",
-                borderRadius: "8px",
-                border: "1px solid #d1d5db",
-                fontSize: "14px",
-                backgroundColor: "white",
-                color: "#1e293b",
-                width: "100%",
-                boxSizing: "border-box"
-              }}
-            />
-          </div>
-          <div style={{ gridColumn: "span 2" }}>
             <button
               type="submit"
               style={{
@@ -398,19 +330,13 @@ function VehicleList() {
                 padding: "12px 24px",
                 borderRadius: "8px",
                 border: "none",
-                fontWeight: "600",
-                cursor: "pointer",
                 fontSize: "14px",
-                transition: "all 0.3s ease"
+                fontWeight: "500",
+                cursor: "pointer",
+                transition: "background-color 0.2s"
               }}
-              onMouseEnter={(e) => {
-                e.target.style.background = "#047857";
-                e.target.style.transform = "translateY(-1px)";
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.background = "#059669";
-                e.target.style.transform = "translateY(0)";
-              }}
+              onMouseOver={(e) => e.target.style.background = "#047857"}
+              onMouseOut={(e) => e.target.style.background = "#059669"}
             >
               Add Vehicle
             </button>
@@ -418,10 +344,10 @@ function VehicleList() {
         </form>
       </div>
 
-      {/* Search and Filter Section */}
+      {/* Search & Filter Section */}
       <div style={{
         backgroundColor: "#f8fafc",
-        padding: "20px",
+        padding: "24px",
         borderRadius: "12px",
         marginBottom: "24px",
         border: "1px solid #e2e8f0"
@@ -437,7 +363,7 @@ function VehicleList() {
         <div style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-          gap: "16px"
+          gap: "12px"
         }}>
           <div>
             <label style={{
@@ -451,7 +377,7 @@ function VehicleList() {
             </label>
             <input
               type="text"
-              placeholder="Search by make, model, or description..."
+              placeholder="Search vehicles..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               style={{
@@ -474,11 +400,11 @@ function VehicleList() {
               color: "#374151",
               fontSize: "14px"
             }}>
-              Vehicle Type
+              Brand Filter
             </label>
             <select
-              value={filterType}
-              onChange={(e) => setFilterType(e.target.value)}
+              value={filterBrand}
+              onChange={(e) => setFilterBrand(e.target.value)}
               style={{
                 padding: "12px",
                 borderRadius: "8px",
@@ -490,43 +416,10 @@ function VehicleList() {
                 boxSizing: "border-box"
               }}
             >
-              <option value="all">All Types</option>
-              <option value="sedan">Sedan</option>
-              <option value="suv">SUV</option>
-              <option value="truck">Truck</option>
-              <option value="sports">Sports</option>
-              <option value="luxury">Luxury</option>
-              <option value="electric">Electric</option>
-            </select>
-          </div>
-          <div>
-            <label style={{
-              display: "block",
-              marginBottom: "6px",
-              fontWeight: "500",
-              color: "#374151",
-              fontSize: "14px"
-            }}>
-              Status
-            </label>
-            <select
-              value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value)}
-              style={{
-                padding: "12px",
-                borderRadius: "8px",
-                border: "1px solid #d1d5db",
-                fontSize: "14px",
-                backgroundColor: "white",
-                color: "#1e293b",
-                width: "100%",
-                boxSizing: "border-box"
-              }}
-            >
-              <option value="all">All Status</option>
-              <option value="available">Available</option>
-              <option value="rented">Rented</option>
-              <option value="maintenance">Maintenance</option>
+              <option value="all">All Brands</option>
+              {uniqueBrands.map(brand => (
+                <option key={brand} value={brand}>{brand}</option>
+              ))}
             </select>
           </div>
         </div>
@@ -534,44 +427,44 @@ function VehicleList() {
 
       {/* Vehicle List */}
       <div style={{
-        backgroundColor: "white",
+        backgroundColor: "#f8fafc",
+        padding: "24px",
         borderRadius: "12px",
-        border: "1px solid #e2e8f0",
-        overflow: "hidden"
+        border: "1px solid #e2e8f0"
       }}>
-        <div style={{
-          padding: "20px",
-          borderBottom: "1px solid #e2e8f0",
-          backgroundColor: "#f8fafc"
+        <h3 style={{
+          fontSize: "1.25rem",
+          fontWeight: "600",
+          marginBottom: "16px",
+          color: "#1e293b"
         }}>
-          <h3 style={{
-            fontSize: "1.25rem",
-            fontWeight: "600",
-            margin: 0,
-            color: "#1e293b"
-          }}>
-            Vehicle List ({filteredVehicles.length} vehicles)
-          </h3>
-        </div>
+          Vehicle List ({filteredVehicles.length} vehicles)
+        </h3>
         
         {filteredVehicles.length === 0 ? (
           <div style={{
-            padding: "40px",
             textAlign: "center",
-            color: "#64748b"
+            padding: "48px",
+            color: "#6b7280",
+            fontSize: "16px"
           }}>
             No vehicles found matching your criteria.
           </div>
         ) : (
-          <div style={{ overflowX: "auto" }}>
+          <div style={{
+            overflowX: "auto",
+            borderRadius: "8px",
+            border: "1px solid #e2e8f0"
+          }}>
             <table style={{
               width: "100%",
-              borderCollapse: "collapse"
+              borderCollapse: "collapse",
+              backgroundColor: "white"
             }}>
               <thead>
                 <tr style={{
                   backgroundColor: "#f8fafc",
-                  borderBottom: "1px solid #e2e8f0"
+                  borderBottom: "2px solid #e2e8f0"
                 }}>
                   <th style={{
                     padding: "16px",
@@ -579,7 +472,14 @@ function VehicleList() {
                     fontWeight: "600",
                     color: "#374151",
                     fontSize: "14px"
-                  }}>Make</th>
+                  }}>Name</th>
+                  <th style={{
+                    padding: "16px",
+                    textAlign: "left",
+                    fontWeight: "600",
+                    color: "#374151",
+                    fontSize: "14px"
+                  }}>Brand</th>
                   <th style={{
                     padding: "16px",
                     textAlign: "left",
@@ -593,21 +493,7 @@ function VehicleList() {
                     fontWeight: "600",
                     color: "#374151",
                     fontSize: "14px"
-                  }}>Year</th>
-                  <th style={{
-                    padding: "16px",
-                    textAlign: "left",
-                    fontWeight: "600",
-                    color: "#374151",
-                    fontSize: "14px"
-                  }}>Type</th>
-                  <th style={{
-                    padding: "16px",
-                    textAlign: "left",
-                    fontWeight: "600",
-                    color: "#374151",
-                    fontSize: "14px"
-                  }}>Status</th>
+                  }}>Quantity</th>
                   <th style={{
                     padding: "16px",
                     textAlign: "left",
@@ -626,18 +512,18 @@ function VehicleList() {
               </thead>
               <tbody>
                 {filteredVehicles.map((vehicle) => (
-                  <tr key={vehicle.id} style={{
+                  <tr key={vehicle.vid} style={{
                     borderBottom: "1px solid #f1f5f9"
                   }}>
                     <td style={{
                       padding: "16px",
                       color: "#1e293b"
                     }}>
-                      {editingId === vehicle.id ? (
+                      {editingId === vehicle.vid ? (
                         <input
                           type="text"
-                          value={editingData.make}
-                          onChange={(e) => handleEditingDataChange("make", e.target.value)}
+                          value={editingData.name}
+                          onChange={(e) => handleEditingDataChange("name", e.target.value)}
                           style={{
                             padding: "8px",
                             borderRadius: "4px",
@@ -647,14 +533,35 @@ function VehicleList() {
                           }}
                         />
                       ) : (
-                        vehicle.make
+                        vehicle.name
                       )}
                     </td>
                     <td style={{
                       padding: "16px",
                       color: "#1e293b"
                     }}>
-                      {editingId === vehicle.id ? (
+                      {editingId === vehicle.vid ? (
+                        <input
+                          type="text"
+                          value={editingData.brand}
+                          onChange={(e) => handleEditingDataChange("brand", e.target.value)}
+                          style={{
+                            padding: "8px",
+                            borderRadius: "4px",
+                            border: "1px solid #d1d5db",
+                            fontSize: "14px",
+                            width: "100%"
+                          }}
+                        />
+                      ) : (
+                        vehicle.brand
+                      )}
+                    </td>
+                    <td style={{
+                      padding: "16px",
+                      color: "#1e293b"
+                    }}>
+                      {editingId === vehicle.vid ? (
                         <input
                           type="text"
                           value={editingData.model}
@@ -675,11 +582,11 @@ function VehicleList() {
                       padding: "16px",
                       color: "#1e293b"
                     }}>
-                      {editingId === vehicle.id ? (
+                      {editingId === vehicle.vid ? (
                         <input
                           type="number"
-                          value={editingData.year}
-                          onChange={(e) => handleEditingDataChange("year", e.target.value)}
+                          value={editingData.quantity}
+                          onChange={(e) => handleEditingDataChange("quantity", e.target.value)}
                           style={{
                             padding: "8px",
                             borderRadius: "4px",
@@ -689,85 +596,14 @@ function VehicleList() {
                           }}
                         />
                       ) : (
-                        vehicle.year
+                        vehicle.quantity
                       )}
                     </td>
                     <td style={{
                       padding: "16px",
                       color: "#1e293b"
                     }}>
-                      {editingId === vehicle.id ? (
-                        <select
-                          value={editingData.type}
-                          onChange={(e) => handleEditingDataChange("type", e.target.value)}
-                          style={{
-                            padding: "8px",
-                            borderRadius: "4px",
-                            border: "1px solid #d1d5db",
-                            fontSize: "14px",
-                            width: "100%"
-                          }}
-                        >
-                          <option value="sedan">Sedan</option>
-                          <option value="suv">SUV</option>
-                          <option value="truck">Truck</option>
-                          <option value="sports">Sports</option>
-                          <option value="luxury">Luxury</option>
-                          <option value="electric">Electric</option>
-                        </select>
-                      ) : (
-                        <span style={{
-                          textTransform: "capitalize",
-                          padding: "4px 8px",
-                          borderRadius: "4px",
-                          backgroundColor: "#f1f5f9",
-                          fontSize: "12px",
-                          fontWeight: "500"
-                        }}>
-                          {vehicle.type}
-                        </span>
-                      )}
-                    </td>
-                    <td style={{
-                      padding: "16px",
-                      color: "#1e293b"
-                    }}>
-                      {editingId === vehicle.id ? (
-                        <select
-                          value={editingData.status}
-                          onChange={(e) => handleEditingDataChange("status", e.target.value)}
-                          style={{
-                            padding: "8px",
-                            borderRadius: "4px",
-                            border: "1px solid #d1d5db",
-                            fontSize: "14px",
-                            width: "100%"
-                          }}
-                        >
-                          <option value="available">Available</option>
-                          <option value="rented">Rented</option>
-                          <option value="maintenance">Maintenance</option>
-                        </select>
-                      ) : (
-                        <span style={{
-                          padding: "4px 8px",
-                          borderRadius: "4px",
-                          fontSize: "12px",
-                          fontWeight: "500",
-                          backgroundColor: vehicle.status === "available" ? "#dcfce7" : 
-                                           vehicle.status === "rented" ? "#fef3c7" : "#fee2e2",
-                          color: vehicle.status === "available" ? "#059669" : 
-                                 vehicle.status === "rented" ? "#d97706" : "#dc2626"
-                        }}>
-                          {vehicle.status}
-                        </span>
-                      )}
-                    </td>
-                    <td style={{
-                      padding: "16px",
-                      color: "#1e293b"
-                    }}>
-                      {editingId === vehicle.id ? (
+                      {editingId === vehicle.vid ? (
                         <input
                           type="number"
                           value={editingData.price}
@@ -781,14 +617,14 @@ function VehicleList() {
                           }}
                         />
                       ) : (
-                        `$${vehicle.price}/day`
+                        `$${vehicle.price}`
                       )}
                     </td>
                     <td style={{
                       padding: "16px",
                       color: "#1e293b"
                     }}>
-                      {editingId === vehicle.id ? (
+                      {editingId === vehicle.vid ? (
                         <div style={{ display: "flex", gap: "8px" }}>
                           <button
                             onClick={handleSaveVehicle}
@@ -798,9 +634,8 @@ function VehicleList() {
                               padding: "6px 12px",
                               borderRadius: "4px",
                               border: "none",
-                              fontWeight: "500",
-                              cursor: "pointer",
-                              fontSize: "12px"
+                              fontSize: "12px",
+                              cursor: "pointer"
                             }}
                           >
                             Save
@@ -813,9 +648,8 @@ function VehicleList() {
                               padding: "6px 12px",
                               borderRadius: "4px",
                               border: "none",
-                              fontWeight: "500",
-                              cursor: "pointer",
-                              fontSize: "12px"
+                              fontSize: "12px",
+                              cursor: "pointer"
                             }}
                           >
                             Cancel
@@ -831,24 +665,22 @@ function VehicleList() {
                               padding: "6px 12px",
                               borderRadius: "4px",
                               border: "none",
-                              fontWeight: "500",
-                              cursor: "pointer",
-                              fontSize: "12px"
+                              fontSize: "12px",
+                              cursor: "pointer"
                             }}
                           >
                             Edit
                           </button>
                           <button
-                            onClick={() => handleDelete(vehicle.id)}
+                            onClick={() => handleDelete(vehicle.vid)}
                             style={{
-                              background: "#ef4444",
+                              background: "#dc2626",
                               color: "white",
                               padding: "6px 12px",
                               borderRadius: "4px",
                               border: "none",
-                              fontWeight: "500",
-                              cursor: "pointer",
-                              fontSize: "12px"
+                              fontSize: "12px",
+                              cursor: "pointer"
                             }}
                           >
                             Delete
