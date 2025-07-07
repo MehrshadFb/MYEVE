@@ -30,6 +30,15 @@ module.exports = (sequelize) => {
       password: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+          len: [8, 100],
+                      hasSpecialChar(value) {
+              const specialChars = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+/;
+              if (!specialChars.test(value)) {
+                throw new Error('Password must contain at least one special character');
+              }
+            }
+        },
       },
       role: {
         type: DataTypes.ENUM("admin", "customer"),
@@ -41,6 +50,12 @@ module.exports = (sequelize) => {
       hooks: {
         beforeCreate: async (user) => {
           user.password = await bcrypt.hash(user.password, 10);
+        },
+        beforeUpdate: async (user) => {
+          // Only hash password if it has changed
+          if (user.changed('password')) {
+            user.password = await bcrypt.hash(user.password, 10);
+          }
         },
       },
     }

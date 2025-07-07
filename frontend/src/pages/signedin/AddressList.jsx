@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
+import useAuth from "../../context/useAuth";
 import {
   getAllAddressesByUserId,
   createAddress,
   updateAddress,
   deleteAddress,
-} from "../services/api";
+} from "../../services/api";
 
 const AddressList = () => {
+  const { user } = useAuth();
   const [addresses, setAddresses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [newAddress, setNewAddress] = useState({
     street: "",
     city: "",
@@ -18,7 +22,7 @@ const AddressList = () => {
   });
   const [editingId, setEditingId] = useState(null);
   const [editingData, setEditingData] = useState({});
-  const userId = JSON.parse(localStorage.getItem("user")).id;
+  const userId = user?.id;
 
   useEffect(() => {
     fetchAddresses();
@@ -26,10 +30,15 @@ const AddressList = () => {
 
   const fetchAddresses = async () => {
     try {
+      setLoading(true);
+      setError(null);
       const data = await getAllAddressesByUserId(userId);
       setAddresses(data);
     } catch (error) {
       console.error("Error fetching addresses:", error);
+      setError("Failed to load addresses");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -90,6 +99,18 @@ const AddressList = () => {
   const handleEditingDataChange = (field, value) => {
     setEditingData({ ...editingData, [field]: value });
   };
+
+  if (!userId) {
+    return <div>Loading user data...</div>;
+  }
+
+  if (loading) {
+    return <div>Loading addresses...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div>
