@@ -40,69 +40,10 @@ function Header() {
               background: "transparent"
             }}
             onMouseEnter={(e) => {
-              // Create a more sophisticated electric effect
-              const originalText = e.target.textContent;
-              const letters = originalText.split('');
-              
-              // Clear any existing effects
-              e.target.innerHTML = '';
-              
-              // Create individual letter spans with electric effect
-              letters.forEach((letter, index) => {
-                const span = document.createElement('span');
-                span.textContent = letter;
-                span.style.cssText = `
-                  display: inline-block;
-                  color: #1e293b;
-                  transition: all 0.3s ease;
-                  position: relative;
-                  animation: electricLetter 0.6s ease-out;
-                  animation-delay: ${index * 0.05}s;
-                `;
-                
-                e.target.appendChild(span);
-              });
-              
-              // Add the animation style
-              const style = document.createElement('style');
-                              style.textContent = `
-                  @keyframes electricLetter {
-                    0% {
-                      color: #1e293b;
-                      text-shadow: none;
-                      transform: scale(1);
-                    }
-                    25% {
-                      color: rgba(59, 130, 246, 0.8);
-                      text-shadow: 0 0 2px rgba(59, 130, 246, 0.6), 0 0 4px rgba(59, 130, 246, 0.4);
-                      transform: scale(1.02);
-                    }
-                    50% {
-                      color: rgba(96, 165, 250, 0.9);
-                      text-shadow: 0 0 3px rgba(96, 165, 250, 0.7), 0 0 6px rgba(96, 165, 250, 0.5);
-                      transform: scale(1.03);
-                    }
-                    75% {
-                      color: rgba(59, 130, 246, 0.8);
-                      text-shadow: 0 0 2px rgba(59, 130, 246, 0.6), 0 0 4px rgba(59, 130, 246, 0.4);
-                      transform: scale(1.02);
-                    }
-                    100% {
-                      color: rgba(59, 130, 246, 0.7);
-                      text-shadow: 0 0 1px rgba(59, 130, 246, 0.5);
-                      transform: scale(1);
-                    }
-                  }
-                `;
-              
-              if (!document.getElementById('electric-style')) {
-                style.id = 'electric-style';
-                document.head.appendChild(style);
-              }
+              e.target.style.color = "#3b82f6";
+              e.target.style.textShadow = "0 0 8px rgba(59, 130, 246, 0.4)";
             }}
             onMouseLeave={(e) => {
-              // Restore original text
-              e.target.textContent = "MYEVE";
               e.target.style.color = "#1e293b";
               e.target.style.textShadow = "none";
             }}>

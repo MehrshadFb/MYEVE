@@ -9,8 +9,14 @@ function Vehicles() {
   const [filteredVehicles, setFilteredVehicles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterBrand, setFilterBrand] = useState("all");
+  const [showFilters, setShowFilters] = useState(false);
+  const [activeFilterTab, setActiveFilterTab] = useState("brand");
   const { user } = useAuth();
+
+  // Filter states
+  const [selectedBrands, setSelectedBrands] = useState([]);
+  const [selectedTypes, setSelectedTypes] = useState([]);
+  const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
 
   const fetchVehicles = async () => {
     try {
@@ -29,6 +35,19 @@ function Vehicles() {
     fetchVehicles();
   }, []);
 
+  // Get unique values for filters
+  const uniqueBrands = [...new Set(vehicles.map(vehicle => vehicle.brand))];
+  const uniqueTypes = [...new Set(vehicles.map(vehicle => vehicle.type || "Unknown"))];
+  
+  // Price ranges
+  const priceRanges = [
+    { label: "Under $25,000", min: 0, max: 25000 },
+    { label: "$25,000 - $50,000", min: 25000, max: 50000 },
+    { label: "$50,000 - $75,000", min: 50000, max: 75000 },
+    { label: "$75,000 - $100,000", min: 75000, max: 100000 },
+    { label: "Over $100,000", min: 100000, max: Infinity }
+  ];
+
   // Filter and search vehicles
   useEffect(() => {
     let filtered = vehicles;
@@ -44,15 +63,66 @@ function Vehicles() {
     }
 
     // Apply brand filter
-    if (filterBrand !== "all") {
-      filtered = filtered.filter(vehicle => vehicle.brand === filterBrand);
+    if (selectedBrands.length > 0) {
+      filtered = filtered.filter(vehicle => selectedBrands.includes(vehicle.brand));
+    }
+
+    // Apply type filter
+    if (selectedTypes.length > 0) {
+      filtered = filtered.filter(vehicle => selectedTypes.includes(vehicle.type || "Unknown"));
+    }
+
+    // Apply price range filter
+    if (selectedPriceRanges.length > 0) {
+      filtered = filtered.filter(vehicle => {
+        return selectedPriceRanges.some(rangeLabel => {
+          const range = priceRanges.find(r => r.label === rangeLabel);
+          if (!range) return false;
+          return vehicle.price >= range.min && vehicle.price <= range.max;
+        });
+      });
     }
 
     setFilteredVehicles(filtered);
-  }, [vehicles, searchTerm, filterBrand]);
+  }, [vehicles, searchTerm, selectedBrands, selectedTypes, selectedPriceRanges]);
 
-  // Get unique brands for filter
-  const uniqueBrands = [...new Set(vehicles.map(vehicle => vehicle.brand))];
+  // Toggle filter selections
+  const toggleBrand = (brand) => {
+    setSelectedBrands(prev => 
+      prev.includes(brand) 
+        ? prev.filter(b => b !== brand)
+        : [...prev, brand]
+    );
+  };
+
+  const toggleType = (type) => {
+    setSelectedTypes(prev => 
+      prev.includes(type) 
+        ? prev.filter(t => t !== type)
+        : [...prev, type]
+    );
+  };
+
+  const togglePriceRange = (rangeLabel) => {
+    setSelectedPriceRanges(prev => 
+      prev.includes(rangeLabel) 
+        ? prev.filter(r => r !== rangeLabel)
+        : [...prev, rangeLabel]
+    );
+  };
+
+  // Clear all filters
+  const clearAllFilters = () => {
+    setSelectedBrands([]);
+    setSelectedTypes([]);
+    setSelectedPriceRanges([]);
+    setSearchTerm("");
+  };
+
+  // Get total active filters count
+  const getActiveFiltersCount = () => {
+    return selectedBrands.length + selectedTypes.length + selectedPriceRanges.length;
+  };
 
   return (
     <div style={{ minHeight: "100vh", backgroundColor: "#f8fafc", width: "100vw", overflowX: "hidden" }}>
@@ -116,21 +186,15 @@ function Vehicles() {
             }}>
               Search & Filter Vehicles
             </h3>
+            
+            {/* Search Bar and Filter Button */}
             <div style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-              gap: "20px"
+              display: "flex",
+              gap: "16px",
+              marginBottom: "20px",
+              alignItems: "center"
             }}>
-              <div>
-                <label style={{
-                  display: "block",
-                  marginBottom: "8px",
-                  fontWeight: "500",
-                  color: "#374151",
-                  fontSize: "14px"
-                }}>
-                  Search Vehicles
-                </label>
+              <div style={{ flex: 1, position: "relative" }}>
                 <input
                   type="text"
                   placeholder="Search by name, brand, model, or description..."
@@ -148,37 +212,307 @@ function Vehicles() {
                   }}
                 />
               </div>
-              <div>
-                <label style={{
-                  display: "block",
-                  marginBottom: "8px",
+              
+              <button
+                onClick={() => setShowFilters(!showFilters)}
+                style={{
+                  padding: "12px 16px",
+                  borderRadius: "8px",
+                  border: "1px solid #d1d5db",
+                  backgroundColor: "white",
+                  color: "#1e293b",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  fontSize: "14px",
                   fontWeight: "500",
-                  color: "#374151",
-                  fontSize: "14px"
-                }}>
-                  Brand Filter
-                </label>
-                <select
-                  value={filterBrand}
-                  onChange={(e) => setFilterBrand(e.target.value)}
-                  style={{
-                    padding: "12px 16px",
-                    borderRadius: "8px",
-                    border: "1px solid #d1d5db",
-                    fontSize: "14px",
-                    backgroundColor: "white",
-                    color: "#1e293b",
-                    width: "100%",
-                    boxSizing: "border-box"
-                  }}
-                >
-                  <option value="all">All Brands</option>
-                  {uniqueBrands.map(brand => (
-                    <option key={brand} value={brand}>{brand}</option>
-                  ))}
-                </select>
-              </div>
+                  transition: "all 0.3s ease"
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.borderColor = "#3b82f6";
+                  e.target.style.color = "#3b82f6";
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.borderColor = "#d1d5db";
+                  e.target.style.color = "#1e293b";
+                }}
+              >
+                <span style={{ fontSize: "16px" }}>🔍</span>
+                Filters
+                {getActiveFiltersCount() > 0 && (
+                  <span style={{
+                    backgroundColor: "#3b82f6",
+                    color: "white",
+                    borderRadius: "50%",
+                    width: "20px",
+                    height: "20px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "12px",
+                    fontWeight: "600"
+                  }}>
+                    {getActiveFiltersCount()}
+                  </span>
+                )}
+              </button>
             </div>
+
+            {/* Filter Dropdown */}
+            {showFilters && (
+              <div style={{
+                backgroundColor: "white",
+                borderRadius: "8px",
+                border: "1px solid #e2e8f0",
+                padding: "20px",
+                marginTop: "16px"
+              }}>
+                {/* Filter Tabs */}
+                <div style={{
+                  display: "flex",
+                  borderBottom: "1px solid #e2e8f0",
+                  marginBottom: "20px"
+                }}>
+                  {[
+                    { id: "brand", label: "Brand", count: selectedBrands.length },
+                    { id: "type", label: "Type", count: selectedTypes.length },
+                    { id: "pricing", label: "Pricing", count: selectedPriceRanges.length }
+                  ].map(tab => (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveFilterTab(tab.id)}
+                      style={{
+                        padding: "12px 20px",
+                        border: "none",
+                        backgroundColor: "transparent",
+                        color: activeFilterTab === tab.id ? "#3b82f6" : "#64748b",
+                        fontWeight: "500",
+                        cursor: "pointer",
+                        borderBottom: activeFilterTab === tab.id ? "2px solid #3b82f6" : "2px solid transparent",
+                        transition: "all 0.3s ease",
+                        position: "relative"
+                      }}
+                    >
+                      {tab.label}
+                      {tab.count > 0 && (
+                        <span style={{
+                          backgroundColor: "#3b82f6",
+                          color: "white",
+                          borderRadius: "50%",
+                          width: "18px",
+                          height: "18px",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: "10px",
+                          marginLeft: "6px"
+                        }}>
+                          {tab.count}
+                        </span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Filter Content */}
+                <div style={{ minHeight: "200px" }}>
+                  {/* Brand Filters */}
+                  {activeFilterTab === "brand" && (
+                    <div>
+                      <h4 style={{
+                        fontSize: "1rem",
+                        fontWeight: "600",
+                        marginBottom: "16px",
+                        color: "#1e293b"
+                      }}>
+                        Select Brands
+                      </h4>
+                      <div style={{
+                        display: "grid",
+                        gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+                        gap: "12px"
+                      }}>
+                        {uniqueBrands.map(brand => (
+                          <label key={brand} style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "8px",
+                            cursor: "pointer",
+                            padding: "8px",
+                            borderRadius: "6px",
+                            backgroundColor: selectedBrands.includes(brand) ? "#eff6ff" : "transparent",
+                            border: selectedBrands.includes(brand) ? "1px solid #3b82f6" : "1px solid transparent"
+                          }}>
+                            <input
+                              type="checkbox"
+                              checked={selectedBrands.includes(brand)}
+                              onChange={() => toggleBrand(brand)}
+                              style={{
+                                width: "16px",
+                                height: "16px",
+                                accentColor: "#3b82f6"
+                              }}
+                            />
+                            <span style={{
+                              fontSize: "14px",
+                              color: "#374151"
+                            }}>
+                              {brand}
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Type Filters */}
+                  {activeFilterTab === "type" && (
+                    <div>
+                      <h4 style={{
+                        fontSize: "1rem",
+                        fontWeight: "600",
+                        marginBottom: "16px",
+                        color: "#1e293b"
+                      }}>
+                        Select Types
+                      </h4>
+                      <div style={{
+                        display: "grid",
+                        gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+                        gap: "12px"
+                      }}>
+                        {uniqueTypes.map(type => (
+                          <label key={type} style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "8px",
+                            cursor: "pointer",
+                            padding: "8px",
+                            borderRadius: "6px",
+                            backgroundColor: selectedTypes.includes(type) ? "#eff6ff" : "transparent",
+                            border: selectedTypes.includes(type) ? "1px solid #3b82f6" : "1px solid transparent"
+                          }}>
+                            <input
+                              type="checkbox"
+                              checked={selectedTypes.includes(type)}
+                              onChange={() => toggleType(type)}
+                              style={{
+                                width: "16px",
+                                height: "16px",
+                                accentColor: "#3b82f6"
+                              }}
+                            />
+                            <span style={{
+                              fontSize: "14px",
+                              color: "#374151"
+                            }}>
+                              {type}
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Price Range Filters */}
+                  {activeFilterTab === "pricing" && (
+                    <div>
+                      <h4 style={{
+                        fontSize: "1rem",
+                        fontWeight: "600",
+                        marginBottom: "16px",
+                        color: "#1e293b"
+                      }}>
+                        Select Price Ranges
+                      </h4>
+                      <div style={{
+                        display: "grid",
+                        gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+                        gap: "12px"
+                      }}>
+                        {priceRanges.map(range => (
+                          <label key={range.label} style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "8px",
+                            cursor: "pointer",
+                            padding: "8px",
+                            borderRadius: "6px",
+                            backgroundColor: selectedPriceRanges.includes(range.label) ? "#eff6ff" : "transparent",
+                            border: selectedPriceRanges.includes(range.label) ? "1px solid #3b82f6" : "1px solid transparent"
+                          }}>
+                            <input
+                              type="checkbox"
+                              checked={selectedPriceRanges.includes(range.label)}
+                              onChange={() => togglePriceRange(range.label)}
+                              style={{
+                                width: "16px",
+                                height: "16px",
+                                accentColor: "#3b82f6"
+                              }}
+                            />
+                            <span style={{
+                              fontSize: "14px",
+                              color: "#374151"
+                            }}>
+                              {range.label}
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Filter Actions */}
+                <div style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginTop: "20px",
+                  paddingTop: "20px",
+                  borderTop: "1px solid #e2e8f0"
+                }}>
+                  <button
+                    onClick={clearAllFilters}
+                    style={{
+                      padding: "8px 16px",
+                      borderRadius: "6px",
+                      border: "1px solid #d1d5db",
+                      backgroundColor: "white",
+                      color: "#64748b",
+                      cursor: "pointer",
+                      fontSize: "14px",
+                      transition: "all 0.3s ease"
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.borderColor = "#ef4444";
+                      e.target.style.color = "#ef4444";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.borderColor = "#d1d5db";
+                      e.target.style.color = "#64748b";
+                    }}
+                  >
+                    Clear All Filters
+                  </button>
+                  
+                  <div style={{
+                    display: "flex",
+                    gap: "8px",
+                    alignItems: "center"
+                  }}>
+                    <span style={{
+                      fontSize: "14px",
+                      color: "#64748b"
+                    }}>
+                      {getActiveFiltersCount()} filter{getActiveFiltersCount() !== 1 ? 's' : ''} active
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -394,4 +728,4 @@ function Vehicles() {
   );
 }
 
-export default Vehicles; 
+export default Vehicles;

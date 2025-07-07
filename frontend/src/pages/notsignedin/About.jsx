@@ -162,15 +162,20 @@ function About() {
                   backgroundColor: "#f8fafc",
                   borderRadius: "16px",
                   transition: "all 0.3s ease",
-                  cursor: "pointer"
+                  cursor: "pointer",
+                  position: "relative", // Needed for z-index to work
+                  zIndex: 1, // Ensures element stays above others
+                  willChange: "transform" // Optimizes animation performance
                 }}
                 onMouseEnter={(e) => {
-                  e.target.style.transform = "translateY(-8px)";
-                  e.target.style.boxShadow = "0 20px 40px rgba(0,0,0,0.1)";
+                  e.currentTarget.style.transform = "translateY(-8px)";
+                  e.currentTarget.style.boxShadow = "0 20px 40px rgba(0,0,0,0.1)";
+                  e.currentTarget.style.backgroundColor = "#f8fafc"; // Explicitly set
                 }}
                 onMouseLeave={(e) => {
-                  e.target.style.transform = "translateY(0)";
-                  e.target.style.boxShadow = "none";
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow = "none";
+                  e.currentTarget.style.backgroundColor = "#f8fafc"; // Explicitly set
                 }}
                 >
                 <img 
