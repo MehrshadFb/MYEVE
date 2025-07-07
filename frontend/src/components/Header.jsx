@@ -1,13 +1,16 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import useAuth from "../context/useAuth";
+import SignInDropdown from "./SignInDropdown";
 
 function Header() {
   const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
+  const [isSignInOpen, setIsSignInOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
-    navigate("/signin");
+    navigate("/");
   };
 
   return (
@@ -141,28 +144,35 @@ function Header() {
           </button>
         </div>
       ) : (
-        <Link 
-          to="/signin" 
-          style={{
-            background: "#3b82f6",
-            color: "white",
-            padding: "12px 24px",
-            borderRadius: "8px",
-            textDecoration: "none",
-            fontWeight: "600",
-            transition: "all 0.3s ease"
-          }}
-          onMouseEnter={(e) => {
-            e.target.style.background = "#2563eb";
-            e.target.style.transform = "translateY(-2px)";
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.background = "#3b82f6";
-            e.target.style.transform = "translateY(0)";
-          }}
-        >
-          Sign In
-        </Link>
+        <div style={{ position: "relative" }}>
+          <button
+            onClick={() => setIsSignInOpen(!isSignInOpen)}
+            style={{
+              background: "#3b82f6",
+              color: "white",
+              padding: "12px 24px",
+              borderRadius: "8px",
+              border: "none",
+              fontWeight: "600",
+              cursor: "pointer",
+              transition: "all 0.3s ease"
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.background = "#2563eb";
+              e.target.style.transform = "translateY(-2px)";
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.background = "#3b82f6";
+              e.target.style.transform = "translateY(0)";
+            }}
+          >
+            Sign In
+          </button>
+          <SignInDropdown 
+            isOpen={isSignInOpen} 
+            onClose={() => setIsSignInOpen(false)} 
+          />
+        </div>
       )}
     </header>
   );

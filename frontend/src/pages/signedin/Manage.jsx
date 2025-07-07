@@ -6,7 +6,7 @@ import AddressList from "./AddressList";
 import Header from "../../components/Header";
 
 function Manage() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   // Redirect customers to main page
@@ -16,10 +16,6 @@ function Manage() {
     }
   }, [user, navigate]);
 
-  const handleLogout = () => {
-    logout();
-    navigate("/signin");
-  };
 
   if (!user) {
     return <div>Loading...</div>;
@@ -34,7 +30,7 @@ function Manage() {
     <div style={{ 
       minHeight: "100vh", 
       backgroundColor: "#f8fafc", 
-      padding: "40px 0",
+      padding: "0px 0",
       width: "100%"
     }}>
       <Header />
@@ -43,9 +39,9 @@ function Manage() {
         margin: "0 auto",
         backgroundColor: "white",
         borderRadius: "16px",
-        padding: "80px 0",
+        padding: "40px 0",
         boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
-        marginTop: "100px"
+        marginTop: "60px"
       }}>
         <div style={{
           display: "flex",
@@ -78,31 +74,7 @@ function Manage() {
                 {user.role}
               </span>
             </p>
-          </div>
-          <button 
-            onClick={handleLogout}
-            style={{
-              background: "#ef4444",
-              color: "white",
-              padding: "12px 24px",
-              borderRadius: "8px",
-              border: "none",
-              fontWeight: "600",
-              cursor: "pointer",
-              fontSize: "1rem",
-              transition: "all 0.3s ease"
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.background = "#dc2626";
-              e.target.style.transform = "translateY(-2px)";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.background = "#ef4444";
-              e.target.style.transform = "translateY(0)";
-            }}
-          >
-            Logout
-          </button>
+          </div> 
         </div>
 
         {user.role === "admin" && (
