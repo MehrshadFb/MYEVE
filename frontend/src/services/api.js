@@ -39,10 +39,10 @@ api.interceptors.response.use(
         try {
           const response = await api.post("/refresh", { refreshToken });
           const { token } = response.data;
-          
+
           localStorage.setItem("token", token);
           originalRequest.headers.Authorization = `Bearer ${token}`;
-          
+
           return api(originalRequest);
         } catch (refreshError) {
           // Refresh token is also expired, redirect to login
@@ -143,6 +143,19 @@ export const updateVehicle = async (vid, vehicleData) => {
 
 export const deleteVehicle = async (vid) => {
   const response = await api.delete(`/vehicles/${vid}`);
+  return response.data;
+};
+
+export const uploadVehicleImages = async (vid, files) => {
+  const formData = new FormData();
+  files.forEach((file) => {
+    formData.append("images", file);
+  });
+  const response = await api.post(`/vehicles/${vid}/images`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
   return response.data;
 };
 
