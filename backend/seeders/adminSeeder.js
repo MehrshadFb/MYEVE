@@ -1,11 +1,11 @@
-const { User } = require("../models");
+const { User } = require('../models');
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     try {
       // Check if admin already exists
       const existingAdmin = await User.findOne({
-        where: { email: 'myeveadmin@gmail.com' }
+        where: { email: 'myeveadmin@gmail.com' },
       });
 
       if (!existingAdmin) {
@@ -14,9 +14,9 @@ module.exports = {
           username: 'admin1',
           email: 'myeveadmin@gmail.com',
           password: 'Admin123!', // Will be hashed by beforeCreate hook
-          role: 'admin'
+          role: 'admin',
         });
-        
+
         console.log('✅ Admin account created successfully!');
         console.log('📧 Email: myeveadmin@gmail.com');
         console.log('🔑 Password: Admin123!');
@@ -30,5 +30,5 @@ module.exports = {
 
   down: async (queryInterface, Sequelize) => {
     await queryInterface.bulkDelete('Users', { email: 'myeveadmin@gmail.com' });
-  }
-}; 
+  },
+};

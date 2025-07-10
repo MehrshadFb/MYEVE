@@ -1,8 +1,8 @@
-const { DataTypes } = require("sequelize");
-const { v4: uuidv4 } = require("uuid");
+const { DataTypes } = require('sequelize');
+const { v4: uuidv4 } = require('uuid');
 
 module.exports = (sequelize) => {
-  const Vehicle = sequelize.define("Vehicle", {
+  const Vehicle = sequelize.define('Vehicle', {
     vid: {
       type: DataTypes.UUID,
       defaultValue: uuidv4,
@@ -51,4 +51,4 @@ module.exports = (sequelize) => {
   });
 
   return Vehicle;
-}; 
+};

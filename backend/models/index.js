@@ -1,8 +1,8 @@
-const sequelize = require("../config/database");
-const UserModel = require("./User");
-const AddressModel = require("./Address");
-const VehicleModel = require("./Vehicle");
-const { v4: uuidv4 } = require("uuid");
+const sequelize = require('../config/database');
+const UserModel = require('./User');
+const AddressModel = require('./Address');
+const VehicleModel = require('./Vehicle');
+const { v4: uuidv4 } = require('uuid');
 
 // Initialize models
 const User = UserModel(sequelize);
@@ -11,11 +11,11 @@ const Vehicle = VehicleModel(sequelize);
 
 // Association: One User hasMany Addresses
 User.hasMany(Address, {
-  foreignKey: "userId",
-  as: "addresses",
-  onDelete: "CASCADE",
+  foreignKey: 'userId',
+  as: 'addresses',
+  onDelete: 'CASCADE',
 });
-Address.belongsTo(User, { foreignKey: "userId" });
+Address.belongsTo(User, { foreignKey: 'userId' });
 
 const db = {
   sequelize,
@@ -29,7 +29,7 @@ const seedDatabase = async () => {
   try {
     // Check if admin already exists
     const existingAdmin = await User.findOne({
-      where: { email: 'myeveadmin@gmail.com' }
+      where: { email: 'myeveadmin@gmail.com' },
     });
 
     if (!existingAdmin) {
@@ -38,9 +38,9 @@ const seedDatabase = async () => {
         username: 'admin1',
         email: 'myeveadmin@gmail.com',
         password: 'Admin123!', // Plain text - will be hashed by beforeCreate hook
-        role: 'admin'
+        role: 'admin',
       });
-      
+
       console.log('✅ Admin account created successfully!');
       console.log('📧 Email: myeveadmin@gmail.com');
       console.log('🔑 Password: Admin123!');
@@ -56,15 +56,15 @@ const seedDatabase = async () => {
 const syncDatabase = async (force = false) => {
   try {
     await sequelize.authenticate();
-    console.log("✅ Database connected successfully");
+    console.log('✅ Database connected successfully');
 
     await sequelize.sync({ force }); // Drops & recreates tables if force = true
-    console.log("✅ Database synced - all tables created");
+    console.log('✅ Database synced - all tables created');
 
     // Always run seeder to ensure admin exists
     await seedDatabase();
   } catch (error) {
-    console.error("❌ Database connection failed:", error);
+    console.error('❌ Database connection failed:', error);
     throw error;
   }
 };

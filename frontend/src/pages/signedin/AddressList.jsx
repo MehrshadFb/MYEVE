@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
-import useAuth from "../../context/useAuth";
+import React, { useState, useEffect } from 'react';
+import useAuth from '../../context/useAuth';
 import {
   getAllAddressesByUserId,
   createAddress,
   updateAddress,
   deleteAddress,
-} from "../../services/api";
+} from '../../services/api';
 
 const AddressList = () => {
   const { user } = useAuth();
@@ -13,12 +13,12 @@ const AddressList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [newAddress, setNewAddress] = useState({
-    street: "",
-    city: "",
-    province: "",
-    country: "",
-    zip: "",
-    phone: "",
+    street: '',
+    city: '',
+    province: '',
+    country: '',
+    zip: '',
+    phone: '',
   });
   const [editingId, setEditingId] = useState(null);
   const [editingData, setEditingData] = useState({});
@@ -35,8 +35,8 @@ const AddressList = () => {
       const data = await getAllAddressesByUserId(userId);
       setAddresses(data);
     } catch (error) {
-      console.error("Error fetching addresses:", error);
-      setError("Failed to load addresses");
+      console.error('Error fetching addresses:', error);
+      setError('Failed to load addresses');
     } finally {
       setLoading(false);
     }
@@ -46,16 +46,16 @@ const AddressList = () => {
     try {
       await createAddress({ ...newAddress, userId });
       setNewAddress({
-        street: "",
-        city: "",
-        province: "",
-        country: "",
-        zip: "",
-        phone: "",
+        street: '',
+        city: '',
+        province: '',
+        country: '',
+        zip: '',
+        phone: '',
       });
       fetchAddresses();
     } catch (error) {
-      console.error("Error adding address:", error);
+      console.error('Error adding address:', error);
     }
   };
 
@@ -78,7 +78,7 @@ const AddressList = () => {
       setEditingData({});
       fetchAddresses();
     } catch (error) {
-      console.error("Error updating address:", error);
+      console.error('Error updating address:', error);
     }
   };
 
@@ -92,7 +92,7 @@ const AddressList = () => {
       await deleteAddress(id);
       fetchAddresses();
     } catch (error) {
-      console.error("Error deleting address:", error);
+      console.error('Error deleting address:', error);
     }
   };
 
@@ -189,7 +189,7 @@ const AddressList = () => {
                       type="text"
                       value={editingData.street}
                       onChange={(e) =>
-                        handleEditingDataChange("street", e.target.value)
+                        handleEditingDataChange('street', e.target.value)
                       }
                     />
                   ) : (
@@ -202,7 +202,7 @@ const AddressList = () => {
                       type="text"
                       value={editingData.city}
                       onChange={(e) =>
-                        handleEditingDataChange("city", e.target.value)
+                        handleEditingDataChange('city', e.target.value)
                       }
                     />
                   ) : (
@@ -215,7 +215,7 @@ const AddressList = () => {
                       type="text"
                       value={editingData.province}
                       onChange={(e) =>
-                        handleEditingDataChange("province", e.target.value)
+                        handleEditingDataChange('province', e.target.value)
                       }
                     />
                   ) : (
@@ -228,7 +228,7 @@ const AddressList = () => {
                       type="text"
                       value={editingData.country}
                       onChange={(e) =>
-                        handleEditingDataChange("country", e.target.value)
+                        handleEditingDataChange('country', e.target.value)
                       }
                     />
                   ) : (
@@ -241,7 +241,7 @@ const AddressList = () => {
                       type="text"
                       value={editingData.zip}
                       onChange={(e) =>
-                        handleEditingDataChange("zip", e.target.value)
+                        handleEditingDataChange('zip', e.target.value)
                       }
                     />
                   ) : (
@@ -254,7 +254,7 @@ const AddressList = () => {
                       type="text"
                       value={editingData.phone}
                       onChange={(e) =>
-                        handleEditingDataChange("phone", e.target.value)
+                        handleEditingDataChange('phone', e.target.value)
                       }
                     />
                   ) : (
