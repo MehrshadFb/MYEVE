@@ -1,23 +1,23 @@
+import React from 'react';
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
-} from "react-router-dom";
-import { useState, useEffect } from "react";
-import { AuthProvider } from "./context/AuthContext";
-import useAuth from "./context/useAuth";
-import SignIn from "./pages/notsignedin/SignIn";
-import SignUp from "./pages/notsignedin/SignUp";
-import Manage from "./pages/signedin/Manage";
-import Profile from "./pages/signedin/Profile";
-import AddVehicle from "./pages/signedin/AddVehicle";
-import LandingPage from "./pages/notsignedin/LandingPage";
-import Featured from "./pages/notsignedin/Featured";
-import Vehicles from "./pages/notsignedin/Vehicles";
-import About from "./pages/notsignedin/About";
-import ShoppingCart from "./pages/notsignedin/ShoppingCart";
-
+} from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { AuthProvider } from './context/AuthContext';
+import useAuth from './context/useAuth';
+import SignIn from './pages/notsignedin/SignIn';
+import SignUp from './pages/notsignedin/SignUp';
+import Manage from './pages/signedin/Manage';
+import Profile from './pages/signedin/Profile';
+import AddVehicle from './pages/signedin/AddVehicle';
+import LandingPage from './pages/notsignedin/LandingPage';
+import Featured from './pages/notsignedin/Featured';
+import Vehicles from './pages/notsignedin/Vehicles';
+import About from './pages/notsignedin/About';
+import ShoppingCart from './pages/notsignedin/ShoppingCart';
 
 function AppRoutes() {
   const { isAuthenticated, loading } = useAuth();
@@ -39,10 +39,7 @@ function AppRoutes() {
   return (
     <Router>
       <Routes>
-        <Route
-          path="/"
-          element={<LandingPage />}
-        />
+        <Route path="/" element={<LandingPage />} />
         <Route path="/featured" element={<Featured />} />
         <Route path="/vehicles" element={<Vehicles />} />
         <Route path="/about" element={<About />} />

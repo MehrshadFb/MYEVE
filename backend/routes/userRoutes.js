@@ -1,5 +1,5 @@
-const express = require("express");
-const { authenticateToken, authorizeRole } = require("../middleware/auth");
+const express = require('express');
+const { authenticateToken, authorizeRole } = require('../middleware/auth');
 const {
   signUp,
   signIn,
@@ -7,37 +7,37 @@ const {
   deleteUserById,
   updateProfile,
   refreshToken,
-} = require("../controllers/userController");
+} = require('../controllers/userController');
 const {
   createAddress,
   getAllAddresses,
   getAllAddressesByUserId,
   updateAddress,
   deleteAddress,
-} = require("../controllers/addressController");
+} = require('../controllers/addressController');
 
 const router = express.Router();
 
 // Public routes
-router.post("/signup", signUp);
-router.post("/signin", signIn);
-router.post("/refresh", refreshToken);
+router.post('/signup', signUp);
+router.post('/signin', signIn);
+router.post('/refresh', refreshToken);
 
 // Admin-only routes
-router.get("/users", authenticateToken, authorizeRole("admin"), getAllUsers);
+router.get('/users', authenticateToken, authorizeRole('admin'), getAllUsers);
 router.delete(
-  "/users/:id",
+  '/users/:id',
   authenticateToken,
-  authorizeRole("admin"),
-  deleteUserById
+  authorizeRole('admin'),
+  deleteUserById,
 );
 
 // User-specific routes
-router.put("/profile", authenticateToken, updateProfile);
-router.post("/addresses", authenticateToken, createAddress);
-router.get("/addresses", authenticateToken, getAllAddresses);
-router.get("/addresses/:userId", authenticateToken, getAllAddressesByUserId); // Assuming this function is defined in addressController.js
-router.put("/addresses/:id", authenticateToken, updateAddress);
-router.delete("/addresses/:id", authenticateToken, deleteAddress);
+router.put('/profile', authenticateToken, updateProfile);
+router.post('/addresses', authenticateToken, createAddress);
+router.get('/addresses', authenticateToken, getAllAddresses);
+router.get('/addresses/:userId', authenticateToken, getAllAddressesByUserId); // Assuming this function is defined in addressController.js
+router.put('/addresses/:id', authenticateToken, updateAddress);
+router.delete('/addresses/:id', authenticateToken, deleteAddress);
 
 module.exports = router;

@@ -1,10 +1,10 @@
-const { DataTypes } = require("sequelize");
-const bcrypt = require("bcrypt");
-const { v4: uuidv4 } = require("uuid");
+const { DataTypes } = require('sequelize');
+const bcrypt = require('bcrypt');
+const { v4: uuidv4 } = require('uuid');
 
 module.exports = (sequelize) => {
   const User = sequelize.define(
-    "User",
+    'User',
     {
       id: {
         type: DataTypes.UUID,
@@ -32,18 +32,20 @@ module.exports = (sequelize) => {
         allowNull: false,
         validate: {
           len: [8, 100],
-                      hasSpecialChar(value) {
-              const specialChars = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+/;
-              if (!specialChars.test(value)) {
-                throw new Error('Password must contain at least one special character');
-              }
+          hasSpecialChar(value) {
+            const specialChars = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+/;
+            if (!specialChars.test(value)) {
+              throw new Error(
+                'Password must contain at least one special character',
+              );
             }
+          },
         },
       },
       role: {
-        type: DataTypes.ENUM("admin", "customer"),
+        type: DataTypes.ENUM('admin', 'customer'),
         allowNull: false,
-        defaultValue: "customer",
+        defaultValue: 'customer',
       },
     },
     {
@@ -58,7 +60,7 @@ module.exports = (sequelize) => {
           }
         },
       },
-    }
+    },
   );
 
   User.prototype.validatePassword = async function (password) {

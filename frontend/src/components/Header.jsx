@@ -1,7 +1,8 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import useAuth from "../context/useAuth";
-import SignInDropdown from "./SignInDropdown";
+import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import useAuth from '../context/useAuth';
+import SignInDropdown from './SignInDropdown';
 
 function Header() {
   const { isAuthenticated, user, logout } = useAuth();
@@ -10,167 +11,217 @@ function Header() {
 
   const handleLogout = () => {
     logout();
-    navigate("/");
+    navigate('/');
   };
 
   return (
-    <header style={{
-      position: "fixed",
-      top: 0,
-      left: 0,
-      right: 0,
-      padding: "10px 40px",
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      backgroundColor: "rgba(255, 255, 255, 0.95)",
-      backdropFilter: "blur(10px)",
-      zIndex: 1000,
-      boxShadow: "0 20px 20px rgba(0,0,0,0.1)"
-    }}>
-      <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-        <Link to="/" style={{ textDecoration: "none" }}>
-          <h1 
-            style={{ 
-              fontSize: "1.8rem", 
-              fontWeight: "700", 
-              color: "#1e293b",
+    <header
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        padding: '10px 40px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        backdropFilter: 'blur(10px)',
+        zIndex: 1000,
+        boxShadow: '0 20px 20px rgba(0,0,0,0.1)',
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+        <Link to="/" style={{ textDecoration: 'none' }}>
+          <h1
+            style={{
+              fontSize: '1.8rem',
+              fontWeight: '700',
+              color: '#1e293b',
               margin: 0,
-              cursor: "pointer",
-              transition: "all 0.3s ease",
-              position: "relative",
-              overflow: "visible",
-              background: "transparent"
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
+              position: 'relative',
+              overflow: 'visible',
+              background: 'transparent',
             }}
             onMouseEnter={(e) => {
-              e.target.style.color = "#3b82f6";
-              e.target.style.textShadow = "0 0 8px rgba(59, 130, 246, 0.4)";
+              e.target.style.color = '#3b82f6';
+              e.target.style.textShadow = '0 0 8px rgba(59, 130, 246, 0.4)';
             }}
             onMouseLeave={(e) => {
-              e.target.style.color = "#1e293b";
-              e.target.style.textShadow = "none";
-            }}>
+              e.target.style.color = '#1e293b';
+              e.target.style.textShadow = 'none';
+            }}
+          >
             MYEVE
           </h1>
         </Link>
-        <nav style={{ display: "flex", gap: "30px", alignItems: "center" }}>
-          <Link to="/featured" style={{ color: "#64748b", textDecoration: "none", fontWeight: "500" }}>Featured</Link>
-          <Link to="/vehicles" style={{ color: "#64748b", textDecoration: "none", fontWeight: "500" }}>Vehicles</Link>
-          <Link to="/about" style={{ color: "#64748b", textDecoration: "none", fontWeight: "500" }}>About</Link>
+        <nav style={{ display: 'flex', gap: '30px', alignItems: 'center' }}>
+          <Link
+            to="/featured"
+            style={{
+              color: '#64748b',
+              textDecoration: 'none',
+              fontWeight: '500',
+            }}
+          >
+            Featured
+          </Link>
+          <Link
+            to="/vehicles"
+            style={{
+              color: '#64748b',
+              textDecoration: 'none',
+              fontWeight: '500',
+            }}
+          >
+            Vehicles
+          </Link>
+          <Link
+            to="/about"
+            style={{
+              color: '#64748b',
+              textDecoration: 'none',
+              fontWeight: '500',
+            }}
+          >
+            About
+          </Link>
           {isAuthenticated && (
-            <Link to="/profile" style={{ color: "#64748b", textDecoration: "none", fontWeight: "500" }}>Profile</Link>
+            <Link
+              to="/profile"
+              style={{
+                color: '#64748b',
+                textDecoration: 'none',
+                fontWeight: '500',
+              }}
+            >
+              Profile
+            </Link>
           )}
           {/* Cart Icon */}
-          <Link to="/cart" style={{ display: "flex", alignItems: "center", marginLeft: "18px" }}>
+          <Link
+            to="/cart"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              marginLeft: '18px',
+            }}
+          >
             <img
               src="/cart-icon.png"
               alt="Shopping Cart"
               style={{
-                width: "28px",
-                height: "28px",
-                filter: "drop-shadow(0 2px 6px rgba(59,130,246,0.10))",
-                transition: "transform 0.2s, filter 0.2s",
-                cursor: "pointer"
+                width: '28px',
+                height: '28px',
+                filter: 'drop-shadow(0 2px 6px rgba(59,130,246,0.10))',
+                transition: 'transform 0.2s, filter 0.2s',
+                cursor: 'pointer',
               }}
-              onMouseEnter={e => {
-                e.currentTarget.style.transform = "scale(1.13)";
-                e.currentTarget.style.filter = "drop-shadow(0 2px 10px #3b82f6)";
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'scale(1.13)';
+                e.currentTarget.style.filter =
+                  'drop-shadow(0 2px 10px #3b82f6)';
               }}
-              onMouseLeave={e => {
-                e.currentTarget.style.transform = "scale(1)";
-                e.currentTarget.style.filter = "drop-shadow(0 2px 6px rgba(59,130,246,0.10))";
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'scale(1)';
+                e.currentTarget.style.filter =
+                  'drop-shadow(0 2px 6px rgba(59,130,246,0.10))';
               }}
             />
           </Link>
         </nav>
       </div>
-      
+
       {isAuthenticated ? (
-        <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
-          <span style={{ 
-            color: "#1e293b", 
-            fontWeight: "600",
-            fontSize: "1rem"
-          }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+          <span
+            style={{
+              color: '#1e293b',
+              fontWeight: '600',
+              fontSize: '1rem',
+            }}
+          >
             Welcome, {user?.username}
           </span>
-          {user?.role === "admin" && (
-            <Link 
-              to="/manage" 
+          {user?.role === 'admin' && (
+            <Link
+              to="/manage"
               style={{
-                color: "#64748b",
-                textDecoration: "none",
-                fontWeight: "500",
-                padding: "8px 16px",
-                borderRadius: "6px",
-                border: "1px solid #e2e8f0",
-                transition: "all 0.3s ease"
+                color: '#64748b',
+                textDecoration: 'none',
+                fontWeight: '500',
+                padding: '8px 16px',
+                borderRadius: '6px',
+                border: '1px solid #e2e8f0',
+                transition: 'all 0.3s ease',
               }}
               onMouseEnter={(e) => {
-                e.target.style.background = "#f8fafc";
-                e.target.style.color = "#3b82f6";
+                e.target.style.background = '#f8fafc';
+                e.target.style.color = '#3b82f6';
               }}
               onMouseLeave={(e) => {
-                e.target.style.background = "transparent";
-                e.target.style.color = "#64748b";
+                e.target.style.background = 'transparent';
+                e.target.style.color = '#64748b';
               }}
             >
               Manage
             </Link>
           )}
-          <button 
+          <button
             onClick={handleLogout}
             style={{
-              background: "#ef4444",
-              color: "white",
-              padding: "8px 16px",
-              borderRadius: "6px",
-              border: "none",
-              fontWeight: "500",
-              cursor: "pointer",
-              fontSize: "0.9rem",
-              transition: "all 0.3s ease"
+              background: '#ef4444',
+              color: 'white',
+              padding: '8px 16px',
+              borderRadius: '6px',
+              border: 'none',
+              fontWeight: '500',
+              cursor: 'pointer',
+              fontSize: '0.9rem',
+              transition: 'all 0.3s ease',
             }}
             onMouseEnter={(e) => {
-              e.target.style.background = "#dc2626";
-              e.target.style.transform = "translateY(-1px)";
+              e.target.style.background = '#dc2626';
+              e.target.style.transform = 'translateY(-1px)';
             }}
             onMouseLeave={(e) => {
-              e.target.style.background = "#ef4444";
-              e.target.style.transform = "translateY(0)";
+              e.target.style.background = '#ef4444';
+              e.target.style.transform = 'translateY(0)';
             }}
           >
             Logout
           </button>
         </div>
       ) : (
-        <div style={{ position: "relative" }}>
+        <div style={{ position: 'relative' }}>
           <button
             onClick={() => setIsSignInOpen(!isSignInOpen)}
             style={{
-              background: "#3b82f6",
-              color: "white",
-              padding: "12px 24px",
-              borderRadius: "8px",
-              border: "none",
-              fontWeight: "600",
-              cursor: "pointer",
-              transition: "all 0.3s ease"
+              background: '#3b82f6',
+              color: 'white',
+              padding: '12px 24px',
+              borderRadius: '8px',
+              border: 'none',
+              fontWeight: '600',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
             }}
             onMouseEnter={(e) => {
-              e.target.style.background = "#2563eb";
-              e.target.style.transform = "translateY(-2px)";
+              e.target.style.background = '#2563eb';
+              e.target.style.transform = 'translateY(-2px)';
             }}
             onMouseLeave={(e) => {
-              e.target.style.background = "#3b82f6";
-              e.target.style.transform = "translateY(0)";
+              e.target.style.background = '#3b82f6';
+              e.target.style.transform = 'translateY(0)';
             }}
           >
             Sign In
           </button>
-          <SignInDropdown 
-            isOpen={isSignInOpen} 
-            onClose={() => setIsSignInOpen(false)} 
+          <SignInDropdown
+            isOpen={isSignInOpen}
+            onClose={() => setIsSignInOpen(false)}
           />
         </div>
       )}
@@ -178,4 +229,4 @@ function Header() {
   );
 }
 
-export default Header; 
+export default Header;
