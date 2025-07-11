@@ -2,12 +2,14 @@ const sequelize = require("../config/database");
 const UserModel = require("./User");
 const AddressModel = require("./Address");
 const VehicleModel = require("./Vehicle");
+const ShoppingCart = require("./ShoppingCart");
 const { v4: uuidv4 } = require("uuid");
 
 // Initialize models
 const User = UserModel(sequelize);
 const Address = AddressModel(sequelize);
 const Vehicle = VehicleModel(sequelize);
+const ShoppingCart = ShoppingCart(sequelize);
 
 // Association: One User hasMany Addresses
 User.hasMany(Address, {
@@ -16,6 +18,15 @@ User.hasMany(Address, {
   onDelete: "CASCADE",
 });
 Address.belongsTo(User, { foreignKey: "userId" });
+
+User.hasOne(ShoppingCart, { foreignKey: "userId" });
+ShoppingCart.belongsTo(User, { foreignKey: "userId" });
+
+ShoppingCart.hasMany(CartItem, { foreignKey: "cartId", onDelete: "CASCADE" });
+CartItem.belongsTo(ShoppingCart, { foreignKey: "cartId" });
+
+Vehicle.hasMany(CartItem, { foreignKey: "vehicleId" });
+CartItem.belongsTo(Vehicle, { foreignKey: "vehicleId" });
 
 const db = {
   sequelize,
