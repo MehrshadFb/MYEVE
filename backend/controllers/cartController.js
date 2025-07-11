@@ -1,10 +1,14 @@
-const { ShoppingCart, CartItem} = require("../models");
+const { ShoppingCart, CartItem, Vehicle } = require("../models");
 
-//Add to Cart
+//Add to cart
 
-exports.addToCart = async (req, res) => {
-  const { vehicleId, quantity } = req.body;
+const addToCart = async (req, res) => {
   const userId = req.user.id;
+  const { vehicleId, quantity } = req.body;
+
+  if (!vehicleId) {
+    return res.status(400).json({ message: "vehicleId is required" });
+  }
 
   try {
     let cart = await ShoppingCart.findOne({ where: { userId } });
@@ -13,29 +17,24 @@ exports.addToCart = async (req, res) => {
     }
 
     let item = await CartItem.findOne({
-      where: { cartId: cart.id, vehicleId },
+      where: { cartId: cart.id, vehicleId }
     });
 
     if (item) {
       item.quantity += quantity;
       await item.save();
     } else {
-      await CartItem.create({
-        cartId: cart.id,
-        vehicleId,
-        quantity,
-      });
+      await CartItem.create({ cartId: cart.id, vehicleId, quantity });
     }
 
-    res.status(200).json({ message: "Item added to cart." });
-  } catch (err) {
-    res.status(500).json({ error: "Failed to add to cart", detail: err.message });
+    return res.status(200).json({ message: "Vehicle added to cart" });
+  } catch (error) {
+    console.error("addToCart error:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 
-//Get cart with total
-
-exports.getCart = async (req, res) => {
+const getCart = async (req, res) => {
   const userId = req.user.id;
 
   try {
@@ -43,30 +42,42 @@ exports.getCart = async (req, res) => {
       where: { userId },
       include: {
         model: CartItem,
-        include: Vehicle,
-      },
+        include: {
+          model: Vehicle,
+          attributes: ["vid", "name", "price", "brand", "model"]
+        }
+      }
     });
 
-    if (!cart) {
-      return res.status(200).json({ items: [], totalItems: 0, totalAmount: 0 });
+    if (!cart || cart.CartItems.length === 0) {
+      return res.status(200).json({
+        items: [],
+        totalItems: 0,
+        totalAmount: 0
+      });
     }
 
     let totalItems = 0;
     let totalAmount = 0;
 
-    const items = cart.CartItems.map((item) => {
+    const items = cart.CartItems.map(item => {
       totalItems += item.quantity;
       totalAmount += parseFloat(item.Vehicle.price) * item.quantity;
 
       return {
         vehicle: item.Vehicle,
-        quantity: item.quantity,
+        quantity: item.quantity
       };
     });
 
-    res.status(200).json({ items, totalItems, totalAmount });
-  } catch (err) {
-    res.status(500).json({ error: "Failed to fetch cart", detail: err.message });
+    return res.status(200).json({ items, totalItems, totalAmount });
+  } catch (error) {
+    console.error("getCart error:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 
+module.exports = {
+  addToCart,
+  getCart
+};

@@ -2,14 +2,16 @@ const sequelize = require("../config/database");
 const UserModel = require("./User");
 const AddressModel = require("./Address");
 const VehicleModel = require("./Vehicle");
-const ShoppingCart = require("./ShoppingCart");
+const defineShoppingCart = require("./ShoppingCart");
+const defineCartItem = require("./CartItem");
 const { v4: uuidv4 } = require("uuid");
 
 // Initialize models
 const User = UserModel(sequelize);
 const Address = AddressModel(sequelize);
 const Vehicle = VehicleModel(sequelize);
-const ShoppingCart = ShoppingCart(sequelize);
+const ShoppingCart = defineShoppingCart(sequelize);
+const CartItem = defineCartItem(sequelize);
 
 // Association: One User hasMany Addresses
 User.hasMany(Address, {
@@ -26,13 +28,18 @@ ShoppingCart.hasMany(CartItem, { foreignKey: "cartId", onDelete: "CASCADE" });
 CartItem.belongsTo(ShoppingCart, { foreignKey: "cartId" });
 
 Vehicle.hasMany(CartItem, { foreignKey: "vehicleId" });
-CartItem.belongsTo(Vehicle, { foreignKey: "vehicleId" });
+CartItem.belongsTo(Vehicle, {
+  foreignKey: 'vehicleId',
+  targetKey: 'vid' // Because Vehicle uses 'vid' 
+});
 
 const db = {
   sequelize,
   User,
   Address,
   Vehicle,
+  ShoppingCart,
+  CartItem
 };
 
 // Seed database with admin account
@@ -80,4 +87,4 @@ const syncDatabase = async (force = false) => {
   }
 };
 
-module.exports = { db, syncDatabase, User, Address, Vehicle };
+module.exports = { db, syncDatabase, User, Address, Vehicle, ShoppingCart, CartItem };
