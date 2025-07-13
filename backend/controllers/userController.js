@@ -23,6 +23,42 @@ const signUp = async (req, res) => {
     return res.status(201).json({ message: "User registered successfully" });
   } catch (err) {
     console.error("Signup error:", err);
+    
+    // Handle Sequelize validation errors
+    if (err.name === 'SequelizeValidationError') {
+      const validationErrors = err.errors.map(error => {
+        switch (error.validatorKey) {
+          case 'len':
+            if (error.path === 'username') {
+              return 'Username must be between 3 and 50 characters';
+            } else if (error.path === 'password') {
+              return 'Password must be between 8 and 100 characters';
+            }
+            break;
+          case 'isEmail':
+            return 'Please enter a valid email address';
+          case 'hasSpecialChar':
+            return 'Password must contain at least one special character';
+          default:
+            return error.message;
+        }
+      });
+      
+      return res.status(400).json({ 
+        message: validationErrors.join(', ') 
+      });
+    }
+    
+    // Handle unique constraint errors
+    if (err.name === 'SequelizeUniqueConstraintError') {
+      const field = err.errors[0].path;
+      if (field === 'username') {
+        return res.status(409).json({ message: "Username already exists" });
+      } else if (field === 'email') {
+        return res.status(409).json({ message: "Email already exists" });
+      }
+    }
+    
     return res.status(500).json({ message: "Internal server error" });
   }
 };

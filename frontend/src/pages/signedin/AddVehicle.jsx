@@ -8,10 +8,12 @@ function AddVehicle() {
   const navigate = useNavigate();
 
   const [vehicleData, setVehicleData] = useState({
-    name: "",
+    type: "",
     description: "",
     brand: "",
     model: "",
+    seats: "",
+    range: "",
     quantity: 0,
     price: "",
   });
@@ -32,9 +34,11 @@ function AddVehicle() {
 
     // Validate required fields
     if (
-      !vehicleData.name ||
+      !vehicleData.type ||
       !vehicleData.brand ||
       !vehicleData.model ||
+      !vehicleData.seats ||
+      !vehicleData.range ||
       !vehicleData.price
     ) {
       setMessage({ type: "error", text: "Please fill in all required fields" });
@@ -45,6 +49,24 @@ function AddVehicle() {
     // Validate numeric fields
     if (isNaN(vehicleData.price) || parseFloat(vehicleData.price) <= 0) {
       setMessage({ type: "error", text: "Price must be a positive number" });
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (isNaN(vehicleData.seats) || parseInt(vehicleData.seats) < 1) {
+      setMessage({
+        type: "error",
+        text: "Seats must be a positive number",
+      });
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (isNaN(vehicleData.range) || parseInt(vehicleData.range) < 0) {
+      setMessage({
+        type: "error",
+        text: "Range must be a non-negative number",
+      });
       setIsSubmitting(false);
       return;
     }
@@ -60,10 +82,12 @@ function AddVehicle() {
 
     try {
       const response = await createVehicle({
-        name: vehicleData.name,
+        type: vehicleData.type,
         description: vehicleData.description,
         brand: vehicleData.brand,
         model: vehicleData.model,
+        seats: parseInt(vehicleData.seats),
+        range: parseInt(vehicleData.range),
         quantity: parseInt(vehicleData.quantity),
         price: parseFloat(vehicleData.price),
       });
@@ -79,10 +103,12 @@ function AddVehicle() {
 
       // Clear form after successful submission
       setVehicleData({
-        name: "",
+        type: "",
         description: "",
         brand: "",
         model: "",
+        seats: "",
+        range: "",
         quantity: 0,
         price: "",
       });
@@ -280,7 +306,7 @@ function AddVehicle() {
               />
             </div>
 
-            {/* Vehicle Name */}
+            {/* Vehicle Type */}
             <div>
               <label
                 style={{
@@ -291,14 +317,12 @@ function AddVehicle() {
                   fontSize: "14px",
                 }}
               >
-                Vehicle Name *
+                Vehicle Type *
               </label>
-              <input
-                type="text"
-                name="name"
-                value={vehicleData.name}
+              <select
+                name="type"
+                value={vehicleData.type}
                 onChange={handleChange}
-                placeholder="Enter vehicle name"
                 required
                 style={{
                   width: "100%",
@@ -309,8 +333,19 @@ function AddVehicle() {
                   backgroundColor: "white",
                   color: "#1e293b",
                   boxSizing: "border-box",
+                  cursor: "pointer",
                 }}
-              />
+              >
+                <option value="">Select vehicle type</option>
+                <option value="Sedan">Sedan</option>
+                <option value="SUV">SUV</option>
+                <option value="Hatchback">Hatchback</option>
+                <option value="Truck">Truck</option>
+                <option value="Sports Car">Sports Car</option>
+                <option value="Luxury">Luxury</option>
+                <option value="Compact">Compact</option>
+                <option value="Crossover">Crossover</option>
+              </select>
             </div>
 
             {/* Brand */}
@@ -365,6 +400,80 @@ function AddVehicle() {
                 value={vehicleData.model}
                 onChange={handleChange}
                 placeholder="Enter model name"
+                required
+                style={{
+                  width: "100%",
+                  padding: "12px 16px",
+                  borderRadius: "8px",
+                  border: "1px solid #d1d5db",
+                  fontSize: "16px",
+                  backgroundColor: "white",
+                  color: "#1e293b",
+                  boxSizing: "border-box",
+                }}
+              />
+            </div>
+
+            {/* Seats */}
+            <div>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "8px",
+                  fontWeight: "600",
+                  color: "#374151",
+                  fontSize: "14px",
+                }}
+              >
+                Number of Seats *
+              </label>
+              <select
+                name="seats"
+                value={vehicleData.seats}
+                onChange={handleChange}
+                required
+                style={{
+                  width: "100%",
+                  padding: "12px 16px",
+                  borderRadius: "8px",
+                  border: "1px solid #d1d5db",
+                  fontSize: "16px",
+                  backgroundColor: "white",
+                  color: "#1e293b",
+                  boxSizing: "border-box",
+                  cursor: "pointer",
+                }}
+              >
+                <option value="">Select number of seats</option>
+                <option value="2">2 Seats</option>
+                <option value="4">4 Seats</option>
+                <option value="5">5 Seats</option>
+                <option value="6">6 Seats</option>
+                <option value="7">7 Seats</option>
+                <option value="8">8 Seats</option>
+              </select>
+            </div>
+
+            {/* Range */}
+            <div>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "8px",
+                  fontWeight: "600",
+                  color: "#374151",
+                  fontSize: "14px",
+                }}
+              >
+                Range (miles) *
+              </label>
+              <input
+                type="number"
+                name="range"
+                value={vehicleData.range}
+                onChange={handleChange}
+                placeholder="Enter range in miles"
+                min="0"
                 required
                 style={{
                   width: "100%",

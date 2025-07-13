@@ -74,6 +74,10 @@ DB_USER=eecsuser
 DB_PASSWORD=eecspassword123
 DB_HOST=localhost
 DB_PORT=3307
+AWS_ACCESS_KEY_ID=AKIAQA7VRQMSPOOJ7ICK
+AWS_SECRET_ACCESS_KEY=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
+AWS_REGION=us-east-2
+AWS_BUCKET_NAME=eecs4413-mehrshad
 ```
 
 ### 3. Start the Application
