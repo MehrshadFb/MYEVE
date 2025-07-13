@@ -1,4 +1,5 @@
 # EECS4413 Project - Full Stack Web Application
+Guide by Hamzah Alhafi
 
 A full-stack web application built with React (frontend) and Node.js/Express (backend) with MySQL database.
 
