@@ -17,6 +17,10 @@ function SignUp() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    // Clear error when user starts typing
+    if (error) {
+      setError(null);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -28,7 +32,8 @@ function SignUp() {
       await signUp(formData);
       navigate("/signin");
     } catch (err) {
-      setError(err.response?.data?.message || "Signup failed");
+      const errorMessage = err.response?.data?.message || "Signup failed";
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -94,6 +99,9 @@ function SignUp() {
               color: "#ef4444",
               fontSize: "0.875rem"
             }}>
+              <div style={{ fontWeight: "600", marginBottom: "4px" }}>
+                Signup Error
+              </div>
               {error}
             </div>
           )}
@@ -136,6 +144,14 @@ function SignUp() {
                   e.target.style.boxShadow = "none";
                 }}
               />
+              <small style={{ 
+                color: "#6b7280", 
+                fontSize: "0.75rem", 
+                marginTop: "4px", 
+                display: "block" 
+              }}>
+                Must be 3-50 characters long
+              </small>
             </div>
 
             <div style={{ marginBottom: "20px" }}>
@@ -212,6 +228,14 @@ function SignUp() {
                   e.target.style.boxShadow = "none";
                 }}
               />
+              <small style={{ 
+                color: "#6b7280", 
+                fontSize: "0.75rem", 
+                marginTop: "4px", 
+                display: "block" 
+              }}>
+                Must be 8-100 characters with at least one special character (!@#$%^&*)
+              </small>
             </div>
 
             <button 

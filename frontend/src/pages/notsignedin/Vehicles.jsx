@@ -17,6 +17,8 @@ function Vehicles() {
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [selectedTypes, setSelectedTypes] = useState([]);
   const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
+  const [selectedSeats, setSelectedSeats] = useState([]);
+  const [selectedRanges, setSelectedRanges] = useState([]);
 
   const fetchVehicles = async () => {
     try {
@@ -37,9 +39,9 @@ function Vehicles() {
 
   // Get unique values for filters
   const uniqueBrands = [...new Set(vehicles.map((vehicle) => vehicle.brand))];
-  const uniqueTypes = [
-    ...new Set(vehicles.map((vehicle) => vehicle.type || "Unknown")),
-  ];
+  const uniqueTypes = [...new Set(vehicles.map((vehicle) => vehicle.type))];
+  const uniqueSeats = [...new Set(vehicles.map((vehicle) => vehicle.seats))].sort((a, b) => a - b);
+  const uniqueRanges = [...new Set(vehicles.map((vehicle) => vehicle.range))].sort((a, b) => a - b);
 
   // Price ranges
   const priceRanges = [
@@ -58,7 +60,7 @@ function Vehicles() {
     if (searchTerm) {
       filtered = filtered.filter(
         (vehicle) =>
-          vehicle.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          vehicle.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
           vehicle.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
           vehicle.model.toLowerCase().includes(searchTerm.toLowerCase()) ||
           (vehicle.description &&
@@ -78,7 +80,21 @@ function Vehicles() {
     // Apply type filter
     if (selectedTypes.length > 0) {
       filtered = filtered.filter((vehicle) =>
-        selectedTypes.includes(vehicle.type || "Unknown")
+        selectedTypes.includes(vehicle.type)
+      );
+    }
+
+    // Apply seats filter
+    if (selectedSeats.length > 0) {
+      filtered = filtered.filter((vehicle) =>
+        selectedSeats.includes(vehicle.seats)
+      );
+    }
+
+    // Apply range filter
+    if (selectedRanges.length > 0) {
+      filtered = filtered.filter((vehicle) =>
+        selectedRanges.includes(vehicle.range)
       );
     }
 
@@ -99,6 +115,8 @@ function Vehicles() {
     searchTerm,
     selectedBrands,
     selectedTypes,
+    selectedSeats,
+    selectedRanges,
     selectedPriceRanges,
   ]);
 
@@ -115,6 +133,18 @@ function Vehicles() {
     );
   };
 
+  const toggleSeats = (seats) => {
+    setSelectedSeats((prev) =>
+      prev.includes(seats) ? prev.filter((s) => s !== seats) : [...prev, seats]
+    );
+  };
+
+  const toggleRange = (range) => {
+    setSelectedRanges((prev) =>
+      prev.includes(range) ? prev.filter((r) => r !== range) : [...prev, range]
+    );
+  };
+
   const togglePriceRange = (rangeLabel) => {
     setSelectedPriceRanges((prev) =>
       prev.includes(rangeLabel)
@@ -127,6 +157,8 @@ function Vehicles() {
   const clearAllFilters = () => {
     setSelectedBrands([]);
     setSelectedTypes([]);
+    setSelectedSeats([]);
+    setSelectedRanges([]);
     setSelectedPriceRanges([]);
     setSearchTerm("");
   };
@@ -134,7 +166,11 @@ function Vehicles() {
   // Get total active filters count
   const getActiveFiltersCount = () => {
     return (
-      selectedBrands.length + selectedTypes.length + selectedPriceRanges.length
+      selectedBrands.length + 
+      selectedTypes.length + 
+      selectedSeats.length + 
+      selectedRanges.length + 
+      selectedPriceRanges.length
     );
   };
 
@@ -235,7 +271,7 @@ function Vehicles() {
               <div style={{ flex: 1, position: "relative" }}>
                 <input
                   type="text"
-                  placeholder="Search by name, brand, model, or description..."
+                  placeholder="Search by type, brand, model, or description..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   style={{
@@ -325,6 +361,8 @@ function Vehicles() {
                       count: selectedBrands.length,
                     },
                     { id: "type", label: "Type", count: selectedTypes.length },
+                    { id: "seats", label: "Seats", count: selectedSeats.length },
+                    { id: "range", label: "Range", count: selectedRanges.length },
                     {
                       id: "pricing",
                       label: "Pricing",
@@ -501,6 +539,132 @@ function Vehicles() {
                     </div>
                   )}
 
+                  {/* Seats Filters */}
+                  {activeFilterTab === "seats" && (
+                    <div>
+                      <h4
+                        style={{
+                          fontSize: "1rem",
+                          fontWeight: "600",
+                          marginBottom: "16px",
+                          color: "#1e293b",
+                        }}
+                      >
+                        Select Number of Seats
+                      </h4>
+                      <div
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns:
+                            "repeat(auto-fill, minmax(150px, 1fr))",
+                          gap: "12px",
+                        }}
+                      >
+                        {uniqueSeats.map((seats) => (
+                          <label
+                            key={seats}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "8px",
+                              cursor: "pointer",
+                              padding: "8px",
+                              borderRadius: "6px",
+                              backgroundColor: selectedSeats.includes(seats)
+                                ? "#eff6ff"
+                                : "transparent",
+                              border: selectedSeats.includes(seats)
+                                ? "1px solid #3b82f6"
+                                : "1px solid transparent",
+                            }}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={selectedSeats.includes(seats)}
+                              onChange={() => toggleSeats(seats)}
+                              style={{
+                                width: "16px",
+                                height: "16px",
+                                accentColor: "#3b82f6",
+                              }}
+                            />
+                            <span
+                              style={{
+                                fontSize: "14px",
+                                color: "#374151",
+                              }}
+                            >
+                              {seats} {seats === 1 ? "Seat" : "Seats"}
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Range Filters */}
+                  {activeFilterTab === "range" && (
+                    <div>
+                      <h4
+                        style={{
+                          fontSize: "1rem",
+                          fontWeight: "600",
+                          marginBottom: "16px",
+                          color: "#1e293b",
+                        }}
+                      >
+                        Select Range (miles)
+                      </h4>
+                      <div
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns:
+                            "repeat(auto-fill, minmax(150px, 1fr))",
+                          gap: "12px",
+                        }}
+                      >
+                        {uniqueRanges.map((range) => (
+                          <label
+                            key={range}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "8px",
+                              cursor: "pointer",
+                              padding: "8px",
+                              borderRadius: "6px",
+                              backgroundColor: selectedRanges.includes(range)
+                                ? "#eff6ff"
+                                : "transparent",
+                              border: selectedRanges.includes(range)
+                                ? "1px solid #3b82f6"
+                                : "1px solid transparent",
+                            }}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={selectedRanges.includes(range)}
+                              onChange={() => toggleRange(range)}
+                              style={{
+                                width: "16px",
+                                height: "16px",
+                                accentColor: "#3b82f6",
+                              }}
+                            />
+                            <span
+                              style={{
+                                fontSize: "14px",
+                                color: "#374151",
+                              }}
+                            >
+                              {range.toLocaleString()} miles
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   {/* Price Range Filters */}
                   {activeFilterTab === "pricing" && (
                     <div>
@@ -518,7 +682,7 @@ function Vehicles() {
                         style={{
                           display: "grid",
                           gridTemplateColumns:
-                            "repeat(auto-fill, minmax(250px, 1fr))",
+                            "repeat(auto-fill, minmax(200px, 1fr))",
                           gap: "12px",
                         }}
                       >
@@ -569,7 +733,7 @@ function Vehicles() {
                   )}
                 </div>
 
-                {/* Filter Actions */}
+                {/* Clear Filters Button */}
                 <div
                   style={{
                     display: "flex",
@@ -590,11 +754,12 @@ function Vehicles() {
                       color: "#64748b",
                       cursor: "pointer",
                       fontSize: "14px",
+                      fontWeight: "500",
                       transition: "all 0.3s ease",
                     }}
                     onMouseEnter={(e) => {
-                      e.target.style.borderColor = "#ef4444";
-                      e.target.style.color = "#ef4444";
+                      e.target.style.borderColor = "#9ca3af";
+                      e.target.style.color = "#374151";
                     }}
                     onMouseLeave={(e) => {
                       e.target.style.borderColor = "#d1d5db";
@@ -603,24 +768,14 @@ function Vehicles() {
                   >
                     Clear All Filters
                   </button>
-
-                  <div
+                  <span
                     style={{
-                      display: "flex",
-                      gap: "8px",
-                      alignItems: "center",
+                      fontSize: "14px",
+                      color: "#64748b",
                     }}
                   >
-                    <span
-                      style={{
-                        fontSize: "14px",
-                        color: "#64748b",
-                      }}
-                    >
-                      {getActiveFiltersCount()} filter
-                      {getActiveFiltersCount() !== 1 ? "s" : ""} active
-                    </span>
-                  </div>
+                    {filteredVehicles.length} of {vehicles.length} vehicles
+                  </span>
                 </div>
               </div>
             )}
@@ -631,10 +786,8 @@ function Vehicles() {
       {/* Vehicles Grid */}
       <section
         style={{
-          padding: "40px 0 80px 0",
-          backgroundColor: "white",
-          width: "100vw",
-          marginLeft: "calc(-50vw + 50%)",
+          padding: "40px 0",
+          width: "100%",
         }}
       >
         <div
@@ -645,98 +798,83 @@ function Vehicles() {
             margin: "0 auto",
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: "40px",
-            }}
-          >
-            <h2
-              style={{
-                fontSize: "2.5rem",
-                fontWeight: "700",
-                color: "#1e293b",
-                margin: 0,
-              }}
-            >
-              Available Vehicles
-            </h2>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "20px",
-              }}
-            >
-              <span
-                style={{
-                  fontSize: "1rem",
-                  color: "#64748b",
-                  fontWeight: "500",
-                }}
-              >
-                {filteredVehicles.length} vehicles found
-              </span>
-              {user?.role === "admin" && (
-                <Link
-                  to="/add-vehicle"
-                  style={{
-                    background: "#059669",
-                    color: "white",
-                    padding: "8px 16px",
-                    borderRadius: "6px",
-                    textDecoration: "none",
-                    fontWeight: "500",
-                    fontSize: "14px",
-                    transition: "all 0.3s ease",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "6px",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.background = "#047857";
-                    e.target.style.transform = "translateY(-1px)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.background = "#059669";
-                    e.target.style.transform = "translateY(0)";
-                  }}
-                >
-                  <span style={{ fontSize: "16px" }}>+</span>
-                  Add Vehicle
-                </Link>
-              )}
-            </div>
-          </div>
-
           {loading ? (
             <div
               style={{
-                textAlign: "center",
-                padding: "60px 20px",
-                color: "#64748b",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                minHeight: "400px",
               }}
             >
-              Loading vehicles...
+              <div
+                style={{
+                  fontSize: "1.2rem",
+                  color: "#64748b",
+                }}
+              >
+                Loading vehicles...
+              </div>
             </div>
           ) : filteredVehicles.length === 0 ? (
             <div
               style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                minHeight: "400px",
                 textAlign: "center",
-                padding: "60px 20px",
-                color: "#64748b",
               }}
             >
-              No vehicles found matching your criteria.
+              <div
+                style={{
+                  fontSize: "2rem",
+                  color: "#64748b",
+                  marginBottom: "16px",
+                }}
+              >
+                No vehicles found
+              </div>
+              <p
+                style={{
+                  color: "#94a3b8",
+                  marginBottom: "24px",
+                }}
+              >
+                Try adjusting your search or filters
+              </p>
+              <button
+                onClick={clearAllFilters}
+                style={{
+                  padding: "12px 24px",
+                  borderRadius: "8px",
+                  border: "1px solid #3b82f6",
+                  backgroundColor: "white",
+                  color: "#3b82f6",
+                  cursor: "pointer",
+                  fontWeight: "600",
+                  fontSize: "1rem",
+                  transition: "all 0.3s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.backgroundColor = "#3b82f6";
+                  e.target.style.color = "white";
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.backgroundColor = "white";
+                  e.target.style.color = "#3b82f6";
+                }}
+              >
+                Clear Filters
+              </button>
             </div>
           ) : (
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
-                gap: "30px",
+                gridTemplateColumns: "repeat(auto-fill, minmax(350px, 1fr))",
+                gap: "24px",
               }}
             >
               {filteredVehicles.map((vehicle) => (
@@ -748,161 +886,203 @@ function Vehicles() {
                     overflow: "hidden",
                     boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
                     transition: "all 0.3s ease",
-                    border: "1px solid #e2e8f0",
+                    cursor: "pointer",
                   }}
                   onMouseEnter={(e) => {
-                    e.target.style.transform = "translateY(-8px)";
-                    e.target.style.boxShadow = "0 20px 40px rgba(0,0,0,0.15)";
+                    e.target.style.transform = "translateY(-4px)";
+                    e.target.style.boxShadow = "0 8px 30px rgba(0,0,0,0.15)";
                   }}
                   onMouseLeave={(e) => {
                     e.target.style.transform = "translateY(0)";
                     e.target.style.boxShadow = "0 4px 20px rgba(0,0,0,0.1)";
                   }}
                 >
+                  {/* Vehicle Image */}
                   <div
                     style={{
                       height: "200px",
-                      width: "100%",
-                      overflow: "hidden",
+                      backgroundColor: "#f1f5f9",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
                       position: "relative",
                     }}
                   >
-                    {vehicle.images?.length > 0 ? (
+                    {vehicle.images && vehicle.images.length > 0 ? (
                       <img
                         src={vehicle.images[0].url}
-                        alt={vehicle.name}
+                        alt={vehicle.type}
                         style={{
-                          height: "100%",
                           width: "100%",
+                          height: "100%",
                           objectFit: "cover",
                         }}
                       />
                     ) : (
                       <div
                         style={{
-                          height: "100%",
-                          width: "100%",
-                          background:
-                            "linear-gradient(45deg, #3b82f6, #8b5cf6)",
-                          color: "white",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          fontSize: "2rem",
+                          color: "#94a3b8",
+                          fontSize: "3rem",
                         }}
                       >
-                        {vehicle.name}
+                        🚗
                       </div>
                     )}
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "12px",
+                        right: "12px",
+                        backgroundColor: "rgba(0,0,0,0.7)",
+                        color: "white",
+                        padding: "4px 8px",
+                        borderRadius: "4px",
+                        fontSize: "12px",
+                        fontWeight: "600",
+                      }}
+                    >
+                      ${parseFloat(vehicle.price).toLocaleString()}
+                    </div>
                   </div>
 
-                  <div style={{ padding: "24px" }}>
+                  {/* Vehicle Info */}
+                  <div style={{ padding: "20px" }}>
                     <div
                       style={{
                         display: "flex",
                         justifyContent: "space-between",
-                        alignItems: "center",
+                        alignItems: "flex-start",
                         marginBottom: "12px",
                       }}
                     >
-                      <h3
-                        style={{
-                          fontSize: "1.3rem",
-                          fontWeight: "600",
-                          color: "#1e293b",
-                        }}
-                      >
-                        {vehicle.name}
-                      </h3>
-                      <span
-                        style={{
-                          padding: "4px 12px",
-                          borderRadius: "20px",
-                          backgroundColor: "#f1f5f9",
-                          color: "#64748b",
-                          fontSize: "0.875rem",
-                          fontWeight: "500",
-                          textTransform: "capitalize",
-                        }}
-                      >
-                        {vehicle.brand}
-                      </span>
+                      <div>
+                        <h3
+                          style={{
+                            fontSize: "1.25rem",
+                            fontWeight: "700",
+                            color: "#1e293b",
+                            margin: "0 0 4px 0",
+                          }}
+                        >
+                          {vehicle.brand} {vehicle.model}
+                        </h3>
+                        <p
+                          style={{
+                            fontSize: "0.875rem",
+                            color: "#64748b",
+                            margin: "0",
+                            textTransform: "capitalize",
+                          }}
+                        >
+                          {vehicle.type}
+                        </p>
+                      </div>
                     </div>
 
+                    {/* Vehicle Details */}
                     <div
                       style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        marginBottom: "12px",
+                        display: "grid",
+                        gridTemplateColumns: "repeat(2, 1fr)",
+                        gap: "12px",
+                        marginBottom: "16px",
                       }}
                     >
-                      <span
+                      <div
                         style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "6px",
+                          fontSize: "0.875rem",
                           color: "#64748b",
-                          fontSize: "0.9rem",
                         }}
                       >
-                        Model: {vehicle.model}
-                      </span>
-                      <span
+                        <span>👥</span>
+                        <span>{vehicle.seats} {vehicle.seats === 1 ? "Seat" : "Seats"}</span>
+                      </div>
+                      <div
                         style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "6px",
+                          fontSize: "0.875rem",
                           color: "#64748b",
-                          fontSize: "0.9rem",
                         }}
                       >
-                        Quantity: {vehicle.quantity}
-                      </span>
+                        <span>🔋</span>
+                        <span>{vehicle.range.toLocaleString()} miles</span>
+                      </div>
                     </div>
 
                     {vehicle.description && (
                       <p
                         style={{
+                          fontSize: "0.875rem",
                           color: "#64748b",
                           marginBottom: "16px",
                           lineHeight: "1.5",
-                          fontSize: "0.9rem",
+                          display: "-webkit-box",
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: "vertical",
+                          overflow: "hidden",
                         }}
                       >
                         {vehicle.description}
                       </p>
                     )}
 
+                    {/* Action Buttons */}
                     <div
                       style={{
                         display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
+                        gap: "12px",
                       }}
                     >
-                      <span
-                        style={{
-                          fontSize: "1.25rem",
-                          fontWeight: "700",
-                          color: "#3b82f6",
-                        }}
-                      >
-                        ${vehicle.price}
-                      </span>
                       <button
                         style={{
-                          padding: "8px 16px",
+                          flex: 1,
+                          padding: "10px 16px",
                           borderRadius: "8px",
-                          border: "none",
-                          background: "#3b82f6",
-                          color: "white",
+                          border: "1px solid #3b82f6",
+                          backgroundColor: "white",
+                          color: "#3b82f6",
                           fontWeight: "600",
                           cursor: "pointer",
+                          fontSize: "0.875rem",
                           transition: "all 0.3s ease",
                         }}
                         onMouseEnter={(e) => {
-                          e.target.style.background = "#2563eb";
+                          e.target.style.backgroundColor = "#3b82f6";
+                          e.target.style.color = "white";
                         }}
                         onMouseLeave={(e) => {
-                          e.target.style.background = "#3b82f6";
+                          e.target.style.backgroundColor = "white";
+                          e.target.style.color = "#3b82f6";
                         }}
                       >
                         View Details
+                      </button>
+                      <button
+                        style={{
+                          flex: 1,
+                          padding: "10px 16px",
+                          borderRadius: "8px",
+                          border: "none",
+                          backgroundColor: "#3b82f6",
+                          color: "white",
+                          fontWeight: "600",
+                          cursor: "pointer",
+                          fontSize: "0.875rem",
+                          transition: "all 0.3s ease",
+                        }}
+                        onMouseEnter={(e) => {
+                          e.target.style.backgroundColor = "#2563eb";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.target.style.backgroundColor = "#3b82f6";
+                        }}
+                      >
+                        Add to Cart
                       </button>
                     </div>
                   </div>

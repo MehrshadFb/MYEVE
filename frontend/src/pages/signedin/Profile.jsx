@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useAuth from "../../context/useAuth";
-import { updateProfile, createAddress } from "../../services/api";
+import { updateProfile, createAddress, getAllAddressesByUserId, deleteAddress } from "../../services/api";
 import Header from "../../components/Header";
 
 function Profile() {
@@ -14,6 +14,11 @@ function Profile() {
     confirmPassword: ""
   });
 
+  const [editingField, setEditingField] = useState(null);
+  const [tempValue, setTempValue] = useState("");
+  const [addresses, setAddresses] = useState([]);
+  const [message, setMessage] = useState({ type: "", text: "" });
+
   const [newAddress, setNewAddress] = useState({
     street: "",
     city: "",
@@ -23,7 +28,20 @@ function Profile() {
     phone: ""
   });
 
-  const [message, setMessage] = useState({ type: "", text: "" });
+  // Fetch user addresses on component mount
+  useEffect(() => {
+    const fetchAddresses = async () => {
+      try {
+        const response = await getAllAddressesByUserId(user.id);
+        setAddresses(response);
+      } catch (error) {
+        console.error("Error fetching addresses:", error);
+      }
+    };
+    if (user?.id) {
+      fetchAddresses();
+    }
+  }, [user?.id]);
 
   const handleProfileChange = (e) => {
     const { name, value } = e.target;
@@ -35,12 +53,36 @@ function Profile() {
     setNewAddress(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleProfileUpdate = async (e) => {
+  const startEditing = (field, currentValue) => {
+    setEditingField(field);
+    setTempValue(currentValue);
+  };
+
+  const cancelEditing = () => {
+    setEditingField(null);
+    setTempValue("");
+  };
+
+  const saveField = async (field) => {
+    try {
+      const updateData = { [field]: tempValue };
+      const response = await updateProfile(updateData);
+      
+      setProfileData(prev => ({ ...prev, [field]: tempValue }));
+      setMessage({ type: "success", text: response.message || "Profile updated successfully!" });
+      setEditingField(null);
+      setTempValue("");
+    } catch (err) {
+      setMessage({ type: "error", text: err.response?.data?.message || "Failed to update profile" });
+    }
+  };
+
+  const handlePasswordUpdate = async (e) => {
     e.preventDefault();
     setMessage({ type: "", text: "" });
 
     // Validate password change
-    if (profileData.newPassword && profileData.newPassword !== profileData.confirmPassword) {
+    if (profileData.newPassword !== profileData.confirmPassword) {
       setMessage({ type: "error", text: "New passwords do not match" });
       return;
     }
@@ -57,8 +99,6 @@ function Profile() {
 
     try {
       const response = await updateProfile({
-        username: profileData.username,
-        email: profileData.email,
         currentPassword: profileData.currentPassword,
         newPassword: profileData.newPassword
       });
@@ -73,7 +113,7 @@ function Profile() {
         confirmPassword: ""
       }));
     } catch (err) {
-      setMessage({ type: "error", text: err.response?.data?.message || "Failed to update profile" });
+      setMessage({ type: "error", text: err.response?.data?.message || "Failed to update password" });
     }
   };
 
@@ -84,6 +124,10 @@ function Profile() {
     try {
       const response = await createAddress(newAddress);
       setMessage({ type: "success", text: response.message || "Address added successfully!" });
+      
+      // Refresh addresses list
+      const updatedAddresses = await getAllAddressesByUserId(user.id);
+      setAddresses(updatedAddresses);
       
       // Clear address form
       setNewAddress({
@@ -99,7 +143,120 @@ function Profile() {
     }
   };
 
+  const handleDeleteAddress = async (addressId) => {
+    if (window.confirm("Are you sure you want to delete this address?")) {
+      try {
+        await deleteAddress(addressId);
+        setMessage({ type: "success", text: "Address deleted successfully!" });
+        
+        // Refresh addresses list
+        const updatedAddresses = await getAllAddressesByUserId(user.id);
+        setAddresses(updatedAddresses);
+      } catch (err) {
+        console.error("Error deleting address:", err);
+        setMessage({ type: "error", text: err.response?.data?.message || "Failed to delete address" });
+      }
+    }
+  };
 
+  const renderEditableField = (label, field, value, type = "text") => {
+    const isEditing = editingField === field;
+    
+    return (
+      <div style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: "16px",
+        border: "1px solid #e2e8f0",
+        borderRadius: "8px",
+        marginBottom: "12px",
+        backgroundColor: "white"
+      }}>
+        <div style={{ flex: 1 }}>
+          <div style={{
+            fontSize: "14px",
+            color: "#64748b",
+            marginBottom: "4px"
+          }}>
+            {label}
+          </div>
+          {isEditing ? (
+            <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+              <input
+                type={type}
+                value={tempValue}
+                onChange={(e) => setTempValue(e.target.value)}
+                style={{
+                  padding: "8px 12px",
+                  borderRadius: "6px",
+                  border: "1px solid #d1d5db",
+                  fontSize: "14px",
+                  flex: 1
+                }}
+                autoFocus
+              />
+              <button
+                onClick={() => saveField(field)}
+                style={{
+                  padding: "6px 12px",
+                  borderRadius: "6px",
+                  border: "none",
+                  backgroundColor: "#059669",
+                  color: "white",
+                  fontSize: "12px",
+                  cursor: "pointer"
+                }}
+              >
+                Save
+              </button>
+              <button
+                onClick={cancelEditing}
+                style={{
+                  padding: "6px 12px",
+                  borderRadius: "6px",
+                  border: "1px solid #d1d5db",
+                  backgroundColor: "white",
+                  color: "#64748b",
+                  fontSize: "12px",
+                  cursor: "pointer"
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          ) : (
+            <div style={{
+              fontSize: "16px",
+              color: "#1e293b",
+              fontWeight: "500"
+            }}>
+              {value || "Not set"}
+            </div>
+          )}
+        </div>
+        {!isEditing && (
+          <button
+            onClick={() => startEditing(field, value)}
+            style={{
+              padding: "8px",
+              borderRadius: "6px",
+              border: "none",
+              backgroundColor: "#f1f5f9",
+              color: "#64748b",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center"
+            }}
+            title="Edit"
+          >
+            ✎
+          </button>
+        )}
+      </div>
+    );
+  };
 
   if (!user) {
     return <div>Loading...</div>;
@@ -109,18 +266,14 @@ function Profile() {
     <div style={{ 
       minHeight: "100vh", 
       backgroundColor: "#f8fafc", 
-      padding: "40px 0",
       width: "100%",
       overflow: "hidden"
     }}>
       <Header />
       <div style={{
         width: "100%",
-        margin: "0 auto",
         backgroundColor: "white",
-        borderRadius: "16px",
-        padding: "40px",
-        boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+        padding: "70px 40px",
         marginTop: "0px"
       }}>
         <div style={{
@@ -162,8 +315,10 @@ function Profile() {
 
         <div style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))",
-          gap: "40px"
+          gridTemplateColumns: "repeat(auto-fit, minmax(500px, 600px))",
+          gap: "100px",
+          maxWidth: "100%",
+          margin: "0 auto"
         }}>
           {/* Profile Information */}
           <div>
@@ -175,181 +330,98 @@ function Profile() {
             }}>
               Account Information
             </h2>
-            <form onSubmit={handleProfileUpdate}>
-              <div style={{ marginBottom: "16px" }}>
-                <label style={{
-                  display: "block",
-                  marginBottom: "6px",
-                  fontWeight: "500",
-                  color: "#374151",
-                  fontSize: "14px"
-                }}>
-                  Username
-                </label>
-                <input
-                  name="username"
-                  type="text"
-                  value={profileData.username}
-                  onChange={handleProfileChange}
-                  style={{
-                    padding: "12px",
-                    borderRadius: "8px",
-                    border: "1px solid #d1d5db",
-                    fontSize: "14px",
-                    backgroundColor: "white",
-                    color: "#1e293b",
-                    width: "50%",
-                    boxSizing: "border-box"
-                  }}
-                />
-              </div>
+            
+            {renderEditableField("Username", "username", profileData.username)}
+            {renderEditableField("Email", "email", profileData.email, "email")}
 
-              <div style={{ marginBottom: "16px" }}>
-                <label style={{
-                  display: "block",
-                  marginBottom: "6px",
-                  fontWeight: "500",
-                  color: "#374151",
-                  fontSize: "14px"
-                }}>
-                  Email
-                </label>
-                <input
-                  name="email"
-                  type="email"
-                  value={profileData.email}
-                  onChange={handleProfileChange}
+            {/* Password Change Section */}
+            <div style={{
+              marginTop: "30px",
+              padding: "20px",
+              backgroundColor: "#f8fafc",
+              borderRadius: "8px",
+              border: "1px solid #e2e8f0"
+            }}>
+              <h3 style={{
+                fontSize: "1.1rem",
+                fontWeight: "600",
+                color: "#1e293b",
+                marginBottom: "16px"
+              }}>
+                Change Password
+              </h3>
+              <form onSubmit={handlePasswordUpdate}>
+                <div style={{ marginBottom: "12px" }}>
+                  <input
+                    name="currentPassword"
+                    type="password"
+                    value={profileData.currentPassword}
+                    onChange={handleProfileChange}
+                    placeholder="Current password"
+                    style={{
+                      padding: "8px 12px",
+                      borderRadius: "6px",
+                      border: "1px solid #d1d5db",
+                      fontSize: "14px",
+                      width: "100%",
+                      boxSizing: "border-box"
+                    }}
+                  />
+                </div>
+                <div style={{ marginBottom: "12px" }}>
+                  <input
+                    name="newPassword"
+                    type="password"
+                    value={profileData.newPassword}
+                    onChange={handleProfileChange}
+                    placeholder="New password (min 8 chars + special char)"
+                    style={{
+                      padding: "8px 12px",
+                      borderRadius: "6px",
+                      border: "1px solid #d1d5db",
+                      fontSize: "14px",
+                      width: "100%",
+                      boxSizing: "border-box"
+                    }}
+                  />
+                </div>
+                <div style={{ marginBottom: "16px" }}>
+                  <input
+                    name="confirmPassword"
+                    type="password"
+                    value={profileData.confirmPassword}
+                    onChange={handleProfileChange}
+                    placeholder="Confirm new password"
+                    style={{
+                      padding: "8px 12px",
+                      borderRadius: "6px",
+                      border: "1px solid #d1d5db",
+                      fontSize: "14px",
+                      width: "100%",
+                      boxSizing: "border-box"
+                    }}
+                  />
+                </div>
+                <button
+                  type="submit"
                   style={{
-                    padding: "12px",
-                    borderRadius: "8px",
-                    border: "1px solid #d1d5db",
-                    fontSize: "14px",
-                    backgroundColor: "white",
-                    color: "#1e293b",
-                    width: "50%",
-                    boxSizing: "border-box"
+                    background: "#3b82f6",
+                    color: "white",
+                    padding: "8px 16px",
+                    borderRadius: "6px",
+                    border: "none",
+                    fontWeight: "500",
+                    cursor: "pointer",
+                    fontSize: "14px"
                   }}
-                />
-              </div>
-
-              <div style={{ marginBottom: "16px" }}>
-                <label style={{
-                  display: "block",
-                  marginBottom: "6px",
-                  fontWeight: "500",
-                  color: "#374151",
-                  fontSize: "14px"
-                }}>
-                  Current Password
-                </label>
-                <input
-                  name="currentPassword"
-                  type="password"
-                  value={profileData.currentPassword}
-                  onChange={handleProfileChange}
-                  placeholder="Enter current password"
-                  style={{
-                    padding: "12px",
-                    borderRadius: "8px",
-                    border: "1px solid #d1d5db",
-                    fontSize: "14px",
-                    backgroundColor: "white",
-                    color: "#1e293b",
-                    width: "50%",
-                    boxSizing: "border-box"
-                  }}
-                />
-              </div>
-
-              <div style={{ marginBottom: "16px" }}>
-                <label style={{
-                  display: "block",
-                  marginBottom: "6px",
-                  fontWeight: "500",
-                  color: "#374151",
-                  fontSize: "14px"
-                }}>
-                  New Password
-                </label>
-                <input
-                  name="newPassword"
-                  type="password"
-                  value={profileData.newPassword}
-                  onChange={handleProfileChange}
-                  placeholder="Enter new password (min 8 chars + special char)"
-                  style={{
-                    padding: "12px",
-                    borderRadius: "8px",
-                    border: "1px solid #d1d5db",
-                    fontSize: "14px",
-                    backgroundColor: "white",
-                    color: "#1e293b",
-                    width: "50%",
-                    boxSizing: "border-box"
-                  }}
-                />
-                <small style={{ color: "#6b7280", fontSize: "12px", marginTop: "4px", display: "block" }}>
-                  Must be at least 8 characters and include a special character
-                </small>
-              </div>
-
-              <div style={{ marginBottom: "20px" }}>
-                <label style={{
-                  display: "block",
-                  marginBottom: "6px",
-                  fontWeight: "500",
-                  color: "#374151",
-                  fontSize: "14px"
-                }}>
-                  Confirm New Password
-                </label>
-                <input
-                  name="confirmPassword"
-                  type="password"
-                  value={profileData.confirmPassword}
-                  onChange={handleProfileChange}
-                  placeholder="Confirm new password"
-                  style={{
-                    padding: "12px",
-                    borderRadius: "8px",
-                    border: "1px solid #d1d5db",
-                    fontSize: "14px",
-                    backgroundColor: "white",
-                    color: "#1e293b",
-                    width: "50%",
-                    boxSizing: "border-box"
-                  }}
-                />
-              </div>
-
-              <button
-                type="submit"
-                style={{
-                  background: "#3b82f6",
-                  color: "white",
-                  padding: "12px 24px",
-                  borderRadius: "8px",
-                  border: "none",
-                  fontWeight: "600",
-                  cursor: "pointer",
-                  fontSize: "14px",
-                  transition: "all 0.3s ease"
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.background = "#2563eb";
-                  e.target.style.transform = "translateY(-1px)";
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.background = "#3b82f6";
-                  e.target.style.transform = "translateY(0)";
-                }}
-              >
-                Update Profile
-              </button>
-            </form>
+                >
+                  Update Password
+                </button>
+              </form>
+            </div>
           </div>
 
-          {/* Add Address */}
+          {/* Addresses Section */}
           <div>
             <h2 style={{
               fontSize: "1.5rem",
@@ -357,213 +429,191 @@ function Profile() {
               color: "#1e293b",
               marginBottom: "20px"
             }}>
-              Add New Address
+              Addresses
             </h2>
-            <form onSubmit={handleAddAddress}>
-              <div style={{ marginBottom: "16px" }}>
-                <label style={{
-                  display: "block",
-                  marginBottom: "6px",
-                  fontWeight: "500",
-                  color: "#374151",
-                  fontSize: "14px"
-                }}>
-                  Street Address
-                </label>
-                <input
-                  name="street"
-                  type="text"
-                  value={newAddress.street}
-                  onChange={handleAddressChange}
-                  placeholder="Enter street address"
-                  required
-                  style={{
-                    padding: "12px",
-                    borderRadius: "8px",
-                    border: "1px solid #d1d5db",
-                    fontSize: "14px",
-                    backgroundColor: "white",
-                    color: "#1e293b",
-                    width: "50%",
-                    boxSizing: "border-box"
-                  }}
-                />
-              </div>
 
-              <div style={{ marginBottom: "16px" }}>
-                <label style={{
-                  display: "block",
-                  marginBottom: "6px",
-                  fontWeight: "500",
-                  color: "#374151",
-                  fontSize: "14px"
-                }}>
-                  City
-                </label>
-                <input
-                  name="city"
-                  type="text"
-                  value={newAddress.city}
-                  onChange={handleAddressChange}
-                  placeholder="Enter city"
-                  required
-                  style={{
-                    padding: "12px",
-                    borderRadius: "8px",
-                    border: "1px solid #d1d5db",
-                    fontSize: "14px",
-                    backgroundColor: "white",
-                    color: "#1e293b",
-                    width: "50%",
-                    boxSizing: "border-box"
-                  }}
-                />
-              </div>
-
-              <div style={{ marginBottom: "16px" }}>
-                <label style={{
-                  display: "block",
-                  marginBottom: "6px",
-                  fontWeight: "500",
-                  color: "#374151",
-                  fontSize: "14px"
-                }}>
-                  Province/State
-                </label>
-                <input
-                  name="province"
-                  type="text"
-                  value={newAddress.province}
-                  onChange={handleAddressChange}
-                  placeholder="Enter province or state"
-                  required
-                  style={{
-                    padding: "12px",
-                    borderRadius: "8px",
-                    border: "1px solid #d1d5db",
-                    fontSize: "14px",
-                    backgroundColor: "white",
-                    color: "#1e293b",
-                    width: "50%",
-                    boxSizing: "border-box"
-                  }}
-                />
-              </div>
-
-              <div style={{ marginBottom: "16px" }}>
-                <label style={{
-                  display: "block",
-                  marginBottom: "6px",
-                  fontWeight: "500",
-                  color: "#374151",
-                  fontSize: "14px"
-                }}>
-                  Country
-                </label>
-                <input
-                  name="country"
-                  type="text"
-                  value={newAddress.country}
-                  onChange={handleAddressChange}
-                  placeholder="Enter country"
-                  required
-                  style={{
-                    padding: "12px",
-                    borderRadius: "8px",
-                    border: "1px solid #d1d5db",
-                    fontSize: "14px",
-                    backgroundColor: "white",
-                    color: "#1e293b",
-                    width: "50%",
-                    boxSizing: "border-box"
-                  }}
-                />
-              </div>
-
-              <div style={{ marginBottom: "16px" }}>
-                <label style={{
-                  display: "block",
-                  marginBottom: "6px",
-                  fontWeight: "500",
-                  color: "#374151",
-                  fontSize: "14px"
-                }}>
-                  Zip/Postal Code
-                </label>
-                <input
-                  name="zip"
-                  type="text"
-                  value={newAddress.zip}
-                  onChange={handleAddressChange}
-                  placeholder="Enter zip or postal code"
-                  required
-                  style={{
-                    padding: "12px",
-                    borderRadius: "8px",
-                    border: "1px solid #d1d5db",
-                    fontSize: "14px",
-                    backgroundColor: "white",
-                    color: "#1e293b",
-                    width: "50%",
-                    boxSizing: "border-box"
-                  }}
-                />
-              </div>
-
-              <div style={{ marginBottom: "20px" }}>
-                <label style={{
-                  display: "block",
-                  marginBottom: "6px",
-                  fontWeight: "500",
-                  color: "#374151",
-                  fontSize: "14px"
-                }}>
-                  Phone (Optional)
-                </label>
-                <input
-                  name="phone"
-                  type="tel"
-                  value={newAddress.phone}
-                  onChange={handleAddressChange}
-                  placeholder="Enter phone number"
-                  style={{
-                    padding: "12px",
-                    borderRadius: "8px",
-                    border: "1px solid #d1d5db",
-                    fontSize: "14px",
-                    backgroundColor: "white",
-                    color: "#1e293b",
-                    width: "50%",
-                    boxSizing: "border-box"
-                  }}
-                />
-              </div>
-
-              <button
-                type="submit"
-                style={{
-                  background: "#059669",
-                  color: "white",
-                  padding: "12px 24px",
-                  borderRadius: "8px",
-                  border: "none",
+            {/* Display existing addresses */}
+            {addresses.length > 0 && (
+              <div style={{ marginBottom: "30px" }}>
+                <h3 style={{
+                  fontSize: "1rem",
                   fontWeight: "600",
-                  cursor: "pointer",
-                  fontSize: "14px",
-                  transition: "all 0.3s ease"
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.background = "#047857";
-                  e.target.style.transform = "translateY(-1px)";
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.background = "#059669";
-                  e.target.style.transform = "translateY(0)";
-                }}
-              >
-                Add Address
-              </button>
-            </form>
+                  color: "#374151",
+                  marginBottom: "12px"
+                }}>
+                  Your Addresses
+                </h3>
+                {addresses.map((address) => (
+                  <div key={address.id} style={{
+                    padding: "16px",
+                    border: "1px solid #e2e8f0",
+                    borderRadius: "8px",
+                    marginBottom: "12px",
+                    backgroundColor: "white",
+                    position: "relative"
+                  }}>
+                    <div style={{ fontSize: "14px", color: "#1e293b" }}>
+                      {address.street}<br />
+                      {address.city}, {address.province} {address.zip}<br />
+                      {address.country}
+                      {address.phone && <><br />📞 {address.phone}</>}
+                    </div>
+                    <button
+                      onClick={() => handleDeleteAddress(address.id)}
+                      style={{
+                        position: "absolute",
+                        top: "12px",
+                        right: "12px",
+                        padding: "6px 10px",
+                        borderRadius: "6px",
+                        border: "none",
+                        backgroundColor: "#ef4444",
+                        color: "white",
+                        fontSize: "12px",
+                        cursor: "pointer",
+                        fontWeight: "500"
+                      }}
+                      title="Delete address"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Add new address form */}
+            <div style={{
+              padding: "20px",
+              backgroundColor: "#f8fafc",
+              borderRadius: "8px",
+              border: "1px solid #e2e8f0"
+            }}>
+              <h3 style={{
+                fontSize: "1.1rem",
+                fontWeight: "600",
+                color: "#1e293b",
+                marginBottom: "16px"
+              }}>
+                Add New Address
+              </h3>
+              <form onSubmit={handleAddAddress}>
+                <div style={{ marginBottom: "12px" }}>
+                  <input
+                    name="street"
+                    type="text"
+                    value={newAddress.street}
+                    onChange={handleAddressChange}
+                    placeholder="Street address"
+                    required
+                    style={{
+                      padding: "8px 12px",
+                      borderRadius: "6px",
+                      border: "1px solid #d1d5db",
+                      fontSize: "14px",
+                      width: "100%",
+                      boxSizing: "border-box"
+                    }}
+                  />
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "12px" }}>
+                  <input
+                    name="city"
+                    type="text"
+                    value={newAddress.city}
+                    onChange={handleAddressChange}
+                    placeholder="City"
+                    required
+                    style={{
+                      padding: "8px 12px",
+                      borderRadius: "6px",
+                      border: "1px solid #d1d5db",
+                      fontSize: "14px",
+                      boxSizing: "border-box"
+                    }}
+                  />
+                  <input
+                    name="province"
+                    type="text"
+                    value={newAddress.province}
+                    onChange={handleAddressChange}
+                    placeholder="Province/State"
+                    required
+                    style={{
+                      padding: "8px 12px",
+                      borderRadius: "6px",
+                      border: "1px solid #d1d5db",
+                      fontSize: "14px",
+                      boxSizing: "border-box"
+                    }}
+                  />
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "12px" }}>
+                  <input
+                    name="country"
+                    type="text"
+                    value={newAddress.country}
+                    onChange={handleAddressChange}
+                    placeholder="Country"
+                    required
+                    style={{
+                      padding: "8px 12px",
+                      borderRadius: "6px",
+                      border: "1px solid #d1d5db",
+                      fontSize: "14px",
+                      boxSizing: "border-box"
+                    }}
+                  />
+                  <input
+                    name="zip"
+                    type="text"
+                    value={newAddress.zip}
+                    onChange={handleAddressChange}
+                    placeholder="Zip/Postal Code"
+                    required
+                    style={{
+                      padding: "8px 12px",
+                      borderRadius: "6px",
+                      border: "1px solid #d1d5db",
+                      fontSize: "14px",
+                      boxSizing: "border-box"
+                    }}
+                  />
+                </div>
+                <div style={{ marginBottom: "16px" }}>
+                  <input
+                    name="phone"
+                    type="tel"
+                    value={newAddress.phone}
+                    onChange={handleAddressChange}
+                    placeholder="Phone (optional)"
+                    style={{
+                      padding: "8px 12px",
+                      borderRadius: "6px",
+                      border: "1px solid #d1d5db",
+                      fontSize: "14px",
+                      width: "100%",
+                      boxSizing: "border-box"
+                    }}
+                  />
+                </div>
+                <button
+                  type="submit"
+                  style={{
+                    background: "#059669",
+                    color: "white",
+                    padding: "8px 16px",
+                    borderRadius: "6px",
+                    border: "none",
+                    fontWeight: "500",
+                    cursor: "pointer",
+                    fontSize: "14px"
+                  }}
+                >
+                  Add Address
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </div>

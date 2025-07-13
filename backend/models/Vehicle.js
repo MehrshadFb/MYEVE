@@ -8,11 +8,11 @@ module.exports = (sequelize) => {
       defaultValue: uuidv4,
       primaryKey: true,
     },
-    name: {
+    type: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        len: [1, 100],
+        len: [1, 50],
       },
     },
     description: {
@@ -31,6 +31,21 @@ module.exports = (sequelize) => {
       allowNull: false,
       validate: {
         len: [1, 100],
+      },
+    },
+    seats: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        min: 1,
+        max: 20,
+      },
+    },
+    range: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        min: 0,
       },
     },
     quantity: {
