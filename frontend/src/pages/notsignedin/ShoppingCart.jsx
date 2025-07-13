@@ -1,14 +1,30 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Header from "../../components/Header";
+import { getCart } from "../../services/api"; // ✅ Import cart API
+
+
 
 function ShoppingCart() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [cartItems, setCartItems] = useState([]);
+
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token); // convert to true/false
-  }, []);
+  const token = localStorage.getItem("token");
+  setIsLoggedIn(!!token);
+
+  if (token) {
+    getCart()
+      .then((data) => {
+        setCartItems(data.items || []);
+      })
+      .catch((err) => {
+        console.error("Error fetching cart:", err);
+      });
+  }
+}, []);
+
 
   return (
     <div style={{ minHeight: "100vh", backgroundColor: "#f8fafc", width: "100vw", overflowX: "hidden" }}>
@@ -36,16 +52,27 @@ function ShoppingCart() {
             }}>
               Shopping Cart
             </h1>
-            <p style={{
-              fontSize: "1.3rem",
-              marginBottom: "600px",
-              opacity: 0.9,
-              maxWidth: "600px",
-              marginLeft: "auto",
-              marginRight: "auto"
-            }}>
-              List of carts will go here
-            </p>
+            {cartItems.length > 0 ? (
+        <ul style={{ listStyle: "none", padding: 0 }}>
+          {cartItems.map((item) => (
+            <li key={item.id} style={{ marginBottom: "10px" }}>
+              {item.name} - Quantity: {item.quantity}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p style={{
+          fontSize: "1.3rem",
+          marginBottom: "600px",
+          opacity: 0.9,
+          maxWidth: "600px",
+          marginLeft: "auto",
+          marginRight: "auto"
+        }}>
+          Your cart is empty.
+        </p>
+      )}
+
           </div>
         ) : (
           <div style={{ width: "100%" }}>

@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { getAllVehicles } from "../../services/api";
+import { getAllVehicles, addToCart } from "../../services/api";
 import Header from "../../components/Header";
 import { Link } from "react-router-dom";
 import useAuth from "../../context/useAuth";
+
 
 function Vehicles() {
   const [vehicles, setVehicles] = useState([]);
@@ -12,6 +13,7 @@ function Vehicles() {
   const [showFilters, setShowFilters] = useState(false);
   const [activeFilterTab, setActiveFilterTab] = useState("brand");
   const { user } = useAuth();
+  
 
   // Filter states
   const [selectedBrands, setSelectedBrands] = useState([]);
@@ -122,6 +124,16 @@ function Vehicles() {
   // Get total active filters count
   const getActiveFiltersCount = () => {
     return selectedBrands.length + selectedTypes.length + selectedPriceRanges.length;
+  };
+
+  const handleAddToCart = async (vehicleId) => {
+    try {
+      await addToCart(vehicleId);
+      alert("Vehicle added to cart!");
+    } catch (error) {
+      console.error("Add to cart failed:", error);
+      alert("Failed to add to cart.");
+    }
   };
 
   return (
@@ -697,26 +709,35 @@ function Vehicles() {
                         fontWeight: "700",
                         color: "#3b82f6"
                       }}>${vehicle.price}</span>
-                      <button style={{
-                        padding: "8px 16px",
-                        borderRadius: "8px",
-                        border: "none",
-                        background: "#3b82f6",
-                        color: "white",
-                        fontWeight: "600",
-                        cursor: "pointer",
-                        transition: "all 0.3s ease"
-                      }}
-                      onMouseEnter={(e) => {
-                        e.target.style.background = "#2563eb";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.target.style.background = "#3b82f6";
-                      }}
-                      >
-                        View Details
-                      </button>
+                      <div style={{ display: "flex", gap: "8px" }}>
+                        <button style={{
+                          padding: "8px 16px",
+                          borderRadius: "8px",
+                          border: "none",
+                          background: "#3b82f6",
+                          color: "white",
+                          fontWeight: "600",
+                          cursor: "pointer"
+                        }}>
+                          View Details
+                        </button>
+                        <button
+                          onClick={() => handleAddToCart(vehicle.vid)}
+                          style={{
+                            padding: "8px 16px",
+                            borderRadius: "8px",
+                            border: "none",
+                            background: "#10b981",
+                            color: "white",
+                            fontWeight: "600",
+                            cursor: "pointer"
+                          }}
+                        >
+                          ➕
+                        </button>
+                      </div>
                     </div>
+
                   </div>
                 </div>
               ))}
