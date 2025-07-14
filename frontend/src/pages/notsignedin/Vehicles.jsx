@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { getAllVehicles } from "../../services/api";
+import { getAllVehicles, addToCart } from "../../services/api";
 import Header from "../../components/Header";
 import { Link } from "react-router-dom";
 import useAuth from "../../context/useAuth";
+
 
 function Vehicles() {
   const [vehicles, setVehicles] = useState([]);
@@ -12,6 +13,7 @@ function Vehicles() {
   const [showFilters, setShowFilters] = useState(false);
   const [activeFilterTab, setActiveFilterTab] = useState("brand");
   const { user } = useAuth();
+  
 
   // Filter states
   const [selectedBrands, setSelectedBrands] = useState([]);
@@ -173,6 +175,17 @@ function Vehicles() {
       selectedPriceRanges.length
     );
   };
+
+  const handleAddToCart = async (vid) => {
+    try {
+      await addToCart({ vehicleId: vid, quantity: 1 }); // quantity must be passed
+      alert("Added to cart!");
+    } catch (error) {
+      console.error("Add to cart failed:", error);
+      alert("Failed to add to cart");
+    }
+  };
+
 
   return (
     <div
@@ -1031,60 +1044,71 @@ function Vehicles() {
                       </p>
                     )}
 
-                    {/* Action Buttons */}
-                    <div
-                      style={{
-                        display: "flex",
-                        gap: "12px",
-                      }}
-                    >
-                      <button
-                        style={{
-                          flex: 1,
-                          padding: "10px 16px",
-                          borderRadius: "8px",
-                          border: "1px solid #3b82f6",
-                          backgroundColor: "white",
-                          color: "#3b82f6",
-                          fontWeight: "600",
-                          cursor: "pointer",
-                          fontSize: "0.875rem",
-                          transition: "all 0.3s ease",
-                        }}
-                        onMouseEnter={(e) => {
-                          e.target.style.backgroundColor = "#3b82f6";
-                          e.target.style.color = "white";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.target.style.backgroundColor = "white";
-                          e.target.style.color = "#3b82f6";
-                        }}
-                      >
-                        View Details
-                      </button>
-                      <button
-                        style={{
-                          flex: 1,
-                          padding: "10px 16px",
-                          borderRadius: "8px",
-                          border: "none",
-                          backgroundColor: "#3b82f6",
-                          color: "white",
-                          fontWeight: "600",
-                          cursor: "pointer",
-                          fontSize: "0.875rem",
-                          transition: "all 0.3s ease",
-                        }}
-                        onMouseEnter={(e) => {
-                          e.target.style.backgroundColor = "#2563eb";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.target.style.backgroundColor = "#3b82f6";
-                        }}
-                      >
-                        Add to Cart
-                      </button>
+                        <div style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center"
+                        }}>
+                          <span style={{
+                            fontSize: "1.25rem",
+                            fontWeight: "700",
+                            color: "#3b82f6"
+                          }}>
+                            ${vehicle.price}
+                          </span>
+                          <div style={{ display: "flex", gap: "12px" }}>
+                            <button
+                              style={{
+                                flex: 1,
+                                padding: "10px 16px",
+                                borderRadius: "8px",
+                                border: "1px solid #3b82f6",
+                                backgroundColor: "white",
+                                color: "#3b82f6",
+                                fontWeight: "600",
+                                cursor: "pointer",
+                                fontSize: "0.875rem",
+                                transition: "all 0.3s ease",
+                              }}
+                              onMouseEnter={(e) => {
+                                e.target.style.backgroundColor = "#3b82f6";
+                                e.target.style.color = "white";
+                              }}
+                              onMouseLeave={(e) => {
+                                e.target.style.backgroundColor = "white";
+                                e.target.style.color = "#3b82f6";
+                              }}
+                            >
+                              View Details
+                            </button>
+                            <button
+                              onClick={() => handleAddToCart(vehicle.vid)}
+                              style={{
+                                flex: 1,
+                                padding: "10px 16px",
+                                borderRadius: "8px",
+                                border: "none",
+                                backgroundColor: "#10b981",
+                                color: "white",
+                                fontWeight: "600",
+                                cursor: "pointer",
+                                fontSize: "0.875rem",
+                                transition: "all 0.3s ease",
+                              }}
+                              onMouseEnter={(e) => {
+                                e.target.style.backgroundColor = "#059669";
+                              }}
+                              onMouseLeave={(e) => {
+                                e.target.style.backgroundColor = "#10b981";
+                              }}
+                            >
+                              Add to Cart
+                            </button>
+                          </div>
+                        </div>
+
                     </div>
+
                   </div>
                 </div>
               ))}

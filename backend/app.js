@@ -3,6 +3,7 @@ const cors = require("cors");
 const { syncDatabase } = require("./models/index");
 const userRoutes = require("./routes/userRoutes");
 const vehicleRoutes = require("./routes/vehicleRoutes");
+const cartRoutes = require('./routes/cartRoutes');
 
 const app = express();
 
@@ -13,6 +14,8 @@ app.use(express.json());
 // Routes
 app.use("/api", userRoutes);
 app.use("/api", vehicleRoutes);
+app.use("/api/cart", cartRoutes)
+
 
 // Health check route
 app.get("/health", (req, res) => {

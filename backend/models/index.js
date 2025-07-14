@@ -2,6 +2,8 @@ const sequelize = require("../config/database");
 const UserModel = require("./User");
 const AddressModel = require("./Address");
 const VehicleModel = require("./Vehicle");
+const defineShoppingCart = require("./ShoppingCart");
+const defineCartItem = require("./CartItem");
 const ImageModel = require("./Image");
 const { v4: uuidv4 } = require("uuid");
 
@@ -9,7 +11,10 @@ const { v4: uuidv4 } = require("uuid");
 const User = UserModel(sequelize);
 const Address = AddressModel(sequelize);
 const Vehicle = VehicleModel(sequelize);
+const ShoppingCart = defineShoppingCart(sequelize);
+const CartItem = defineCartItem(sequelize);
 const Image = ImageModel(sequelize);
+
 
 // Association: One User hasMany Addresses
 User.hasMany(Address, {
@@ -19,6 +24,18 @@ User.hasMany(Address, {
 });
 Address.belongsTo(User, { foreignKey: "userId" });
 
+
+User.hasOne(ShoppingCart, { foreignKey: "userId" });
+ShoppingCart.belongsTo(User, { foreignKey: "userId" });
+
+ShoppingCart.hasMany(CartItem, { foreignKey: "cartId", onDelete: "CASCADE" });
+CartItem.belongsTo(ShoppingCart, { foreignKey: "cartId" });
+
+Vehicle.hasMany(CartItem, { foreignKey: "vehicleId" });
+CartItem.belongsTo(Vehicle, {
+  foreignKey: 'vehicleId',
+  targetKey: 'vid' // Because Vehicle uses 'vid' 
+});
 // Association: One Vehicle hasMany Images
 Vehicle.hasMany(Image, { foreignKey: "vehicleId", as: "images" });
 Image.belongsTo(Vehicle, { foreignKey: "vehicleId", as: "vehicle" });
@@ -28,6 +45,8 @@ const db = {
   User,
   Address,
   Vehicle,
+  ShoppingCart,
+  CartItem
   Image,
 };
 
@@ -76,4 +95,4 @@ const syncDatabase = async (force = false) => {
   }
 };
 
-module.exports = { db, syncDatabase, User, Address, Vehicle, Image };
+module.exports = { db, syncDatabase, User, Address, Vehicle, ShoppingCart, CartItem, Image};
