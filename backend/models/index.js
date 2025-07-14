@@ -3,13 +3,14 @@ const UserModel = require("./User");
 const AddressModel = require("./Address");
 const VehicleModel = require("./Vehicle");
 const ImageModel = require("./Image");
-const { v4: uuidv4 } = require("uuid");
+const ReviewModel = require("./Review");
 
 // Initialize models
 const User = UserModel(sequelize);
 const Address = AddressModel(sequelize);
 const Vehicle = VehicleModel(sequelize);
 const Image = ImageModel(sequelize);
+const Review = ReviewModel(sequelize);
 
 // Association: One User hasMany Addresses
 User.hasMany(Address, {
@@ -22,6 +23,22 @@ Address.belongsTo(User, { foreignKey: "userId" });
 // Association: One Vehicle hasMany Images
 Vehicle.hasMany(Image, { foreignKey: "vehicleId", as: "images" });
 Image.belongsTo(Vehicle, { foreignKey: "vehicleId", as: "vehicle" });
+
+// Association: One Vehicle hasMany Reviews
+Vehicle.hasMany(Review, {
+  foreignKey: "vehicleId",
+  as: "reviews",
+  onDelete: "CASCADE",
+});
+Review.belongsTo(Vehicle, { foreignKey: "vehicleId", as: "vehicle" });
+
+// Association: One User hasMany Reviews
+User.hasMany(Review, {
+  foreignKey: "userId",
+  as: "reviews",
+  onDelete: "CASCADE",
+});
+Review.belongsTo(User, { foreignKey: "userId", as: "user" });
 
 const db = {
   sequelize,
@@ -76,4 +93,4 @@ const syncDatabase = async (force = false) => {
   }
 };
 
-module.exports = { db, syncDatabase, User, Address, Vehicle, Image };
+module.exports = { db, syncDatabase, User, Address, Vehicle, Image, Review };

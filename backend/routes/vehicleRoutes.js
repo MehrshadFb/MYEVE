@@ -8,6 +8,7 @@ const {
   updateVehicle,
   deleteVehicle,
   uploadImages,
+  submitReview,
 } = require("../controllers/vehicleController");
 
 const router = express.Router();
@@ -15,6 +16,9 @@ const router = express.Router();
 // Public routes (anyone can view vehicles)
 router.get("/vehicles", getAllVehicles);
 router.get("/vehicles/:vid", getVehicleById);
+
+// Signed-in user routes (can post reviews)
+router.post("/vehicles/:vid/reviews", authenticateToken, submitReview);
 
 // Admin-only routes (only admins can create, update, delete vehicles)
 router.post(

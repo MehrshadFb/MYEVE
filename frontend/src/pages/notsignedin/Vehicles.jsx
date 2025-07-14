@@ -40,8 +40,12 @@ function Vehicles() {
   // Get unique values for filters
   const uniqueBrands = [...new Set(vehicles.map((vehicle) => vehicle.brand))];
   const uniqueTypes = [...new Set(vehicles.map((vehicle) => vehicle.type))];
-  const uniqueSeats = [...new Set(vehicles.map((vehicle) => vehicle.seats))].sort((a, b) => a - b);
-  const uniqueRanges = [...new Set(vehicles.map((vehicle) => vehicle.range))].sort((a, b) => a - b);
+  const uniqueSeats = [
+    ...new Set(vehicles.map((vehicle) => vehicle.seats)),
+  ].sort((a, b) => a - b);
+  const uniqueRanges = [
+    ...new Set(vehicles.map((vehicle) => vehicle.range)),
+  ].sort((a, b) => a - b);
 
   // Price ranges
   const priceRanges = [
@@ -166,10 +170,10 @@ function Vehicles() {
   // Get total active filters count
   const getActiveFiltersCount = () => {
     return (
-      selectedBrands.length + 
-      selectedTypes.length + 
-      selectedSeats.length + 
-      selectedRanges.length + 
+      selectedBrands.length +
+      selectedTypes.length +
+      selectedSeats.length +
+      selectedRanges.length +
       selectedPriceRanges.length
     );
   };
@@ -361,8 +365,16 @@ function Vehicles() {
                       count: selectedBrands.length,
                     },
                     { id: "type", label: "Type", count: selectedTypes.length },
-                    { id: "seats", label: "Seats", count: selectedSeats.length },
-                    { id: "range", label: "Range", count: selectedRanges.length },
+                    {
+                      id: "seats",
+                      label: "Seats",
+                      count: selectedSeats.length,
+                    },
+                    {
+                      id: "range",
+                      label: "Range",
+                      count: selectedRanges.length,
+                    },
                     {
                       id: "pricing",
                       label: "Pricing",
@@ -998,7 +1010,10 @@ function Vehicles() {
                         }}
                       >
                         <span>👥</span>
-                        <span>{vehicle.seats} {vehicle.seats === 1 ? "Seat" : "Seats"}</span>
+                        <span>
+                          {vehicle.seats}{" "}
+                          {vehicle.seats === 1 ? "Seat" : "Seats"}
+                        </span>
                       </div>
                       <div
                         style={{
@@ -1058,6 +1073,9 @@ function Vehicles() {
                         onMouseLeave={(e) => {
                           e.target.style.backgroundColor = "white";
                           e.target.style.color = "#3b82f6";
+                        }}
+                        onClick={() => {
+                          window.location.href = `/vehicles/${vehicle.vid}`;
                         }}
                       >
                         View Details

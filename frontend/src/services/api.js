@@ -86,6 +86,11 @@ export const getAllUsers = async () => {
   return response.data;
 };
 
+export const getUserById = async (id) => {
+  const response = await api.get(`/users/${id}`);
+  return response.data;
+};
+
 export const deleteUserById = async (id) => {
   const response = await api.delete(`/users/${id}`);
   return response.data;
@@ -156,6 +161,11 @@ export const uploadVehicleImages = async (vid, files) => {
       "Content-Type": "multipart/form-data",
     },
   });
+  return response.data;
+};
+
+export const submitReview = async (vid, reviewData) => {
+  const response = await api.post(`/vehicles/${vid}/reviews`, reviewData);
   return response.data;
 };
 

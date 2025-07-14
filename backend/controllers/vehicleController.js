@@ -1,9 +1,10 @@
 const express = require("express");
-const { Vehicle, Image } = require("../models");
+const { Vehicle, Image, Review } = require("../models");
 
 // Create a new vehicle
 const createVehicle = async (req, res) => {
-  const { type, description, brand, model, seats, range, quantity, price } = req.body;
+  const { type, description, brand, model, seats, range, quantity, price } =
+    req.body;
 
   if (!type || !brand || !model || !seats || !range || !price) {
     return res.status(400).json({
@@ -43,6 +44,10 @@ const getAllVehicles = async (req, res) => {
           model: Image,
           as: "images",
         },
+        {
+          model: Review,
+          as: "reviews",
+        },
       ],
       order: [["createdAt", "DESC"]],
     });
@@ -56,9 +61,19 @@ const getAllVehicles = async (req, res) => {
 // Get vehicle by ID
 const getVehicleById = async (req, res) => {
   const { vid } = req.params;
-
   try {
-    const vehicle = await Vehicle.findByPk(vid);
+    const vehicle = await Vehicle.findByPk(vid, {
+      include: [
+        {
+          model: Image,
+          as: "images",
+        },
+        {
+          model: Review,
+          as: "reviews",
+        },
+      ],
+    });
     if (!vehicle) {
       return res.status(404).json({ message: "Vehicle not found" });
     }
@@ -72,7 +87,8 @@ const getVehicleById = async (req, res) => {
 // Update vehicle
 const updateVehicle = async (req, res) => {
   const { vid } = req.params;
-  const { type, description, brand, model, seats, range, quantity, price } = req.body;
+  const { type, description, brand, model, seats, range, quantity, price } =
+    req.body;
 
   try {
     const vehicle = await Vehicle.findByPk(vid);
@@ -141,6 +157,38 @@ const uploadImages = async (req, res) => {
   }
 };
 
+const submitReview = async (req, res) => {
+  const { vid } = req.params;
+  const { rating, comment } = req.body;
+
+  try {
+    const vehicle = await Vehicle.findByPk(vid);
+    if (!vehicle) {
+      return res.status(404).json({ message: "Vehicle not found" });
+    }
+    if (!rating || rating < 1 || rating > 5) {
+      return res
+        .status(400)
+        .json({ message: "Rating must be between 1 and 5" });
+    }
+
+    const review = await Review.create({
+      vehicleId: vid,
+      userId: req.user.id,
+      rating,
+      comment,
+    });
+
+    return res.status(201).json({
+      message: "Review submitted successfully",
+      review,
+    });
+  } catch (err) {
+    console.error("submitReview error:", err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 module.exports = {
   createVehicle,
   getAllVehicles,
@@ -148,4 +196,5 @@ module.exports = {
   updateVehicle,
   deleteVehicle,
   uploadImages,
+  submitReview,
 };
