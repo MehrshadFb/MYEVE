@@ -153,14 +153,19 @@ export const getCart = async () => {
   return response.data;
 };
 
-export const addToCart = async (vehicleId, quantity = 1) => {
-  const response = await api.post("/cart", { vehicleId, quantity });
+export const addToCart = async ({ vehicleId, quantity = 1 }) => {
+  const response = await api.post("/cart/add", { vehicleId, quantity });
   return response.data;
 };
 
 export const updateCartItem = async (itemId, quantity) => {
-  const response = await api.put(`/cart/item/${itemId}`, { quantity });
-  return response.data;
+  try {
+    const response = await api.put(`/cart/item/${itemId}`, { quantity });
+    return response.data;
+  } catch (err) {
+    console.error("updateCartItem error:", err.response?.data || err.message);
+    throw err;
+  }
 };
 
 export const removeCartItem = async (itemId) => {

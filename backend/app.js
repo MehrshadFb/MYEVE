@@ -14,7 +14,7 @@ app.use(express.json());
 // Routes
 app.use("/api", userRoutes);
 app.use("/api", vehicleRoutes);
-app.use("/api", cartRoutes)
+app.use("/api/cart", cartRoutes)
 
 
 // Health check route

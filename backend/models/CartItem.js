@@ -16,6 +16,10 @@ module.exports = (sequelize) => {
         min: 1,
       },
     },
+    vehicleId: {
+      type: DataTypes.UUID,
+      allowNull: false,  
+    }
   });
 
   return CartItem;

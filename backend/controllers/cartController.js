@@ -6,6 +6,9 @@ const addToCart = async (req, res) => {
   const userId = req.user.id;
   const { vehicleId, quantity } = req.body;
 
+  console.log("Incoming AddToCart:", { userId, vehicleId, quantity });
+  console.log("User:", userId, "Vehicle:", vehicleId, "Qty:", quantity); 
+
   if (!vehicleId) {
     return res.status(400).json({ message: "vehicleId is required" });
   }
@@ -34,6 +37,7 @@ const addToCart = async (req, res) => {
   }
 };
 
+//GET cart
 const getCart = async (req, res) => {
   const userId = req.user.id;
 
@@ -65,6 +69,7 @@ const getCart = async (req, res) => {
       totalAmount += parseFloat(item.Vehicle.price) * item.quantity;
 
       return {
+        id: item.id,
         vehicle: item.Vehicle,
         quantity: item.quantity
       };
@@ -77,7 +82,67 @@ const getCart = async (req, res) => {
   }
 };
 
+//DELETE cart
+const removeCartItem = async (req, res) => {
+  const { itemId } = req.params;
+  try {
+    const deleted = await CartItem.destroy({ where: { id: itemId } });
+    return deleted
+      ? res.status(200).json({ message: 'Item removed' })
+      : res.status(404).json({ message: 'Item not found' });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+//PUT CART
+const updateCartItem = async (req, res) => {
+  const itemId = req.params.itemId;
+  const { quantity } = req.body;
+
+  try {
+    const item = await CartItem.findOne({ where: { id: itemId } }); // remove userId check
+    if (!item) return res.status(404).json({ message: "Item not found" });
+
+    item.quantity = quantity;
+    await item.save();
+
+    // send full updated cart
+    const userId = req.user.id;
+    const cart = await ShoppingCart.findOne({
+      where: { userId },
+      include: {
+        model: CartItem,
+        include: {
+          model: Vehicle,
+          attributes: ["vid", "name", "price", "brand", "model"]
+        }
+      }
+    });
+
+    let totalAmount = 0;
+    const items = cart.CartItems.map((item) => {
+      totalAmount += parseFloat(item.Vehicle.price) * item.quantity;
+      return {
+        id: item.id,
+        vehicle: item.Vehicle,
+        quantity: item.quantity
+      };
+    });
+
+    return res.status(200).json({ items, totalAmount });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+
+
+
 module.exports = {
   addToCart,
-  getCart
+  getCart,
+  removeCartItem,
+  updateCartItem,
 };

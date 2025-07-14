@@ -126,15 +126,16 @@ function Vehicles() {
     return selectedBrands.length + selectedTypes.length + selectedPriceRanges.length;
   };
 
-  const handleAddToCart = async (vehicleId) => {
+  const handleAddToCart = async (vid) => {
     try {
-      await addToCart(vehicleId);
-      alert("Vehicle added to cart!");
+      await addToCart({ vehicleId: vid, quantity: 1 }); // quantity must be passed
+      alert("Added to cart!");
     } catch (error) {
       console.error("Add to cart failed:", error);
-      alert("Failed to add to cart.");
+      alert("Failed to add to cart");
     }
   };
+
 
   return (
     <div style={{ minHeight: "100vh", backgroundColor: "#f8fafc", width: "100vw", overflowX: "hidden" }}>
