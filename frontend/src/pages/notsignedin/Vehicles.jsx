@@ -1,19 +1,16 @@
 import { useEffect, useState } from "react";
 import { getAllVehicles } from "../../services/api";
 import Header from "../../components/Header";
-import { Link } from "react-router-dom";
-import useAuth from "../../context/useAuth";
+import { useNavigate } from "react-router-dom";
 
 function Vehicles() {
+  const navigate = useNavigate();
   const [vehicles, setVehicles] = useState([]);
   const [filteredVehicles, setFilteredVehicles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [showFilters, setShowFilters] = useState(false);
   const [activeFilterTab, setActiveFilterTab] = useState("brand");
-  const { user } = useAuth();
-
-  // Filter states
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [selectedTypes, setSelectedTypes] = useState([]);
   const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
@@ -1075,7 +1072,7 @@ function Vehicles() {
                           e.target.style.color = "#3b82f6";
                         }}
                         onClick={() => {
-                          window.location.href = `/vehicles/${vehicle.vid}`;
+                          navigate(`/vehicles/${vehicle.vid}`);
                         }}
                       >
                         View Details
