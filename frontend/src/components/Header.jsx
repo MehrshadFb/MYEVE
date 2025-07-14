@@ -54,11 +54,75 @@ function Header() {
           </h1>
         </Link>
         <nav style={{ display: "flex", gap: "30px", alignItems: "center" }}>
-          <Link to="/featured" style={{ color: "#64748b", textDecoration: "none", fontWeight: "500" }}>Featured</Link>
-          <Link to="/vehicles" style={{ color: "#64748b", textDecoration: "none", fontWeight: "500" }}>Vehicles</Link>
-          <Link to="/about" style={{ color: "#64748b", textDecoration: "none", fontWeight: "500" }}>About</Link>
+          <Link 
+            to="/featured" 
+            style={{ 
+              color: "#64748b", 
+              textDecoration: "none", 
+              fontWeight: "500",
+              transition: "color 0.3s ease"
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.color = "#000000";
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.color = "#64748b";
+            }}
+          >
+            Featured
+          </Link>
+          <Link 
+            to="/vehicles" 
+            style={{ 
+              color: "#64748b", 
+              textDecoration: "none", 
+              fontWeight: "500",
+              transition: "color 0.3s ease"
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.color = "#000000";
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.color = "#64748b";
+            }}
+          >
+            Vehicles
+          </Link>
+          <Link 
+            to="/about" 
+            style={{ 
+              color: "#64748b", 
+              textDecoration: "none", 
+              fontWeight: "500",
+              transition: "color 0.3s ease"
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.color = "#000000";
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.color = "#64748b";
+            }}
+          >
+            About
+          </Link>
           {isAuthenticated && (
-            <Link to="/profile" style={{ color: "#64748b", textDecoration: "none", fontWeight: "500" }}>Profile</Link>
+            <Link 
+              to="/profile" 
+              style={{ 
+                color: "#64748b", 
+                textDecoration: "none", 
+                fontWeight: "500",
+                transition: "color 0.3s ease"
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.color = "#000000";
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.color = "#64748b";
+              }}
+            >
+              Profile
+            </Link>
           )}
           {/* Cart Icon */}
           <Link to="/cart" style={{ display: "flex", alignItems: "center", marginLeft: "18px" }}>

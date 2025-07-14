@@ -4,6 +4,7 @@ const AddressModel = require("./Address");
 const VehicleModel = require("./Vehicle");
 const defineShoppingCart = require("./ShoppingCart");
 const defineCartItem = require("./CartItem");
+const ImageModel = require("./Image");
 const { v4: uuidv4 } = require("uuid");
 
 // Initialize models
@@ -12,6 +13,8 @@ const Address = AddressModel(sequelize);
 const Vehicle = VehicleModel(sequelize);
 const ShoppingCart = defineShoppingCart(sequelize);
 const CartItem = defineCartItem(sequelize);
+const Image = ImageModel(sequelize);
+
 
 // Association: One User hasMany Addresses
 User.hasMany(Address, {
@@ -20,6 +23,7 @@ User.hasMany(Address, {
   onDelete: "CASCADE",
 });
 Address.belongsTo(User, { foreignKey: "userId" });
+
 
 User.hasOne(ShoppingCart, { foreignKey: "userId" });
 ShoppingCart.belongsTo(User, { foreignKey: "userId" });
@@ -32,6 +36,9 @@ CartItem.belongsTo(Vehicle, {
   foreignKey: 'vehicleId',
   targetKey: 'vid' // Because Vehicle uses 'vid' 
 });
+// Association: One Vehicle hasMany Images
+Vehicle.hasMany(Image, { foreignKey: "vehicleId", as: "images" });
+Image.belongsTo(Vehicle, { foreignKey: "vehicleId", as: "vehicle" });
 
 const db = {
   sequelize,
@@ -40,6 +47,7 @@ const db = {
   Vehicle,
   ShoppingCart,
   CartItem
+  Image,
 };
 
 // Seed database with admin account
@@ -47,26 +55,26 @@ const seedDatabase = async () => {
   try {
     // Check if admin already exists
     const existingAdmin = await User.findOne({
-      where: { email: 'myeveadmin@gmail.com' }
+      where: { email: "myeveadmin@gmail.com" },
     });
 
     if (!existingAdmin) {
       // Create admin account - password will be hashed by User model hook
       await User.create({
-        username: 'admin1',
-        email: 'myeveadmin@gmail.com',
-        password: 'Admin123!', // Plain text - will be hashed by beforeCreate hook
-        role: 'admin'
+        username: "admin1",
+        email: "myeveadmin@gmail.com",
+        password: "Admin123!", // Plain text - will be hashed by beforeCreate hook
+        role: "admin",
       });
-      
-      console.log('✅ Admin account created successfully!');
-      console.log('📧 Email: myeveadmin@gmail.com');
-      console.log('🔑 Password: Admin123!');
+
+      console.log("✅ Admin account created successfully!");
+      console.log("📧 Email: myeveadmin@gmail.com");
+      console.log("🔑 Password: Admin123!");
     } else {
-      console.log('ℹ️  Admin account already exists');
+      console.log("ℹ️  Admin account already exists");
     }
   } catch (error) {
-    console.error('❌ Error seeding database:', error);
+    console.error("❌ Error seeding database:", error);
   }
 };
 
@@ -87,4 +95,4 @@ const syncDatabase = async (force = false) => {
   }
 };
 
-module.exports = { db, syncDatabase, User, Address, Vehicle, ShoppingCart, CartItem };
+module.exports = { db, syncDatabase, User, Address, Vehicle, ShoppingCart, CartItem, Image};

@@ -1,29 +1,32 @@
 const express = require("express");
-const { Vehicle } = require("../models");
+const { Vehicle, Image } = require("../models");
 
 // Create a new vehicle
 const createVehicle = async (req, res) => {
-  const { name, description, brand, model, quantity, price } = req.body;
-  
-  if (!name || !brand || !model || !price) {
-    return res.status(400).json({ 
-      message: "Missing required fields: name, brand, model, and price are required" 
+  const { type, description, brand, model, seats, range, quantity, price } = req.body;
+
+  if (!type || !brand || !model || !seats || !range || !price) {
+    return res.status(400).json({
+      message:
+        "Missing required fields: type, brand, model, seats, range, and price are required",
     });
   }
 
   try {
     const vehicle = await Vehicle.create({
-      name,
+      type,
       description,
       brand,
       model,
+      seats: parseInt(seats),
+      range: parseInt(range),
       quantity: quantity || 0,
-      price
+      price,
     });
-    
+
     return res.status(201).json({
       message: "Vehicle created successfully",
-      vehicle
+      vehicle,
     });
   } catch (err) {
     console.error("createVehicle error:", err);
@@ -35,7 +38,13 @@ const createVehicle = async (req, res) => {
 const getAllVehicles = async (req, res) => {
   try {
     const vehicles = await Vehicle.findAll({
-      order: [['createdAt', 'DESC']]
+      include: [
+        {
+          model: Image,
+          as: "images",
+        },
+      ],
+      order: [["createdAt", "DESC"]],
     });
     return res.status(200).json(vehicles);
   } catch (err) {
@@ -47,7 +56,7 @@ const getAllVehicles = async (req, res) => {
 // Get vehicle by ID
 const getVehicleById = async (req, res) => {
   const { vid } = req.params;
-  
+
   try {
     const vehicle = await Vehicle.findByPk(vid);
     if (!vehicle) {
@@ -63,26 +72,28 @@ const getVehicleById = async (req, res) => {
 // Update vehicle
 const updateVehicle = async (req, res) => {
   const { vid } = req.params;
-  const { name, description, brand, model, quantity, price } = req.body;
-  
+  const { type, description, brand, model, seats, range, quantity, price } = req.body;
+
   try {
     const vehicle = await Vehicle.findByPk(vid);
     if (!vehicle) {
       return res.status(404).json({ message: "Vehicle not found" });
     }
-    
+
     await vehicle.update({
-      name,
+      type,
       description,
       brand,
       model,
+      seats: parseInt(seats),
+      range: parseInt(range),
       quantity,
-      price
+      price,
     });
-    
+
     return res.status(200).json({
       message: "Vehicle updated successfully",
-      vehicle
+      vehicle,
     });
   } catch (err) {
     console.error("updateVehicle error:", err);
@@ -93,13 +104,13 @@ const updateVehicle = async (req, res) => {
 // Delete vehicle
 const deleteVehicle = async (req, res) => {
   const { vid } = req.params;
-  
+
   try {
     const vehicle = await Vehicle.findByPk(vid);
     if (!vehicle) {
       return res.status(404).json({ message: "Vehicle not found" });
     }
-    
+
     await vehicle.destroy();
     return res.status(200).json({ message: "Vehicle deleted successfully" });
   } catch (err) {
@@ -108,10 +119,33 @@ const deleteVehicle = async (req, res) => {
   }
 };
 
+const uploadImages = async (req, res) => {
+  try {
+    const { vid } = req.params;
+    const vehicle = await Vehicle.findByPk(vid);
+    if (!vehicle) return res.status(404).json({ message: "Vehicle not found" });
+
+    const imageEntries = req.files.map((file) => ({
+      url: file.location,
+      vehicleId: vid,
+    }));
+
+    await Image.bulkCreate(imageEntries);
+
+    res
+      .status(201)
+      .json({ message: "Images uploaded successfully", images: imageEntries });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to upload images" });
+  }
+};
+
 module.exports = {
   createVehicle,
   getAllVehicles,
   getVehicleById,
   updateVehicle,
-  deleteVehicle
-}; 
+  deleteVehicle,
+  uploadImages,
+};
