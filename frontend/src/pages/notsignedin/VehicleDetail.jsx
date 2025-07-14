@@ -1,4 +1,3 @@
-// VehicleDetail component
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getVehicleById, submitReview, getUserById } from "../../services/api";
@@ -19,8 +18,6 @@ const VehicleDetail = () => {
       try {
         const data = await getVehicleById(id);
         setVehicle(data);
-
-        // Fetch users for reviews
         if (data.reviews && data.reviews.length > 0) {
           const userIds = [...new Set(data.reviews.map((r) => r.userId))];
           const userPromises = userIds.map((uid) => getUserById(uid));
