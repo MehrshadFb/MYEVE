@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { getAllVehicles } from "../../services/api";
 import Header from "../../components/Header";
 import { Link } from "react-router-dom";
-import useAuth from "../../context/useAuth";
 
 function Vehicles() {
   const [vehicles, setVehicles] = useState([]);
@@ -11,7 +10,6 @@ function Vehicles() {
   const [searchTerm, setSearchTerm] = useState("");
   const [showFilters, setShowFilters] = useState(false);
   const [activeFilterTab, setActiveFilterTab] = useState("brand");
-  const { user } = useAuth();
 
   // Filter states
   const [selectedBrands, setSelectedBrands] = useState([]);
@@ -44,13 +42,13 @@ function Vehicles() {
   const uniqueRanges = [...new Set(vehicles.map((vehicle) => vehicle.range))].sort((a, b) => a - b);
 
   // Price ranges
-  const priceRanges = [
+  const priceRanges = useMemo(() => [
     { label: "Under $25,000", min: 0, max: 25000 },
     { label: "$25,000 - $50,000", min: 25000, max: 50000 },
     { label: "$50,000 - $75,000", min: 50000, max: 75000 },
     { label: "$75,000 - $100,000", min: 75000, max: 100000 },
     { label: "Over $100,000", min: 100000, max: Infinity },
-  ];
+  ], []);
 
   // Filter and search vehicles
   useEffect(() => {
@@ -118,6 +116,7 @@ function Vehicles() {
     selectedSeats,
     selectedRanges,
     selectedPriceRanges,
+    priceRanges,
   ]);
 
   // Toggle filter selections
