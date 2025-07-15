@@ -9,6 +9,7 @@ const {
   deleteVehicle,
   uploadImages,
   submitReview,
+  deleteReview,
 } = require("../controllers/vehicleController");
 
 const router = express.Router();
@@ -45,6 +46,12 @@ router.post(
   authorizeRole("admin"),
   upload.array("images", 5),
   uploadImages
+);
+router.delete(
+  "/vehicles/:vid/reviews/:reviewId",
+  authenticateToken,
+  authorizeRole("admin"),
+  deleteReview
 );
 
 module.exports = router;
