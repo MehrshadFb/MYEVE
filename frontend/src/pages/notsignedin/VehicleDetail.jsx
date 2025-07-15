@@ -26,6 +26,20 @@ const VehicleDetail = () => {
     fetchVehicle();
   }, [id]);
 
+  const handleSubmitReview = async () => {
+    await submitReview(vehicle.vid, {
+      rating: reviewStars,
+      comment: reviewText,
+    });
+    setReviewSubmitted(true);
+    setReviewText("");
+    setReviewStars(0);
+    setHoverStars(0);
+    const updatedVehicle = await getVehicleById(id);
+    setVehicle(updatedVehicle);
+    setReviewSubmitted(false);
+  };
+
   if (loading)
     return (
       <div className="vehicle-detail-loading">Loading vehicle details...</div>
@@ -163,88 +177,90 @@ const VehicleDetail = () => {
         >
           Leave a Review
         </h3>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            marginBottom: "1rem",
-          }}
-        >
-          {[1, 2, 3, 4, 5].map((star) => (
-            <span
-              key={star}
+        {localStorage.getItem("token") ? (
+          <>
+            <div
               style={{
-                cursor: "pointer",
-                fontSize: "2rem",
-                color:
-                  (hoverStars || reviewStars) >= star ? "#ffd700" : "#e0e0e0",
-                transition: "color 0.2s",
-                marginRight: 4,
+                display: "flex",
+                alignItems: "center",
+                marginBottom: "1rem",
               }}
-              onMouseEnter={() => setHoverStars(star)}
-              onMouseLeave={() => setHoverStars(0)}
-              onClick={() => setReviewStars(star)}
-              role="button"
-              aria-label={`Rate ${star} star${star > 1 ? "s" : ""}`}
             >
-              ★
-            </span>
-          ))}
-          <span
-            style={{
-              marginLeft: 12,
-              color: "#888",
-              fontSize: "1rem",
-            }}
+              {[1, 2, 3, 4, 5].map((star) => (
+                <span
+                  key={star}
+                  style={{
+                    cursor: "pointer",
+                    fontSize: "2rem",
+                    color:
+                      (hoverStars || reviewStars) >= star
+                        ? "#ffd700"
+                        : "#e0e0e0",
+                    transition: "color 0.2s",
+                    marginRight: 4,
+                  }}
+                  onMouseEnter={() => setHoverStars(star)}
+                  onMouseLeave={() => setHoverStars(0)}
+                  onClick={() => setReviewStars(star)}
+                  role="button"
+                  aria-label={`Rate ${star} star${star > 1 ? "s" : ""}`}
+                >
+                  ★
+                </span>
+              ))}
+              <span
+                style={{
+                  marginLeft: 12,
+                  color: "#888",
+                  fontSize: "1rem",
+                }}
+              >
+                {reviewStars ? `${reviewStars}/5` : "Select rating"}
+              </span>
+            </div>
+            <textarea
+              value={reviewText}
+              onChange={(e) => setReviewText(e.target.value)}
+              rows={3}
+              placeholder="Write your review here..."
+              style={{
+                width: "100%",
+                padding: "0.7rem",
+                borderRadius: 8,
+                border: "1px solid #e0e0e0",
+                fontSize: "1rem",
+                marginBottom: "1rem",
+                resize: "vertical",
+                background: "#fff",
+              }}
+            />
+            <button
+              style={{
+                background: "#1976d2",
+                color: "#fff",
+                border: "none",
+                borderRadius: 8,
+                padding: "0.7rem 2rem",
+                fontWeight: 600,
+                fontSize: "1.1rem",
+                cursor: reviewStars && reviewText ? "pointer" : "not-allowed",
+                opacity: reviewStars && reviewText ? 1 : 0.6,
+                boxShadow: "0 2px 8px #eee",
+                marginBottom: "0.5rem",
+              }}
+              disabled={!reviewStars || !reviewText || reviewSubmitted}
+              onClick={handleSubmitReview}
+            >
+              {reviewSubmitted ? "Review Submitted!" : "Submit Review"}
+            </button>
+          </>
+        ) : (
+          <div
+            style={{ color: "#888", fontSize: "1rem", marginBottom: "1rem" }}
           >
-            {reviewStars ? `${reviewStars}/5` : "Select rating"}
-          </span>
-        </div>
-        <textarea
-          value={reviewText}
-          onChange={(e) => setReviewText(e.target.value)}
-          rows={3}
-          placeholder="Write your review here..."
-          style={{
-            width: "100%",
-            padding: "0.7rem",
-            borderRadius: 8,
-            border: "1px solid #e0e0e0",
-            fontSize: "1rem",
-            marginBottom: "1rem",
-            resize: "vertical",
-            background: "#fff",
-          }}
-        />
-        <button
-          style={{
-            background: "#1976d2",
-            color: "#fff",
-            border: "none",
-            borderRadius: 8,
-            padding: "0.7rem 2rem",
-            fontWeight: 600,
-            fontSize: "1.1rem",
-            cursor: reviewStars && reviewText ? "pointer" : "not-allowed",
-            opacity: reviewStars && reviewText ? 1 : 0.6,
-            boxShadow: "0 2px 8px #eee",
-            marginBottom: "0.5rem",
-          }}
-          disabled={!reviewStars || !reviewText || reviewSubmitted}
-          onClick={() =>
-            submitReview(vehicle.vid, {
-              rating: reviewStars,
-              comment: reviewText,
-            }).then(() => {
-              setReviewSubmitted(true);
-              setReviewText("");
-              setReviewStars(0);
-              setHoverStars(0);
-            })
-          }
-        >
-          {reviewSubmitted ? "Review Submitted!" : "Submit Review"}
-        </button>
+            You must be signed in to leave a review.
+          </div>
+        )}
       </div>
       {/* Reviews List */}
       <div
