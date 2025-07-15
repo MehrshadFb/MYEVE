@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getVehicleById, submitReview } from "../../services/api";
+import { getAverageRating } from "../../utils/AnalyticsHelper";
 
 const VehicleDetail = () => {
   const { id } = useParams();
@@ -108,6 +109,41 @@ const VehicleDetail = () => {
           >
             {vehicle.type}
           </span>
+          {/* Average Rating Stars */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              marginBottom: "1rem",
+            }}
+          >
+            {[1, 2, 3, 4, 5].map((star) => (
+              <span
+                key={star}
+                style={{
+                  color:
+                    getAverageRating(vehicle.reviews) >= star
+                      ? "#fbbf24"
+                      : "#e0e0e0",
+                  fontSize: "1.5rem",
+                  marginRight: 2,
+                }}
+              >
+                ★
+              </span>
+            ))}
+            <span
+              style={{
+                color: "#64748b",
+                fontSize: "1rem",
+                marginLeft: "8px",
+              }}
+            >
+              {vehicle.reviews && vehicle.reviews.length > 0
+                ? getAverageRating(vehicle.reviews).toFixed(1)
+                : "No rating"}
+            </span>
+          </div>
           <ul
             style={{
               listStyle: "none",
