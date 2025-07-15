@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAllVehicles } from "../../services/api";
+import { getAllVehicles, addToCart } from "../../services/api";
 import Header from "../../components/Header";
 import { useNavigate } from "react-router-dom";
 import { getAverageRating } from "../../utils/AnalyticsHelper";
@@ -175,6 +175,17 @@ function Vehicles() {
       selectedPriceRanges.length
     );
   };
+
+
+   const handleAddToCart = async (vid) => {
+     try {
+       await addToCart({ vehicleId: vid, quantity: 1 }); // quantity must be passed
+       alert("Added to cart!");
+     } catch (error) {
+       console.error("Add to cart failed:", error);
+       alert("Failed to add to cart");
+     }
+   };
 
   return (
     <div
@@ -1139,6 +1150,84 @@ function Vehicles() {
                           Add to Cart
                         </button>
                       </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "6px",
+                          fontSize: "0.875rem",
+                          color: "#64748b",
+                        }}
+                      >
+                        <span>🔋</span>
+                        <span>{vehicle.range.toLocaleString()} miles</span>
+                      </div>
+                    </div>
+
+                    {vehicle.description && (
+                      <p
+                        style={{
+                          fontSize: "0.875rem",
+                          color: "#64748b",
+                          marginBottom: "16px",
+                          lineHeight: "1.5",
+                          display: "-webkit-box",
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: "vertical",
+                          overflow: "hidden",
+                        }}
+                      >
+                        {vehicle.description}
+                      </p>
+                    )}
+
+                    {/* Action Buttons */}
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "12px",
+                      }}
+                    >
+                      <button
+                        style={{
+                          flex: 1,
+                          padding: "10px 16px",
+                          borderRadius: "8px",
+                          border: "1px solid #3b82f6",
+                          backgroundColor: "white",
+                          color: "#3b82f6",
+                          fontWeight: "600",
+                          cursor: "pointer",
+                          fontSize: "0.875rem",
+                          transition: "all 0.3s ease",
+                        }}
+                        onMouseEnter={(e) => {
+                          e.target.style.backgroundColor = "#3b82f6";
+                          e.target.style.color = "white";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.target.style.backgroundColor = "white";
+                          e.target.style.color = "#3b82f6";
+                        }}
+                      >
+                        View Details
+                      </button>
+                      <div style={{ display: "flex", gap: "8px" }}>
+                         <button
+                           onClick={() => handleAddToCart(vehicle.vid)}
+                           style={{
+                             padding: "8px 16px",
+                             borderRadius: "8px",
+                             border: "none",
+                             background: "#10b981",
+                             color: "white",
+                             fontWeight: "600",
+                             cursor: "pointer"
+                           }}
+                         >
+                           ➕
+                         </button>
+                       </div>
                     </div>
                   </div>
                 );

@@ -172,6 +172,35 @@ export const submitReview = async (vid, reviewData) => {
 export const deleteReview = async (vid, rid) => {
   const response = await api.delete(`/vehicles/${vid}/reviews/${rid}`);
   return response.data;
+}
+// 🛒 Shopping Cart APIs
+export const getCart = async () => {
+  const response = await api.get("/cart");
+   return response.data;
+ };
+
+ export const addToCart = async ({ vehicleId, quantity = 1 }) => {
+   const response = await api.post("/cart/add", { vehicleId, quantity });
+   return response.data;
+ };
+
+ export const updateCartItem = async (itemId, quantity) => {
+   try {
+     const response = await api.put(`/cart/item/${itemId}`, { quantity });
+     return response.data;
+   } catch (err) {
+     console.error("updateCartItem error:", err.response?.data || err.message);
+     throw err;
+   }
+ };
+
+ export const removeCartItem = async (itemId) => {
+  const response = await api.delete(`/cart/item/${itemId}`);
+  return response.data;
+};
+export const clearCart = async () => {
+  const response = await api.delete("/cart/clear");
+  return response.data;
 };
 
 export default api;
