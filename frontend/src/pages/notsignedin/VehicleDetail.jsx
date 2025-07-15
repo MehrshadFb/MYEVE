@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getVehicleById, submitReview, getUserById } from "../../services/api";
+import { getVehicleById, submitReview } from "../../services/api";
 
 const VehicleDetail = () => {
   const { id } = useParams();
@@ -11,23 +11,12 @@ const VehicleDetail = () => {
   const [hoverStars, setHoverStars] = useState(0);
   const [reviewText, setReviewText] = useState("");
   const [reviewSubmitted, setReviewSubmitted] = useState(false);
-  const [userMap, setUserMap] = useState({}); // userId -> user
 
   useEffect(() => {
     const fetchVehicle = async () => {
       try {
         const data = await getVehicleById(id);
         setVehicle(data);
-        if (data.reviews && data.reviews.length > 0) {
-          const userIds = [...new Set(data.reviews.map((r) => r.userId))];
-          const userPromises = userIds.map((uid) => getUserById(uid));
-          const users = await Promise.all(userPromises);
-          const map = {};
-          users.forEach((u) => {
-            map[u.id] = u;
-          });
-          setUserMap(map);
-        }
       } catch (err) {
         setError(err.message);
       } finally {
@@ -295,15 +284,17 @@ const VehicleDetail = () => {
                     marginBottom: "0.5rem",
                   }}
                 >
-                  <span
-                    style={{
-                      fontWeight: 600,
-                      color: "#222",
-                      marginRight: 8,
-                    }}
-                  >
-                    {userMap[review.userId]?.username}
-                  </span>
+                  {review.user && (
+                    <span
+                      style={{
+                        fontWeight: 600,
+                        color: "#222",
+                        marginRight: 8,
+                      }}
+                    >
+                      {review.user.username}
+                    </span>
+                  )}
                   <span
                     style={{
                       color: "#888",

@@ -1,5 +1,5 @@
 const express = require("express");
-const { Vehicle, Image, Review } = require("../models");
+const { Vehicle, Image, Review, User } = require("../models");
 
 // Create a new vehicle
 const createVehicle = async (req, res) => {
@@ -71,6 +71,13 @@ const getVehicleById = async (req, res) => {
         {
           model: Review,
           as: "reviews",
+          include: [
+            {
+              model: User,
+              as: "user",
+              attributes: ["id", "username"],
+            },
+          ],
         },
       ],
     });
