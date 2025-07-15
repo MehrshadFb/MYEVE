@@ -17,7 +17,7 @@ import Featured from "./pages/notsignedin/Featured";
 import Vehicles from "./pages/notsignedin/Vehicles";
 import About from "./pages/notsignedin/About";
 import ShoppingCart from "./pages/notsignedin/ShoppingCart";
-
+import VehicleDetail from "./pages/notsignedin/VehicleDetail";
 
 function AppRoutes() {
   const { isAuthenticated, loading } = useAuth();
@@ -39,12 +39,10 @@ function AppRoutes() {
   return (
     <Router>
       <Routes>
-        <Route
-          path="/"
-          element={<LandingPage />}
-        />
+        <Route path="/" element={<LandingPage />} />
         <Route path="/featured" element={<Featured />} />
         <Route path="/vehicles" element={<Vehicles />} />
+        <Route path="/vehicles/:id" element={<VehicleDetail />} />
         <Route path="/about" element={<About />} />
         <Route path="/cart" element={<ShoppingCart />} />
         <Route path="/signin" element={<SignIn />} />

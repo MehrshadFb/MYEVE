@@ -1,19 +1,17 @@
 import { useEffect, useState } from "react";
 import { getAllVehicles } from "../../services/api";
 import Header from "../../components/Header";
-import { Link } from "react-router-dom";
-import useAuth from "../../context/useAuth";
+import { useNavigate } from "react-router-dom";
+import { getAverageRating } from "../../utils/AnalyticsHelper";
 
 function Vehicles() {
+  const navigate = useNavigate();
   const [vehicles, setVehicles] = useState([]);
   const [filteredVehicles, setFilteredVehicles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [showFilters, setShowFilters] = useState(false);
   const [activeFilterTab, setActiveFilterTab] = useState("brand");
-  const { user } = useAuth();
-
-  // Filter states
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [selectedTypes, setSelectedTypes] = useState([]);
   const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
@@ -40,8 +38,12 @@ function Vehicles() {
   // Get unique values for filters
   const uniqueBrands = [...new Set(vehicles.map((vehicle) => vehicle.brand))];
   const uniqueTypes = [...new Set(vehicles.map((vehicle) => vehicle.type))];
-  const uniqueSeats = [...new Set(vehicles.map((vehicle) => vehicle.seats))].sort((a, b) => a - b);
-  const uniqueRanges = [...new Set(vehicles.map((vehicle) => vehicle.range))].sort((a, b) => a - b);
+  const uniqueSeats = [
+    ...new Set(vehicles.map((vehicle) => vehicle.seats)),
+  ].sort((a, b) => a - b);
+  const uniqueRanges = [
+    ...new Set(vehicles.map((vehicle) => vehicle.range)),
+  ].sort((a, b) => a - b);
 
   // Price ranges
   const priceRanges = [
@@ -166,10 +168,10 @@ function Vehicles() {
   // Get total active filters count
   const getActiveFiltersCount = () => {
     return (
-      selectedBrands.length + 
-      selectedTypes.length + 
-      selectedSeats.length + 
-      selectedRanges.length + 
+      selectedBrands.length +
+      selectedTypes.length +
+      selectedSeats.length +
+      selectedRanges.length +
       selectedPriceRanges.length
     );
   };
@@ -361,8 +363,16 @@ function Vehicles() {
                       count: selectedBrands.length,
                     },
                     { id: "type", label: "Type", count: selectedTypes.length },
-                    { id: "seats", label: "Seats", count: selectedSeats.length },
-                    { id: "range", label: "Range", count: selectedRanges.length },
+                    {
+                      id: "seats",
+                      label: "Seats",
+                      count: selectedSeats.length,
+                    },
+                    {
+                      id: "range",
+                      label: "Range",
+                      count: selectedRanges.length,
+                    },
                     {
                       id: "pricing",
                       label: "Pricing",
@@ -877,217 +887,262 @@ function Vehicles() {
                 gap: "24px",
               }}
             >
-              {filteredVehicles.map((vehicle) => (
-                <div
-                  key={vehicle.vid}
-                  style={{
-                    backgroundColor: "white",
-                    borderRadius: "16px",
-                    overflow: "hidden",
-                    boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
-                    transition: "all 0.3s ease",
-                    cursor: "pointer",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.transform = "translateY(-4px)";
-                    e.target.style.boxShadow = "0 8px 30px rgba(0,0,0,0.15)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.transform = "translateY(0)";
-                    e.target.style.boxShadow = "0 4px 20px rgba(0,0,0,0.1)";
-                  }}
-                >
-                  {/* Vehicle Image */}
+              {filteredVehicles.map((vehicle) => {
+                const avgRating = getAverageRating(vehicle.reviews);
+                return (
                   <div
+                    key={vehicle.vid}
                     style={{
-                      height: "200px",
-                      backgroundColor: "#f1f5f9",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      position: "relative",
+                      backgroundColor: "white",
+                      borderRadius: "16px",
+                      overflow: "hidden",
+                      boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+                      transition: "all 0.3s ease",
+                      cursor: "pointer",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.transform = "translateY(-4px)";
+                      e.target.style.boxShadow = "0 8px 30px rgba(0,0,0,0.15)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.transform = "translateY(0)";
+                      e.target.style.boxShadow = "0 4px 20px rgba(0,0,0,0.1)";
                     }}
                   >
-                    {vehicle.images && vehicle.images.length > 0 ? (
-                      <img
-                        src={vehicle.images[0].url}
-                        alt={vehicle.type}
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                        }}
-                      />
-                    ) : (
-                      <div
-                        style={{
-                          color: "#94a3b8",
-                          fontSize: "3rem",
-                        }}
-                      >
-                        🚗
-                      </div>
-                    )}
+                    {/* Vehicle Image */}
                     <div
                       style={{
-                        position: "absolute",
-                        top: "12px",
-                        right: "12px",
-                        backgroundColor: "rgba(0,0,0,0.7)",
-                        color: "white",
-                        padding: "4px 8px",
-                        borderRadius: "4px",
-                        fontSize: "12px",
-                        fontWeight: "600",
-                      }}
-                    >
-                      ${parseFloat(vehicle.price).toLocaleString()}
-                    </div>
-                  </div>
-
-                  {/* Vehicle Info */}
-                  <div style={{ padding: "20px" }}>
-                    <div
-                      style={{
+                        height: "200px",
+                        backgroundColor: "#f1f5f9",
                         display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "flex-start",
-                        marginBottom: "12px",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        position: "relative",
                       }}
                     >
-                      <div>
-                        <h3
+                      {vehicle.images && vehicle.images.length > 0 ? (
+                        <img
+                          src={vehicle.images[0].url}
+                          alt={vehicle.type}
                           style={{
-                            fontSize: "1.25rem",
-                            fontWeight: "700",
-                            color: "#1e293b",
-                            margin: "0 0 4px 0",
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                          }}
+                        />
+                      ) : (
+                        <div
+                          style={{
+                            color: "#94a3b8",
+                            fontSize: "3rem",
                           }}
                         >
-                          {vehicle.brand} {vehicle.model}
-                        </h3>
+                          🚗
+                        </div>
+                      )}
+                      <div
+                        style={{
+                          position: "absolute",
+                          top: "12px",
+                          left: "12px",
+                          backgroundColor: "rgba(255,255,255,0.9)",
+                          color: "#fbbf24",
+                          padding: "4px 8px",
+                          borderRadius: "4px",
+                          fontSize: "16px",
+                          fontWeight: "600",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "2px",
+                        }}
+                      >
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <span
+                            key={star}
+                            style={{
+                              color: avgRating >= star ? "#fbbf24" : "#e0e0e0",
+                            }}
+                          >
+                            ★
+                          </span>
+                        ))}
+                        <span
+                          style={{
+                            color: "#64748b",
+                            fontSize: "13px",
+                            marginLeft: "6px",
+                          }}
+                        >
+                          {avgRating ? avgRating.toFixed(1) : "No rating"}
+                        </span>
+                      </div>
+                      <div
+                        style={{
+                          position: "absolute",
+                          top: "12px",
+                          right: "12px",
+                          backgroundColor: "rgba(0,0,0,0.7)",
+                          color: "white",
+                          padding: "4px 8px",
+                          borderRadius: "4px",
+                          fontSize: "12px",
+                          fontWeight: "600",
+                        }}
+                      >
+                        ${parseFloat(vehicle.price).toLocaleString()}
+                      </div>
+                    </div>
+
+                    {/* Vehicle Info */}
+                    <div style={{ padding: "20px" }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "flex-start",
+                          marginBottom: "12px",
+                        }}
+                      >
+                        <div>
+                          <h3
+                            style={{
+                              fontSize: "1.25rem",
+                              fontWeight: "700",
+                              color: "#1e293b",
+                              margin: "0 0 4px 0",
+                            }}
+                          >
+                            {vehicle.brand} {vehicle.model}
+                          </h3>
+                          <p
+                            style={{
+                              fontSize: "0.875rem",
+                              color: "#64748b",
+                              margin: "0",
+                              textTransform: "capitalize",
+                            }}
+                          >
+                            {vehicle.type}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Vehicle Details */}
+                      <div
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns: "repeat(2, 1fr)",
+                          gap: "12px",
+                          marginBottom: "16px",
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "6px",
+                            fontSize: "0.875rem",
+                            color: "#64748b",
+                          }}
+                        >
+                          <span>👥</span>
+                          <span>
+                            {vehicle.seats}{" "}
+                            {vehicle.seats === 1 ? "Seat" : "Seats"}
+                          </span>
+                        </div>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "6px",
+                            fontSize: "0.875rem",
+                            color: "#64748b",
+                          }}
+                        >
+                          <span>🔋</span>
+                          <span>{vehicle.range.toLocaleString()} miles</span>
+                        </div>
+                      </div>
+
+                      {vehicle.description && (
                         <p
                           style={{
                             fontSize: "0.875rem",
                             color: "#64748b",
-                            margin: "0",
-                            textTransform: "capitalize",
+                            marginBottom: "16px",
+                            lineHeight: "1.5",
+                            display: "-webkit-box",
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: "vertical",
+                            overflow: "hidden",
                           }}
                         >
-                          {vehicle.type}
+                          {vehicle.description}
                         </p>
-                      </div>
-                    </div>
+                      )}
 
-                    {/* Vehicle Details */}
-                    <div
-                      style={{
-                        display: "grid",
-                        gridTemplateColumns: "repeat(2, 1fr)",
-                        gap: "12px",
-                        marginBottom: "16px",
-                      }}
-                    >
+                      {/* Action Buttons */}
                       <div
                         style={{
                           display: "flex",
-                          alignItems: "center",
-                          gap: "6px",
-                          fontSize: "0.875rem",
-                          color: "#64748b",
+                          gap: "12px",
                         }}
                       >
-                        <span>👥</span>
-                        <span>{vehicle.seats} {vehicle.seats === 1 ? "Seat" : "Seats"}</span>
+                        <button
+                          style={{
+                            flex: 1,
+                            padding: "10px 16px",
+                            borderRadius: "8px",
+                            border: "1px solid #3b82f6",
+                            backgroundColor: "white",
+                            color: "#3b82f6",
+                            fontWeight: "600",
+                            cursor: "pointer",
+                            fontSize: "0.875rem",
+                            transition: "all 0.3s ease",
+                          }}
+                          onMouseEnter={(e) => {
+                            e.target.style.backgroundColor = "#3b82f6";
+                            e.target.style.color = "white";
+                          }}
+                          onMouseLeave={(e) => {
+                            e.target.style.backgroundColor = "white";
+                            e.target.style.color = "#3b82f6";
+                          }}
+                          onClick={() => {
+                            navigate(`/vehicles/${vehicle.vid}`);
+                          }}
+                        >
+                          View Details
+                        </button>
+                        <button
+                          style={{
+                            flex: 1,
+                            padding: "10px 16px",
+                            borderRadius: "8px",
+                            border: "none",
+                            backgroundColor: "#3b82f6",
+                            color: "white",
+                            fontWeight: "600",
+                            cursor: "pointer",
+                            fontSize: "0.875rem",
+                            transition: "all 0.3s ease",
+                          }}
+                          onMouseEnter={(e) => {
+                            e.target.style.backgroundColor = "#2563eb";
+                          }}
+                          onMouseLeave={(e) => {
+                            e.target.style.backgroundColor = "#3b82f6";
+                          }}
+                        >
+                          Add to Cart
+                        </button>
                       </div>
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "6px",
-                          fontSize: "0.875rem",
-                          color: "#64748b",
-                        }}
-                      >
-                        <span>🔋</span>
-                        <span>{vehicle.range.toLocaleString()} miles</span>
-                      </div>
-                    </div>
-
-                    {vehicle.description && (
-                      <p
-                        style={{
-                          fontSize: "0.875rem",
-                          color: "#64748b",
-                          marginBottom: "16px",
-                          lineHeight: "1.5",
-                          display: "-webkit-box",
-                          WebkitLineClamp: 2,
-                          WebkitBoxOrient: "vertical",
-                          overflow: "hidden",
-                        }}
-                      >
-                        {vehicle.description}
-                      </p>
-                    )}
-
-                    {/* Action Buttons */}
-                    <div
-                      style={{
-                        display: "flex",
-                        gap: "12px",
-                      }}
-                    >
-                      <button
-                        style={{
-                          flex: 1,
-                          padding: "10px 16px",
-                          borderRadius: "8px",
-                          border: "1px solid #3b82f6",
-                          backgroundColor: "white",
-                          color: "#3b82f6",
-                          fontWeight: "600",
-                          cursor: "pointer",
-                          fontSize: "0.875rem",
-                          transition: "all 0.3s ease",
-                        }}
-                        onMouseEnter={(e) => {
-                          e.target.style.backgroundColor = "#3b82f6";
-                          e.target.style.color = "white";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.target.style.backgroundColor = "white";
-                          e.target.style.color = "#3b82f6";
-                        }}
-                      >
-                        View Details
-                      </button>
-                      <button
-                        style={{
-                          flex: 1,
-                          padding: "10px 16px",
-                          borderRadius: "8px",
-                          border: "none",
-                          backgroundColor: "#3b82f6",
-                          color: "white",
-                          fontWeight: "600",
-                          cursor: "pointer",
-                          fontSize: "0.875rem",
-                          transition: "all 0.3s ease",
-                        }}
-                        onMouseEnter={(e) => {
-                          e.target.style.backgroundColor = "#2563eb";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.target.style.backgroundColor = "#3b82f6";
-                        }}
-                      >
-                        Add to Cart
-                      </button>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>

@@ -4,6 +4,7 @@ const {
   signUp,
   signIn,
   getAllUsers,
+  getUserById,
   deleteUserById,
   updateProfile,
   refreshToken,
@@ -33,6 +34,7 @@ router.delete(
 );
 
 // User-specific routes
+router.get("/users/:id", authenticateToken, getUserById);
 router.put("/profile", authenticateToken, updateProfile);
 router.post("/addresses", authenticateToken, createAddress);
 router.get("/addresses", authenticateToken, getAllAddresses);

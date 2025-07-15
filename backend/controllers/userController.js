@@ -1,7 +1,7 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const { Sequelize } = require("sequelize");
-const { User, Address } = require("../models");
+const { User, Address, Review } = require("../models");
 
 const JWT_SECRET = process.env.JWT_SECRET || "yourSecretKey";
 
@@ -23,42 +23,42 @@ const signUp = async (req, res) => {
     return res.status(201).json({ message: "User registered successfully" });
   } catch (err) {
     console.error("Signup error:", err);
-    
+
     // Handle Sequelize validation errors
-    if (err.name === 'SequelizeValidationError') {
-      const validationErrors = err.errors.map(error => {
+    if (err.name === "SequelizeValidationError") {
+      const validationErrors = err.errors.map((error) => {
         switch (error.validatorKey) {
-          case 'len':
-            if (error.path === 'username') {
-              return 'Username must be between 3 and 50 characters';
-            } else if (error.path === 'password') {
-              return 'Password must be between 8 and 100 characters';
+          case "len":
+            if (error.path === "username") {
+              return "Username must be between 3 and 50 characters";
+            } else if (error.path === "password") {
+              return "Password must be between 8 and 100 characters";
             }
             break;
-          case 'isEmail':
-            return 'Please enter a valid email address';
-          case 'hasSpecialChar':
-            return 'Password must contain at least one special character';
+          case "isEmail":
+            return "Please enter a valid email address";
+          case "hasSpecialChar":
+            return "Password must contain at least one special character";
           default:
             return error.message;
         }
       });
-      
-      return res.status(400).json({ 
-        message: validationErrors.join(', ') 
+
+      return res.status(400).json({
+        message: validationErrors.join(", "),
       });
     }
-    
+
     // Handle unique constraint errors
-    if (err.name === 'SequelizeUniqueConstraintError') {
+    if (err.name === "SequelizeUniqueConstraintError") {
       const field = err.errors[0].path;
-      if (field === 'username') {
+      if (field === "username") {
         return res.status(409).json({ message: "Username already exists" });
-      } else if (field === 'email') {
+      } else if (field === "email") {
         return res.status(409).json({ message: "Email already exists" });
       }
     }
-    
+
     return res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -112,6 +112,31 @@ const getAllUsers = async (req, res) => {
   }
 };
 
+const getUserById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await User.findByPk(id, {
+      include: [
+        {
+          model: Address,
+          as: "addresses",
+        },
+        {
+          model: Review,
+          as: "reviews",
+        },
+      ],
+    });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    return res.status(200).json(user);
+  } catch (err) {
+    console.error("getUserById error:", err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 const deleteUserById = async (req, res) => {
   const { id } = req.params;
   try {
@@ -152,18 +177,22 @@ const updateProfile = async (req, res) => {
     // Validate current password if changing password
     if (newPassword) {
       if (!currentPassword) {
-        return res.status(400).json({ message: "Current password is required to change password" });
+        return res
+          .status(400)
+          .json({ message: "Current password is required to change password" });
       }
-      
+
       if (!(await user.validatePassword(currentPassword))) {
-        return res.status(401).json({ message: "Current password is incorrect" });
+        return res
+          .status(401)
+          .json({ message: "Current password is incorrect" });
       }
     }
 
     // Check if username or email is already taken by another user
     if (username && username !== user.username) {
       const existingUser = await User.findOne({
-        where: { username, id: { [Sequelize.Op.ne]: userId } }
+        where: { username, id: { [Sequelize.Op.ne]: userId } },
       });
       if (existingUser) {
         return res.status(409).json({ message: "Username already in use" });
@@ -172,7 +201,7 @@ const updateProfile = async (req, res) => {
 
     if (email && email !== user.email) {
       const existingUser = await User.findOne({
-        where: { email, id: { [Sequelize.Op.ne]: userId } }
+        where: { email, id: { [Sequelize.Op.ne]: userId } },
       });
       if (existingUser) {
         return res.status(409).json({ message: "Email already in use" });
@@ -186,10 +215,10 @@ const updateProfile = async (req, res) => {
     if (newPassword) updateData.password = newPassword;
 
     // Use set method to ensure hooks are triggered
-    if (username) user.set('username', username);
-    if (email) user.set('email', email);
-    if (newPassword) user.set('password', newPassword);
-    
+    if (username) user.set("username", username);
+    if (email) user.set("email", email);
+    if (newPassword) user.set("password", newPassword);
+
     await user.save();
 
     return res.status(200).json({
@@ -199,7 +228,7 @@ const updateProfile = async (req, res) => {
         username: user.username,
         email: user.email,
         role: user.role,
-      }
+      },
     });
   } catch (err) {
     console.error("updateProfile error:", err);
@@ -209,7 +238,7 @@ const updateProfile = async (req, res) => {
 
 const refreshToken = async (req, res) => {
   const { refreshToken } = req.body;
-  
+
   if (!refreshToken) {
     return res.status(400).json({ message: "Refresh token is required" });
   }
@@ -217,7 +246,7 @@ const refreshToken = async (req, res) => {
   try {
     const decoded = jwt.verify(refreshToken, JWT_SECRET);
     const user = await User.findByPk(decoded.id);
-    
+
     if (!user) {
       return res.status(401).json({ message: "Invalid refresh token" });
     }
@@ -243,4 +272,12 @@ const refreshToken = async (req, res) => {
   }
 };
 
-module.exports = { signUp, signIn, getAllUsers, deleteUserById, updateProfile, refreshToken };
+module.exports = {
+  signUp,
+  signIn,
+  getAllUsers,
+  getUserById,
+  deleteUserById,
+  updateProfile,
+  refreshToken,
+};
