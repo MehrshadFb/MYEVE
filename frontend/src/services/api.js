@@ -169,4 +169,9 @@ export const submitReview = async (vid, reviewData) => {
   return response.data;
 };
 
+export const deleteReview = async (vid, rid) => {
+  const response = await api.delete(`/vehicles/${vid}/reviews/${rid}`);
+  return response.data;
+};
+
 export default api;

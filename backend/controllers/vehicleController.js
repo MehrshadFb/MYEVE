@@ -47,6 +47,13 @@ const getAllVehicles = async (req, res) => {
         {
           model: Review,
           as: "reviews",
+          include: [
+            {
+              model: User,
+              as: "user",
+              attributes: ["id", "username"],
+            },
+          ],
         },
       ],
       order: [["createdAt", "DESC"]],
@@ -196,6 +203,28 @@ const submitReview = async (req, res) => {
   }
 };
 
+const deleteReview = async (req, res) => {
+  const { vid, reviewId } = req.params;
+
+  try {
+    const review = await Review.findOne({
+      where: {
+        rid: reviewId,
+        vehicleId: vid,
+      },
+    });
+    if (!review) {
+      return res.status(404).json({ message: "Review not found" });
+    }
+
+    await review.destroy();
+    return res.status(200).json({ message: "Review deleted successfully" });
+  } catch (err) {
+    console.error("deleteReview error:", err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 module.exports = {
   createVehicle,
   getAllVehicles,
@@ -204,4 +233,5 @@ module.exports = {
   deleteVehicle,
   uploadImages,
   submitReview,
+  deleteReview,
 };
