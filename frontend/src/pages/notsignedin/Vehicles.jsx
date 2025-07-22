@@ -1128,6 +1128,7 @@ function Vehicles() {
                           View Details
                         </button>
                         <button
+                          onClick={() => handleAddToCart(vehicle.vid)}
                           style={{
                             flex: 1,
                             padding: "10px 16px",
@@ -1188,46 +1189,6 @@ function Vehicles() {
                         gap: "12px",
                       }}
                     >
-                      <button
-                        style={{
-                          flex: 1,
-                          padding: "10px 16px",
-                          borderRadius: "8px",
-                          border: "1px solid #3b82f6",
-                          backgroundColor: "white",
-                          color: "#3b82f6",
-                          fontWeight: "600",
-                          cursor: "pointer",
-                          fontSize: "0.875rem",
-                          transition: "all 0.3s ease",
-                        }}
-                        onMouseEnter={(e) => {
-                          e.target.style.backgroundColor = "#3b82f6";
-                          e.target.style.color = "white";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.target.style.backgroundColor = "white";
-                          e.target.style.color = "#3b82f6";
-                        }}
-                      >
-                        View Details
-                      </button>
-                      <div style={{ display: "flex", gap: "8px" }}>
-                         <button
-                           onClick={() => handleAddToCart(vehicle.vid)}
-                           style={{
-                             padding: "8px 16px",
-                             borderRadius: "8px",
-                             border: "none",
-                             background: "#10b981",
-                             color: "white",
-                             fontWeight: "600",
-                             cursor: "pointer"
-                           }}
-                         >
-                           ➕
-                         </button>
-                       </div>
                     </div>
                   </div>
                 );

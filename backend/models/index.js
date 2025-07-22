@@ -7,7 +7,7 @@ const ReviewModel = require("./Review");
 const defineShoppingCart = require("./ShoppingCart");
 const defineCartItem = require("./CartItem");
 const { v4: uuidv4 } = require("uuid");
-const ReviewModel = require("./Review");
+
 
 
 // Initialize models
@@ -61,20 +61,6 @@ CartItem.belongsTo(ShoppingCart, {
 CartItem.belongsTo(Vehicle, {
   foreignKey: "vehicleId",
   targetKey: "vid",
-});
-// Association: One Vehicle hasMany Reviews
-Vehicle.hasMany(Review, {
-  foreignKey: "vehicleId",
-  as: "reviews",
-  onDelete: "CASCADE",
-});
-Review.belongsTo(Vehicle, { foreignKey: "vehicleId", as: "vehicle" });
-
-// Association: One User hasMany Reviews
-User.hasMany(Review, {
-  foreignKey: "userId",
-  as: "reviews",
-  onDelete: "CASCADE",
 });
 
 
