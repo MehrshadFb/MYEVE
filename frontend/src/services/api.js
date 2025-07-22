@@ -201,6 +201,15 @@ export const getCart = async () => {
 };
 export const clearCart = async () => {
   const response = await api.delete("/cart/clear");
+   return response.data;
+}
+export const submitReview = async (vid, reviewData) => {
+  const response = await api.post(`/vehicles/${vid}/reviews`, reviewData);
+  return response.data;
+};
+
+export const deleteReview = async (vid, rid) => {
+  const response = await api.delete(`/vehicles/${vid}/reviews/${rid}`);
   return response.data;
 };
 

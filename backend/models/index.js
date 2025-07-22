@@ -7,6 +7,8 @@ const ReviewModel = require("./Review");
 const defineShoppingCart = require("./ShoppingCart");
 const defineCartItem = require("./CartItem");
 const { v4: uuidv4 } = require("uuid");
+const ReviewModel = require("./Review");
+
 
 // Initialize models
 const User = UserModel(sequelize);
@@ -44,6 +46,7 @@ User.hasMany(Review, {
   onDelete: "CASCADE",
 });
 Review.belongsTo(User, { foreignKey: "userId", as: "user" });
+
 // ShoppingCart has many CartItems
 ShoppingCart.hasMany(CartItem, {
   foreignKey: 'cartId',
@@ -59,6 +62,21 @@ CartItem.belongsTo(Vehicle, {
   foreignKey: "vehicleId",
   targetKey: "vid",
 });
+// Association: One Vehicle hasMany Reviews
+Vehicle.hasMany(Review, {
+  foreignKey: "vehicleId",
+  as: "reviews",
+  onDelete: "CASCADE",
+});
+Review.belongsTo(Vehicle, { foreignKey: "vehicleId", as: "vehicle" });
+
+// Association: One User hasMany Reviews
+User.hasMany(Review, {
+  foreignKey: "userId",
+  as: "reviews",
+  onDelete: "CASCADE",
+});
+
 
 const db = {
   sequelize,
@@ -123,3 +141,4 @@ module.exports = {
   CartItem,
   Review
 };
+
