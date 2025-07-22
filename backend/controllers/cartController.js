@@ -40,7 +40,7 @@ const addToCart = async (req, res) => {
 //GET cart
 const getCart = async (req, res) => {
   try {
-    const userId = req.params.userId;
+    const userId = req.user.id;
 
     const cart = await ShoppingCart.findOne({
       where: { userId },
@@ -89,23 +89,34 @@ const updateCartItem = async (req, res) => {
   const { quantity } = req.body;
 
   try {
-    const item = await CartItem.findOne({ where: { id: itemId } }); // remove userId check
+    const item = await CartItem.findOne({ where: { id: itemId } });
     if (!item) return res.status(404).json({ message: "Item not found" });
 
-    item.quantity = quantity;
-    await item.save();
+    if (quantity < 1) {
+      // Remove item if quantity is zero or less
+      await item.destroy();
+    } else {
+      // Otherwise, update quantity
+      item.quantity = quantity;
+      await item.save();
+    }
 
     // send full updated cart
     const userId = req.user.id;
     const cart = await ShoppingCart.findOne({
-      where: { userId },
-      include: {
+    where: { userId },
+    include: [
+        {
         model: CartItem,
-        include: {
-          model: Vehicle,
-          attributes: ["vid", "price", "brand", "model"]
+        as: "CartItems", // <- this is REQUIRED
+        include: [
+            {
+            model: Vehicle,
+            attributes: ["vid", "price", "brand", "model"]
+            }
+        ]
         }
-      }
+    ]
     });
 
     let totalAmount = 0;
@@ -118,12 +129,12 @@ const updateCartItem = async (req, res) => {
       };
     });
 
-    return res.status(200).json({ items, totalAmount });
+    return res.status(200).json(cart);
   } catch (err) {
+    console.error("updateCartItem error:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
-
 
 
 

@@ -6,57 +6,72 @@ import {
   updateCartItem,
   removeCartItem,
 } from "../../services/api";
+import useAuth from "../../context/useAuth";
 
 function ShoppingCart() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [cartItems, setCartItems] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
+  const { user } = useAuth();
+
   const buttonStyle = {
-  padding: "6px 14px",
-  fontSize: "1rem",
-  backgroundColor: "#3b82f6",
-  color: "white",
-  border: "none",
-  borderRadius: "6px",
-  cursor: "pointer",
+    padding: "6px 14px",
+    fontSize: "1rem",
+    backgroundColor: "#3b82f6",
+    color: "white",
+    border: "none",
+    borderRadius: "6px",
+    cursor: "pointer",
+  };
+
+const fetchCart = async () => {
+  try {
+    const data = await getCart(); 
+    
+    // Support both direct getCart() and updateCartItem() responses
+    const items = data.CartItems || data.items || [];
+    setCartItems(items);
+
+    const total = items.reduce((sum, item) => {
+      return sum + parseFloat(item?.vehicle?.price || 0) * item.quantity;
+    }, 0);
+    setTotalAmount(total || 0);
+  } catch (err) {
+    console.error("Error fetching cart:", err);
+  }
 };
 
 
+  // Fetch cart only when user is ready
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token);
-
-    if (token) {
+    if (user?.id) {
       fetchCart();
     }
-  }, []);
+  }, [user]);
 
-  const fetchCart = async () => {
-    try {
-      const data = await getCart();
-      setCartItems(data.items || []);
-      setTotalAmount(data.totalAmount || 0);
-    } catch (err) {
-      console.error("Error fetching cart:", err);
-    }
-  };
+const updateQuantity = async (itemId, newQuantity) => {
+  if (newQuantity < 1) return;
 
-  const updateQuantity = async (itemId, newQuantity) => {
-    if (newQuantity < 1) return;
-    try {
-      await updateCartItem(itemId, newQuantity);
-      await fetchCart();
-    } catch (error) {
-      console.error("Error updating quantity:", error);
-    }
-  };
+  try {
+    const updatedCart = await updateCartItem(itemId, newQuantity);
+    const items = updatedCart.CartItems || updatedCart.items || [];
+
+    setCartItems(items);
+
+    const total = items.reduce((sum, item) => {
+      return sum + parseFloat(item?.Vehicle?.price || 0) * item.quantity;
+    }, 0);
+    setTotalAmount(total);
+  } catch (error) {
+    console.error("🚨 Error updating quantity:", error);
+  }
+};
 
   const handleRemoveItem = async (itemId) => {
     try {
       await removeCartItem(itemId);
       await fetchCart();
     } catch (error) {
-      console.error("Error removing item:", error);
+      console.error("🚨 Error removing item:", error);
     }
   };
 
@@ -100,7 +115,7 @@ function ShoppingCart() {
         maxWidth: "1200px",
         margin: "0 auto"
       }}>
-        {isLoggedIn && cartItems.length > 0 ? (
+        {user?.id && cartItems.length > 0 ? (
           <>
             <div style={{
               display: "grid",
@@ -108,7 +123,7 @@ function ShoppingCart() {
               gap: "30px"
             }}>
               {cartItems.map((item, index) => {
-                const vehicle = item.vehicle;
+                const vehicle = item.Vehicle;
                 return (
                   <div key={index} style={{
                     backgroundColor: "white",
@@ -126,47 +141,36 @@ function ShoppingCart() {
                       color: "#1e293b",
                       marginBottom: "10px"
                     }}>
-                      {vehicle.name}
+                      {vehicle?.model || "Unknown Vehicle"}
                     </h3>
 
                     <p style={{ color: "#64748b", marginBottom: "8px" }}>
-                      Brand: <strong>{vehicle.brand}</strong> | Model: <strong>{vehicle.model}</strong>
+                      Brand: <strong>{vehicle?.brand}</strong> | Model: <strong>{vehicle?.model}</strong>
                     </p>
 
                     <p style={{ color: "#3b82f6", fontWeight: "600", marginBottom: "16px" }}>
-                      ${vehicle.price} × {item.quantity} = ${(parseFloat(vehicle.price) * item.quantity).toFixed(2)}
+                      ${vehicle?.price} × {item.quantity} = ${(parseFloat(vehicle?.price) * item.quantity).toFixed(2)}
                     </p>
 
                     <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                     <button
-                          onClick={() => {
-                          console.log("Clicked − for:", item.id, "Current quantity:", item.quantity);
-                          if (item.quantity > 1) {
-                            updateQuantity(item.id, item.quantity - 1);
-                          } else {
-                            handleRemoveItem(item.id);
-                          }
-                        }}
-                          style={buttonStyle}
-                        >
-                          −
-                        </button>
+                      <button
+                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                        style={buttonStyle}
+                        disabled={item.quantity <= 1}
+                      >
+                        −
+                      </button>
 
-                        <span style={{ fontWeight: "600", fontSize: "1.1rem" }}>
-                          {item.quantity}
-                        </span>
+                      <span style={{ fontWeight: "600", fontSize: "1.1rem" }}>
+                        {item.quantity}
+                      </span>
 
-                        <button
-                          onClick={() => {
-                          console.log("Clicked ＋ for:", item.id, "New quantity:", item.quantity + 1);
-                          updateQuantity(item.id, item.quantity + 1);
-                        }}
-
-                          style={buttonStyle}
-                        >
-                          ＋
-                        </button>
-
+                      <button
+                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        style={buttonStyle}
+                      >
+                        ＋
+                      </button>
 
                       <button
                         onClick={() => handleRemoveItem(item.id)}
@@ -200,7 +204,7 @@ function ShoppingCart() {
               Total: ${parseFloat(totalAmount).toFixed(2)}
             </div>
           </>
-        ) : isLoggedIn ? (
+        ) : user?.id ? (
           <p style={{
             fontSize: "1.2rem",
             textAlign: "center",

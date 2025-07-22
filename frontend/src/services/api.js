@@ -176,8 +176,9 @@ export const deleteReview = async (vid, rid) => {
 // 🛒 Shopping Cart APIs
 export const getCart = async () => {
   const response = await api.get("/cart");
-   return response.data;
- };
+  return response.data;
+};
+
 
  export const addToCart = async ({ vehicleId, quantity = 1 }) => {
    const response = await api.post("/cart/add", { vehicleId, quantity });
