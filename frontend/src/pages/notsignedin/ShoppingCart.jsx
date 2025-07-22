@@ -26,19 +26,26 @@ function ShoppingCart() {
 const fetchCart = async () => {
   try {
     const data = await getCart(); 
-    
-    // Support both direct getCart() and updateCartItem() responses
     const items = data.CartItems || data.items || [];
-    setCartItems(items);
 
-    const total = items.reduce((sum, item) => {
-      return sum + parseFloat(item?.vehicle?.price || 0) * item.quantity;
+    // Normalize the vehicle object
+    const normalizedItems = items.map(item => ({
+      ...item,
+      vehicle: item.Vehicle || item.vehicle || {},
+    }));
+
+    setCartItems(normalizedItems);
+
+    const total = normalizedItems.reduce((sum, item) => {
+      return sum + parseFloat(item.vehicle.price || 0) * item.quantity;
     }, 0);
+
     setTotalAmount(total || 0);
   } catch (err) {
     console.error("Error fetching cart:", err);
   }
 };
+
 
 
   // Fetch cart only when user is ready
@@ -55,16 +62,23 @@ const updateQuantity = async (itemId, newQuantity) => {
     const updatedCart = await updateCartItem(itemId, newQuantity);
     const items = updatedCart.CartItems || updatedCart.items || [];
 
-    setCartItems(items);
+    const normalizedItems = items.map(item => ({
+      ...item,
+      vehicle: item.Vehicle || item.vehicle || {},
+    }));
 
-    const total = items.reduce((sum, item) => {
-      return sum + parseFloat(item?.Vehicle?.price || 0) * item.quantity;
+    setCartItems(normalizedItems);
+
+    const total = normalizedItems.reduce((sum, item) => {
+      return sum + parseFloat(item.vehicle.price || 0) * item.quantity;
     }, 0);
+
     setTotalAmount(total);
   } catch (error) {
     console.error("🚨 Error updating quantity:", error);
   }
 };
+
 
   const handleRemoveItem = async (itemId) => {
     try {
