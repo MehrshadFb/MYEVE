@@ -4,11 +4,18 @@ const AddressModel = require("./Address");
 const VehicleModel = require("./Vehicle");
 const ImageModel = require("./Image");
 const ReviewModel = require("./Review");
+const defineShoppingCart = require("./ShoppingCart");
+const defineCartItem = require("./CartItem");
+const { v4: uuidv4 } = require("uuid");
+
+
 
 // Initialize models
 const User = UserModel(sequelize);
 const Address = AddressModel(sequelize);
 const Vehicle = VehicleModel(sequelize);
+const ShoppingCart = defineShoppingCart(sequelize);
+const CartItem = defineCartItem(sequelize);
 const Image = ImageModel(sequelize);
 const Review = ReviewModel(sequelize);
 
@@ -40,28 +47,45 @@ User.hasMany(Review, {
 });
 Review.belongsTo(User, { foreignKey: "userId", as: "user" });
 
+// ShoppingCart has many CartItems
+ShoppingCart.hasMany(CartItem, {
+  foreignKey: 'cartId',
+  as: 'CartItems', // MUST match the 'as' used in getCart()
+});
+CartItem.belongsTo(ShoppingCart, {
+  foreignKey: 'cartId',
+  as: 'Cart', 
+});
+
+// Association: CartItem belongsTo Vehicle
+CartItem.belongsTo(Vehicle, {
+  foreignKey: "vehicleId",
+  targetKey: "vid",
+});
+
+
 const db = {
   sequelize,
   User,
   Address,
   Vehicle,
   Image,
+  ShoppingCart,
+  CartItem
 };
 
 // Seed database with admin account
 const seedDatabase = async () => {
   try {
-    // Check if admin already exists
     const existingAdmin = await User.findOne({
       where: { email: "myeveadmin@gmail.com" },
     });
 
     if (!existingAdmin) {
-      // Create admin account - password will be hashed by User model hook
       await User.create({
         username: "admin1",
         email: "myeveadmin@gmail.com",
-        password: "Admin123!", // Plain text - will be hashed by beforeCreate hook
+        password: "Admin123!",
         role: "admin",
       });
 
@@ -82,10 +106,9 @@ const syncDatabase = async (force = false) => {
     await sequelize.authenticate();
     console.log("✅ Database connected successfully");
 
-    await sequelize.sync({ force }); // Drops & recreates tables if force = true
+    await sequelize.sync({ force });
     console.log("✅ Database synced - all tables created");
 
-    // Always run seeder to ensure admin exists
     await seedDatabase();
   } catch (error) {
     console.error("❌ Database connection failed:", error);
@@ -93,4 +116,15 @@ const syncDatabase = async (force = false) => {
   }
 };
 
-module.exports = { db, syncDatabase, User, Address, Vehicle, Image, Review };
+module.exports = {
+  db,
+  syncDatabase,
+  User,
+  Address,
+  Vehicle,
+  Image,
+  ShoppingCart,
+  CartItem,
+  Review
+};
+

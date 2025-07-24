@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAllVehicles } from "../../services/api";
+import { getAllVehicles, addToCart } from "../../services/api";
 import Header from "../../components/Header";
 import { useNavigate } from "react-router-dom";
 import { getAverageRating } from "../../utils/AnalyticsHelper";
@@ -175,6 +175,17 @@ function Vehicles() {
       selectedPriceRanges.length
     );
   };
+
+
+   const handleAddToCart = async (vid) => {
+     try {
+       await addToCart({ vehicleId: vid, quantity: 1 }); // quantity must be passed
+       alert("Added to cart!");
+     } catch (error) {
+       console.error("Add to cart failed:", error);
+       alert("Failed to add to cart");
+     }
+   };
 
   return (
     <div
@@ -1117,6 +1128,7 @@ function Vehicles() {
                           View Details
                         </button>
                         <button
+                          onClick={() => handleAddToCart(vehicle.vid)}
                           style={{
                             flex: 1,
                             padding: "10px 16px",
@@ -1139,6 +1151,44 @@ function Vehicles() {
                           Add to Cart
                         </button>
                       </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "6px",
+                          fontSize: "0.875rem",
+                          color: "#64748b",
+                        }}
+                      >
+                        <span>🔋</span>
+                        <span>{vehicle.range.toLocaleString()} miles</span>
+                      </div>
+                    </div>
+
+                    {vehicle.description && (
+                      <p
+                        style={{
+                          fontSize: "0.875rem",
+                          color: "#64748b",
+                          marginBottom: "16px",
+                          lineHeight: "1.5",
+                          display: "-webkit-box",
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: "vertical",
+                          overflow: "hidden",
+                        }}
+                      >
+                        {vehicle.description}
+                      </p>
+                    )}
+
+                    {/* Action Buttons */}
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "12px",
+                      }}
+                    >
                     </div>
                   </div>
                 );
