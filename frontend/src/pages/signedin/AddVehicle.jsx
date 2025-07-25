@@ -12,6 +12,7 @@ function AddVehicle() {
     description: "",
     brand: "",
     model: "",
+    year: "",
     seats: "",
     range: "",
     quantity: 0,
@@ -37,6 +38,7 @@ function AddVehicle() {
       !vehicleData.type ||
       !vehicleData.brand ||
       !vehicleData.model ||
+      !vehicleData.year ||
       !vehicleData.seats ||
       !vehicleData.range ||
       !vehicleData.price
@@ -49,6 +51,15 @@ function AddVehicle() {
     // Validate numeric fields
     if (isNaN(vehicleData.price) || parseFloat(vehicleData.price) <= 0) {
       setMessage({ type: "error", text: "Price must be a positive number" });
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (isNaN(vehicleData.year) || parseInt(vehicleData.year) < 1900 || parseInt(vehicleData.year) > new Date().getFullYear() + 2) {
+      setMessage({
+        type: "error",
+        text: "Year must be between 1900 and " + (new Date().getFullYear() + 2),
+      });
       setIsSubmitting(false);
       return;
     }
@@ -86,6 +97,7 @@ function AddVehicle() {
         description: vehicleData.description,
         brand: vehicleData.brand,
         model: vehicleData.model,
+        year: parseInt(vehicleData.year),
         seats: parseInt(vehicleData.seats),
         range: parseInt(vehicleData.range),
         quantity: parseInt(vehicleData.quantity),
@@ -107,6 +119,7 @@ function AddVehicle() {
         description: "",
         brand: "",
         model: "",
+        year: "",
         seats: "",
         range: "",
         quantity: 0,
@@ -400,6 +413,41 @@ function AddVehicle() {
                 value={vehicleData.model}
                 onChange={handleChange}
                 placeholder="Enter model name"
+                required
+                style={{
+                  width: "100%",
+                  padding: "12px 16px",
+                  borderRadius: "8px",
+                  border: "1px solid #d1d5db",
+                  fontSize: "16px",
+                  backgroundColor: "white",
+                  color: "#1e293b",
+                  boxSizing: "border-box",
+                }}
+              />
+            </div>
+
+            {/* Year */}
+            <div>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "8px",
+                  fontWeight: "600",
+                  color: "#374151",
+                  fontSize: "14px",
+                }}
+              >
+                Year *
+              </label>
+              <input
+                type="number"
+                name="year"
+                value={vehicleData.year}
+                onChange={handleChange}
+                placeholder="Enter year"
+                min="1900"
+                max={new Date().getFullYear() + 2}
                 required
                 style={{
                   width: "100%",

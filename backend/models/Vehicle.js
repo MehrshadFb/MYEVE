@@ -33,6 +33,14 @@ module.exports = (sequelize) => {
         len: [1, 100],
       },
     },
+    year: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        min: 1900,
+        max: new Date().getFullYear() + 2,
+      },
+    },
     seats: {
       type: DataTypes.INTEGER,
       allowNull: false,

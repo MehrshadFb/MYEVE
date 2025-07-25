@@ -5,7 +5,7 @@ const PORT = process.env.PORT || 3001;
 const startServer = async () => {
   try {
     // Initialize database and create tables
-    await syncDatabase(false); // Set to true if you want to reset tables on each start
+    await syncDatabase(true); // Set to true if you want to reset tables on each start
 
     // Start the server
     app.listen(PORT, () => {

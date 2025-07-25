@@ -35,7 +35,7 @@ function Manage() {
             }))
           );
           setAllReviews(reviews);
-        } catch (err) {
+        } catch {
           setAllReviews([]);
         } finally {
           setLoadingReviews(false);
@@ -155,31 +155,57 @@ function Manage() {
                 boxSizing: "border-box",
               }}
             >
-              <button
-                onClick={() => navigate("/add-vehicle")}
-                style={{
-                  background: "#059669",
-                  color: "white",
-                  padding: "12px 24px",
-                  borderRadius: "8px",
-                  border: "none",
-                  fontWeight: "600",
-                  cursor: "pointer",
-                  fontSize: "1rem",
-                  transition: "all 0.3s ease",
-                  marginBottom: "20px",
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.background = "#047857";
-                  e.target.style.transform = "translateY(-2px)";
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.background = "#059669";
-                  e.target.style.transform = "translateY(0)";
-                }}
-              >
-                Add Vehicles
-              </button>
+              <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
+                <button
+                  onClick={() => navigate("/add-vehicle")}
+                  style={{
+                    background: "#059669",
+                    color: "white",
+                    padding: "12px 24px",
+                    borderRadius: "8px",
+                    border: "none",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                    fontSize: "1rem",
+                    transition: "all 0.3s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.background = "#047857";
+                    e.target.style.transform = "translateY(-2px)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.background = "#059669";
+                    e.target.style.transform = "translateY(0)";
+                  }}
+                >
+                  Add Vehicles
+                </button>
+                
+                <button
+                  onClick={() => navigate("/vehicle-list")}
+                  style={{
+                    background: "#3b82f6",
+                    color: "white",
+                    padding: "12px 24px",
+                    borderRadius: "8px",
+                    border: "none",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                    fontSize: "1rem",
+                    transition: "all 0.3s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.background = "#2563eb";
+                    e.target.style.transform = "translateY(-2px)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.background = "#3b82f6";
+                    e.target.style.transform = "translateY(0)";
+                  }}
+                >
+                  Manage Vehicles
+                </button>
+              </div>
             </div>
 
             <UsersList />
