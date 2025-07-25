@@ -12,6 +12,7 @@ import SignUp from "./pages/notsignedin/SignUp";
 import Manage from "./pages/signedin/Manage";
 import Profile from "./pages/signedin/Profile";
 import AddVehicle from "./pages/signedin/AddVehicle";
+import VehicleList from "./pages/signedin/VehicleList";
 import LandingPage from "./pages/notsignedin/LandingPage";
 import Featured from "./pages/notsignedin/Featured";
 import Vehicles from "./pages/notsignedin/Vehicles";
@@ -58,6 +59,10 @@ function AppRoutes() {
         <Route
           path="/add-vehicle"
           element={isAuthenticated ? <AddVehicle /> : <Navigate to="/signin" />}
+        />
+        <Route
+          path="/vehicle-list"
+          element={isAuthenticated ? <VehicleList /> : <Navigate to="/signin" />}
         />
       </Routes>
     </Router>

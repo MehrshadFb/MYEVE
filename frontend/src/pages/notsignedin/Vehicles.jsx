@@ -17,6 +17,9 @@ function Vehicles() {
   const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [selectedRanges, setSelectedRanges] = useState([]);
+  const [sortOption, setSortOption] = useState("");
+  const [minReviewRating, setMinReviewRating] = useState(0);
+  const [hoveredCard, setHoveredCard] = useState(null);
 
   const fetchVehicles = async () => {
     try {
@@ -111,7 +114,58 @@ function Vehicles() {
       });
     }
 
-    setFilteredVehicles(filtered);
+    // Apply minimum review rating filter
+    if (minReviewRating > 0) {
+      filtered = filtered.filter((vehicle) => {
+        const avg = getAverageRating(vehicle.reviews);
+        return avg >= minReviewRating && avg < minReviewRating + 1;
+      });
+    }
+
+    // Sorting
+    let sorted = [...filtered];
+    switch (sortOption) {
+      case "price-asc":
+        sorted.sort((a, b) => a.price - b.price);
+        break;
+      case "price-desc":
+        sorted.sort((a, b) => b.price - a.price);
+        break;
+      case "brand-asc":
+        sorted.sort((a, b) => a.brand.localeCompare(b.brand));
+        break;
+      case "brand-desc":
+        sorted.sort((a, b) => b.brand.localeCompare(a.brand));
+        break;
+      case "model-asc":
+        sorted.sort((a, b) => a.model.localeCompare(b.model));
+        break;
+      case "model-desc":
+        sorted.sort((a, b) => b.model.localeCompare(a.model));
+        break;
+      case "range-asc":
+        sorted.sort((a, b) => a.range - b.range);
+        break;
+      case "range-desc":
+        sorted.sort((a, b) => b.range - a.range);
+        break;
+      case "seats-asc":
+        sorted.sort((a, b) => a.seats - b.seats);
+        break;
+      case "seats-desc":
+        sorted.sort((a, b) => b.seats - a.seats);
+        break;
+      case "rating-desc":
+        sorted.sort((a, b) => getAverageRating(b.reviews) - getAverageRating(a.reviews));
+        break;
+      case "rating-asc":
+        sorted.sort((a, b) => getAverageRating(a.reviews) - getAverageRating(b.reviews));
+        break;
+      default:
+        break;
+    }
+
+    setFilteredVehicles(sorted);
   }, [
     vehicles,
     searchTerm,
@@ -120,6 +174,8 @@ function Vehicles() {
     selectedSeats,
     selectedRanges,
     selectedPriceRanges,
+    sortOption,
+    minReviewRating,
   ]);
 
   // Toggle filter selections
@@ -163,6 +219,8 @@ function Vehicles() {
     setSelectedRanges([]);
     setSelectedPriceRanges([]);
     setSearchTerm("");
+    setSortOption("");
+    setMinReviewRating(0);
   };
 
   // Get total active filters count
@@ -201,8 +259,8 @@ function Vehicles() {
       {/* Hero Section */}
       <section
         style={{
-          paddingTop: "120px",
-          paddingBottom: "80px",
+          paddingTop: "90px",
+          paddingBottom: "10px",
           background: "linear-gradient(135deg, #1e293b 0%, #334155 100%)",
           color: "white",
           textAlign: "center",
@@ -279,9 +337,10 @@ function Vehicles() {
                 gap: "16px",
                 marginBottom: "20px",
                 alignItems: "center",
+                flexWrap: "wrap",
               }}
             >
-              <div style={{ flex: 1, position: "relative" }}>
+              <div style={{ flex: 1, position: "relative", minWidth: 220 }}>
                 <input
                   type="text"
                   placeholder="Search by type, brand, model, or description..."
@@ -299,7 +358,61 @@ function Vehicles() {
                   }}
                 />
               </div>
-
+              {/* Sorting Dropdown */}
+              <div style={{ minWidth: 220 }}>
+                <select
+                  value={sortOption}
+                  onChange={(e) => setSortOption(e.target.value)}
+                  style={{
+                    padding: "12px 16px",
+                    borderRadius: "8px",
+                    border: "1px solid #d1d5db",
+                    fontSize: "14px",
+                    backgroundColor: "white",
+                    color: "#1e293b",
+                    width: "100%",
+                    boxSizing: "border-box",
+                  }}
+                >
+                  <option value="">Sort By</option>
+                  <option value="price-asc">Price: Low to High</option>
+                  <option value="price-desc">Price: High to Low</option>
+                  <option value="brand-asc">Brand: A-Z</option>
+                  <option value="brand-desc">Brand: Z-A</option>
+                  <option value="model-asc">Model: A-Z</option>
+                  <option value="model-desc">Model: Z-A</option>
+                  <option value="range-asc">Range: Low to High</option>
+                  <option value="range-desc">Range: High to Low</option>
+                  <option value="seats-asc">Seats: Low to High</option>
+                  <option value="seats-desc">Seats: High to Low</option>
+                  <option value="rating-desc">Rating: High to Low</option>
+                  <option value="rating-asc">Rating: Low to High</option>
+                </select>
+              </div>
+              {/* Review Filter */}
+              <div style={{ minWidth: 180 }}>
+                <select
+                  value={minReviewRating}
+                  onChange={(e) => setMinReviewRating(Number(e.target.value))}
+                  style={{
+                    padding: "12px 16px",
+                    borderRadius: "8px",
+                    border: "1px solid #d1d5db",
+                    fontSize: "14px",
+                    backgroundColor: "white",
+                    color: "#1e293b",
+                    width: "100%",
+                    boxSizing: "border-box",
+                  }}
+                >
+                  <option value={0}>All Ratings</option>
+                  <option value={5}>5 Stars</option>
+                  <option value={4}>4 Stars</option>
+                  <option value={3}>3 Stars</option>
+                  <option value={2}>2 Stars</option>
+                  <option value={1}>1 Star</option>
+                </select>
+              </div>
               <button
                 onClick={() => setShowFilters(!showFilters)}
                 style={{
@@ -900,6 +1013,7 @@ function Vehicles() {
             >
               {filteredVehicles.map((vehicle) => {
                 const avgRating = getAverageRating(vehicle.reviews);
+                const isHovered = hoveredCard === vehicle.vid;
                 return (
                   <div
                     key={vehicle.vid}
@@ -907,18 +1021,16 @@ function Vehicles() {
                       backgroundColor: "white",
                       borderRadius: "16px",
                       overflow: "hidden",
-                      boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+                      boxShadow: isHovered ? "0 8px 30px rgba(0,0,0,0.15)" : "0 4px 20px rgba(0,0,0,0.1)",
+                      transform: isHovered ? "translateY(-4px)" : "translateY(0)",
                       transition: "all 0.3s ease",
                       cursor: "pointer",
+                      position: "relative",
+                      zIndex: 1,
+                      willChange: "transform"
                     }}
-                    onMouseEnter={(e) => {
-                      e.target.style.transform = "translateY(-4px)";
-                      e.target.style.boxShadow = "0 8px 30px rgba(0,0,0,0.15)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.transform = "translateY(0)";
-                      e.target.style.boxShadow = "0 4px 20px rgba(0,0,0,0.1)";
-                    }}
+                    onMouseEnter={() => setHoveredCard(vehicle.vid)}
+                    onMouseLeave={() => setHoveredCard(null)}
                   >
                     {/* Vehicle Image */}
                     <div
@@ -1036,6 +1148,34 @@ function Vehicles() {
                             {vehicle.type}
                           </p>
                         </div>
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-end",
+                          }}
+                        >
+                          <span
+                            style={{
+                              fontSize: "1.1rem",
+                              fontWeight: "600",
+                              color: "#3b82f6",
+                              marginBottom: "4px",
+                            }}
+                          >
+                            {vehicle.year}
+                          </span>
+                          <span
+                            style={{
+                              fontSize: "0.75rem",
+                              color: "#94a3b8",
+                              textTransform: "uppercase",
+                              letterSpacing: "0.5px",
+                            }}
+                          >
+                            Year
+                          </span>
+                        </div>
                       </div>
 
                       {/* Vehicle Details */}
@@ -1151,44 +1291,6 @@ function Vehicles() {
                           Add to Cart
                         </button>
                       </div>
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "6px",
-                          fontSize: "0.875rem",
-                          color: "#64748b",
-                        }}
-                      >
-                        <span>🔋</span>
-                        <span>{vehicle.range.toLocaleString()} miles</span>
-                      </div>
-                    </div>
-
-                    {vehicle.description && (
-                      <p
-                        style={{
-                          fontSize: "0.875rem",
-                          color: "#64748b",
-                          marginBottom: "16px",
-                          lineHeight: "1.5",
-                          display: "-webkit-box",
-                          WebkitLineClamp: 2,
-                          WebkitBoxOrient: "vertical",
-                          overflow: "hidden",
-                        }}
-                      >
-                        {vehicle.description}
-                      </p>
-                    )}
-
-                    {/* Action Buttons */}
-                    <div
-                      style={{
-                        display: "flex",
-                        gap: "12px",
-                      }}
-                    >
                     </div>
                   </div>
                 );
