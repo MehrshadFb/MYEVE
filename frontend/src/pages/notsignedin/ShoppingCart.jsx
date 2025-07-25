@@ -217,6 +217,37 @@ const updateQuantity = async (itemId, newQuantity) => {
             }}>
               Total: ${parseFloat(totalAmount).toFixed(2)}
             </div>
+
+
+            {/* Loan Calculator */}
+            <div style={{
+              marginTop: "40px",
+              textAlign: "right",
+              fontSize: "1.5rem",
+              fontWeight: "700",
+              color: "#1e293b"
+            }}>
+              Calculate Your Monthly Payment Using the {" "}
+              <Link 
+            to="/loan-calculator" 
+            style={{ 
+              marginTop: "40px",
+              textAlign: "right",
+              fontSize: "1.5rem",
+              fontWeight: "700",
+              color: "#407fe5ff"
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.color = "#000000";
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.color = "#407fe5ff";
+            }}
+          >
+            Loan Calculator
+          </Link>
+            </div>
+
           </>
         ) : user?.id ? (
           <p style={{

@@ -19,6 +19,7 @@ import Vehicles from "./pages/notsignedin/Vehicles";
 import About from "./pages/notsignedin/About";
 import ShoppingCart from "./pages/notsignedin/ShoppingCart";
 import VehicleDetail from "./pages/notsignedin/VehicleDetail";
+import LoanCalculator from "./pages/notsignedin/LoanCalculator";
 
 function AppRoutes() {
   const { isAuthenticated, loading } = useAuth();
@@ -48,6 +49,7 @@ function AppRoutes() {
         <Route path="/cart" element={<ShoppingCart />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/loan-calculator" element={<LoanCalculator />} />
         <Route
           path="/manage"
           element={isAuthenticated ? <Manage /> : <Navigate to="/signin" />}
