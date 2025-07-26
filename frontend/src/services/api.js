@@ -172,36 +172,66 @@ export const submitReview = async (vid, reviewData) => {
 export const deleteReview = async (vid, rid) => {
   const response = await api.delete(`/vehicles/${vid}/reviews/${rid}`);
   return response.data;
-}
+};
 // 🛒 Shopping Cart APIs
 export const getCart = async () => {
   const response = await api.get("/cart");
   return response.data;
 };
 
+export const addToCart = async ({ vehicleId, quantity = 1 }) => {
+  const response = await api.post("/cart/add", { vehicleId, quantity });
+  return response.data;
+};
 
- export const addToCart = async ({ vehicleId, quantity = 1 }) => {
-   const response = await api.post("/cart/add", { vehicleId, quantity });
-   return response.data;
- };
+export const updateCartItem = async (itemId, quantity) => {
+  try {
+    const response = await api.put(`/cart/item/${itemId}`, { quantity });
+    return response.data;
+  } catch (err) {
+    console.error("updateCartItem error:", err.response?.data || err.message);
+    throw err;
+  }
+};
 
- export const updateCartItem = async (itemId, quantity) => {
-   try {
-     const response = await api.put(`/cart/item/${itemId}`, { quantity });
-     return response.data;
-   } catch (err) {
-     console.error("updateCartItem error:", err.response?.data || err.message);
-     throw err;
-   }
- };
-
- export const removeCartItem = async (itemId) => {
+export const removeCartItem = async (itemId) => {
   const response = await api.delete(`/cart/item/${itemId}`);
   return response.data;
 };
+
 export const clearCart = async () => {
   const response = await api.delete("/cart/clear");
-   return response.data;
-}
+  return response.data;
+};
+
+// Order API functions
+export const createOrder = async (orderData) => {
+  const response = await api.post("/orders", orderData);
+  return response.data;
+};
+
+export const getUserOrders = async () => {
+  const response = await api.get("/orders");
+  return response.data;
+};
+
+export const getOrderById = async (orderId) => {
+  const response = await api.get(`/orders/${orderId}`);
+  return response.data;
+};
+
+// Admin order functions
+export const getAllOrders = async (params = {}) => {
+  const queryString = new URLSearchParams(params).toString();
+  const response = await api.get(
+    `/admin/orders${queryString ? `?${queryString}` : ""}`
+  );
+  return response.data;
+};
+
+export const updateOrderStatus = async (orderId, statusData) => {
+  const response = await api.put(`/admin/orders/${orderId}`, statusData);
+  return response.data;
+};
 
 export default api;

@@ -6,9 +6,9 @@ const ImageModel = require("./Image");
 const ReviewModel = require("./Review");
 const defineShoppingCart = require("./ShoppingCart");
 const defineCartItem = require("./CartItem");
+const PurchaseOrderModel = require("./PurchaseOrder");
+const OrderItemModel = require("./OrderItem");
 const { v4: uuidv4 } = require("uuid");
-
-
 
 // Initialize models
 const User = UserModel(sequelize);
@@ -18,6 +18,8 @@ const ShoppingCart = defineShoppingCart(sequelize);
 const CartItem = defineCartItem(sequelize);
 const Image = ImageModel(sequelize);
 const Review = ReviewModel(sequelize);
+const PurchaseOrder = PurchaseOrderModel(sequelize);
+const OrderItem = OrderItemModel(sequelize);
 
 // Association: One User hasMany Addresses
 User.hasMany(Address, {
@@ -49,12 +51,12 @@ Review.belongsTo(User, { foreignKey: "userId", as: "user" });
 
 // ShoppingCart has many CartItems
 ShoppingCart.hasMany(CartItem, {
-  foreignKey: 'cartId',
-  as: 'CartItems', // MUST match the 'as' used in getCart()
+  foreignKey: "cartId",
+  as: "CartItems", // MUST match the 'as' used in getCart()
 });
 CartItem.belongsTo(ShoppingCart, {
-  foreignKey: 'cartId',
-  as: 'Cart', 
+  foreignKey: "cartId",
+  as: "Cart",
 });
 
 // Association: CartItem belongsTo Vehicle
@@ -63,6 +65,28 @@ CartItem.belongsTo(Vehicle, {
   targetKey: "vid",
 });
 
+// Association: One User hasMany PurchaseOrders
+User.hasMany(PurchaseOrder, {
+  foreignKey: "userId",
+  as: "orders",
+  onDelete: "CASCADE",
+});
+PurchaseOrder.belongsTo(User, { foreignKey: "userId", as: "user" });
+
+// Association: One PurchaseOrder hasMany OrderItems
+PurchaseOrder.hasMany(OrderItem, {
+  foreignKey: "orderId",
+  as: "items",
+  onDelete: "CASCADE",
+});
+OrderItem.belongsTo(PurchaseOrder, { foreignKey: "orderId", as: "order" });
+
+// Association: OrderItem belongsTo Vehicle
+OrderItem.belongsTo(Vehicle, {
+  foreignKey: "vehicleId",
+  targetKey: "vid",
+  as: "vehicle",
+});
 
 const db = {
   sequelize,
@@ -71,7 +95,9 @@ const db = {
   Vehicle,
   Image,
   ShoppingCart,
-  CartItem
+  CartItem,
+  PurchaseOrder,
+  OrderItem,
 };
 
 // Seed database with admin account
@@ -125,6 +151,7 @@ module.exports = {
   Image,
   ShoppingCart,
   CartItem,
-  Review
+  Review,
+  PurchaseOrder,
+  OrderItem,
 };
-
