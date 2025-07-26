@@ -308,15 +308,84 @@ function AddVehicle() {
                   fontSize: "14px",
                 }}
               >
-                Upload Images
+                Upload Images (Multiple files allowed)
               </label>
-              <input
-                type="file"
-                accept="image/*"
-                multiple
-                onChange={(e) => setSelectedFiles(Array.from(e.target.files))}
-                style={{ fontSize: "16px" }}
-              />
+              <div style={{
+                border: "2px dashed #d1d5db",
+                borderRadius: "8px",
+                padding: "20px",
+                textAlign: "center",
+                backgroundColor: "#f9fafb",
+                transition: "all 0.3s ease",
+              }}>
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={(e) => {
+                    const files = Array.from(e.target.files);
+                    if (files.length > 10) {
+                      setMessage({ 
+                        type: "error", 
+                        text: "Maximum 10 images allowed. Please select fewer files." 
+                      });
+                      return;
+                    }
+                    setSelectedFiles(files);
+                    // Clear any previous error message
+                    if (message.text && message.text.includes("Maximum 10 images")) {
+                      setMessage({ type: "", text: "" });
+                    }
+                  }}
+                  style={{ 
+                    fontSize: "16px",
+                    marginBottom: "10px",
+                    padding: "8px",
+                    border: "1px solid #d1d5db",
+                    borderRadius: "4px",
+                    backgroundColor: "white",
+                    width: "100%",
+                    boxSizing: "border-box"
+                  }}
+                />
+                <p style={{
+                  margin: "10px 0 0 0",
+                  fontSize: "14px",
+                  color: "#6b7280"
+                }}>
+                  Select up to 10 images (JPG, PNG, GIF) - Hold Ctrl/Cmd to select multiple files
+                </p>
+                {selectedFiles.length > 0 && (
+                  <div style={{
+                    marginTop: "12px",
+                    padding: "12px",
+                    backgroundColor: "#ecfdf5",
+                    borderRadius: "6px",
+                    border: "1px solid #bbf7d0"
+                  }}>
+                    <p style={{
+                      margin: "0 0 8px 0",
+                      fontSize: "14px",
+                      fontWeight: "600",
+                      color: "#059669"
+                    }}>
+                      {selectedFiles.length} file(s) selected:
+                    </p>
+                    <ul style={{
+                      margin: 0,
+                      padding: "0 0 0 20px",
+                      fontSize: "13px",
+                      color: "#374151"
+                    }}>
+                      {selectedFiles.map((file, index) => (
+                        <li key={index} style={{ marginBottom: "4px" }}>
+                          {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Vehicle Type */}
