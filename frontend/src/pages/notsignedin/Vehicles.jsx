@@ -1,8 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { getAllVehicles, addToCart } from "../../services/api";
 import Header from "../../components/Header";
 import { useNavigate } from "react-router-dom";
 import { getAverageRating } from "../../utils/AnalyticsHelper";
+
+// Price ranges constant
+const priceRanges = [
+  { label: "Under $25,000", min: 0, max: 25000 },
+  { label: "$25,000 - $50,000", min: 25000, max: 50000 },
+  { label: "$50,000 - $75,000", min: 50000, max: 75000 },
+  { label: "$75,000 - $100,000", min: 75000, max: 100000 },
+  { label: "Over $100,000", min: 100000, max: Infinity },
+];
 
 function Vehicles() {
   const navigate = useNavigate();
@@ -20,6 +29,8 @@ function Vehicles() {
   const [sortOption, setSortOption] = useState("");
   const [minReviewRating, setMinReviewRating] = useState(0);
   const [hoveredCard, setHoveredCard] = useState(null);
+  const [currentImageIndexes, setCurrentImageIndexes] = useState({});
+  const imageIntervals = useRef({});
 
   const fetchVehicles = async () => {
     try {
@@ -47,15 +58,6 @@ function Vehicles() {
   const uniqueRanges = [
     ...new Set(vehicles.map((vehicle) => vehicle.range)),
   ].sort((a, b) => a - b);
-
-  // Price ranges
-  const priceRanges = [
-    { label: "Under $25,000", min: 0, max: 25000 },
-    { label: "$25,000 - $50,000", min: 25000, max: 50000 },
-    { label: "$50,000 - $75,000", min: 50000, max: 75000 },
-    { label: "$75,000 - $100,000", min: 75000, max: 100000 },
-    { label: "Over $100,000", min: 100000, max: Infinity },
-  ];
 
   // Filter and search vehicles
   useEffect(() => {
@@ -234,6 +236,96 @@ function Vehicles() {
     );
   };
 
+  // Image cycling functions
+  const startImageCycling = (vehicleId, imageCount) => {
+    if (imageCount <= 1) return; // Don't cycle if only one image
+    
+    // Clear existing interval if any
+    if (imageIntervals.current[vehicleId]) {
+      clearInterval(imageIntervals.current[vehicleId]);
+    }
+    
+    // Start new interval
+    imageIntervals.current[vehicleId] = setInterval(() => {
+      setCurrentImageIndexes(prev => ({
+        ...prev,
+        [vehicleId]: ((prev[vehicleId] || 0) + 1) % imageCount
+      }));
+    }, 5000); // 5 seconds
+  };
+
+  const stopImageCycling = (vehicleId) => {
+    if (imageIntervals.current[vehicleId]) {
+      clearInterval(imageIntervals.current[vehicleId]);
+      delete imageIntervals.current[vehicleId];
+    }
+    // Reset to first image when hover ends
+    setCurrentImageIndexes(prev => ({
+      ...prev,
+      [vehicleId]: 0
+    }));
+  };
+
+  const navigateImage = (vehicleId, direction, imageCount) => {
+    // Stop auto-cycling when user manually navigates
+    if (imageIntervals.current[vehicleId]) {
+      clearInterval(imageIntervals.current[vehicleId]);
+      delete imageIntervals.current[vehicleId];
+    }
+    
+    setCurrentImageIndexes(prev => {
+      const currentIndex = prev[vehicleId] || 0;
+      let newIndex;
+      
+      if (direction === 'next') {
+        newIndex = (currentIndex + 1) % imageCount;
+      } else {
+        newIndex = currentIndex === 0 ? imageCount - 1 : currentIndex - 1;
+      }
+      
+      return {
+        ...prev,
+        [vehicleId]: newIndex
+      };
+    });
+    
+    // Restart auto-cycling after manual navigation
+    setTimeout(() => {
+      if (hoveredCard === vehicleId) {
+        startImageCycling(vehicleId, imageCount);
+      }
+    }, 1000); // Wait 1 second before restarting auto-cycle
+  };
+
+  const jumpToImage = (vehicleId, targetIndex, imageCount) => {
+    // Stop auto-cycling when user manually navigates
+    if (imageIntervals.current[vehicleId]) {
+      clearInterval(imageIntervals.current[vehicleId]);
+      delete imageIntervals.current[vehicleId];
+    }
+    
+    setCurrentImageIndexes(prev => ({
+      ...prev,
+      [vehicleId]: targetIndex
+    }));
+    
+    // Restart auto-cycling after manual navigation
+    setTimeout(() => {
+      if (hoveredCard === vehicleId) {
+        startImageCycling(vehicleId, imageCount);
+      }
+    }, 1000);
+  };
+
+  // Cleanup intervals on unmount
+  useEffect(() => {
+    const intervals = imageIntervals.current;
+    return () => {
+      Object.values(intervals).forEach(interval => {
+        if (interval) clearInterval(interval);
+      });
+    };
+  }, []);
 
    const handleAddToCart = async (vid) => {
      try {
@@ -1029,8 +1121,16 @@ function Vehicles() {
                       zIndex: 1,
                       willChange: "transform"
                     }}
-                    onMouseEnter={() => setHoveredCard(vehicle.vid)}
-                    onMouseLeave={() => setHoveredCard(null)}
+                    onMouseEnter={() => {
+                      setHoveredCard(vehicle.vid);
+                      if (vehicle.images && vehicle.images.length > 1) {
+                        startImageCycling(vehicle.vid, vehicle.images.length);
+                      }
+                    }}
+                    onMouseLeave={() => {
+                      setHoveredCard(null);
+                      stopImageCycling(vehicle.vid);
+                    }}
                   >
                     {/* Vehicle Image */}
                     <div
@@ -1045,12 +1145,13 @@ function Vehicles() {
                     >
                       {vehicle.images && vehicle.images.length > 0 ? (
                         <img
-                          src={vehicle.images[0].url}
-                          alt={vehicle.type}
+                          src={vehicle.images[currentImageIndexes[vehicle.vid] || 0]?.url || vehicle.images[0].url}
+                          alt={`${vehicle.brand} ${vehicle.model}`}
                           style={{
                             width: "100%",
                             height: "100%",
                             objectFit: "cover",
+                            transition: "all 0.4s ease-in-out",
                           }}
                         />
                       ) : (
@@ -1114,6 +1215,153 @@ function Vehicles() {
                       >
                         ${parseFloat(vehicle.price).toLocaleString()}
                       </div>
+                      
+                      {/* Image indicators */}
+                      {vehicle.images && vehicle.images.length > 1 && (
+                        <div
+                          style={{
+                            position: "absolute",
+                            bottom: "12px",
+                            left: "50%",
+                            transform: "translateX(-50%)",
+                            display: "flex",
+                            gap: "4px",
+                            padding: "4px 8px",
+                            backgroundColor: "rgba(0,0,0,0.6)",
+                            borderRadius: "12px",
+                            alignItems: "center",
+                          }}
+                        >
+                          {vehicle.images.map((_, index) => (
+                            <button
+                              key={index}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                jumpToImage(vehicle.vid, index, vehicle.images.length);
+                              }}
+                              style={{
+                                width: "8px",
+                                height: "8px",
+                                borderRadius: "50%",
+                                backgroundColor: (currentImageIndexes[vehicle.vid] || 0) === index ? "white" : "rgba(255,255,255,0.4)",
+                                transition: "all 0.3s ease",
+                                border: "none",
+                                cursor: "pointer",
+                                padding: 0,
+                              }}
+                              onMouseEnter={(e) => {
+                                if ((currentImageIndexes[vehicle.vid] || 0) !== index) {
+                                  e.target.style.backgroundColor = "rgba(255,255,255,0.7)";
+                                }
+                              }}
+                              onMouseLeave={(e) => {
+                                if ((currentImageIndexes[vehicle.vid] || 0) !== index) {
+                                  e.target.style.backgroundColor = "rgba(255,255,255,0.4)";
+                                }
+                              }}
+                            />
+                          ))}
+                          {isHovered && (
+                            <span
+                              style={{
+                                color: "white",
+                                fontSize: "10px",
+                                marginLeft: "6px",
+                                fontWeight: "500",
+                              }}
+                            >
+                              {(currentImageIndexes[vehicle.vid] || 0) + 1}/{vehicle.images.length}
+                            </span>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Navigation Arrows */}
+                      {vehicle.images && vehicle.images.length > 1 && isHovered && (
+                        <>
+                          {/* Previous Arrow */}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              navigateImage(vehicle.vid, 'prev', vehicle.images.length);
+                            }}
+                            style={{
+                              position: "absolute",
+                              left: "12px",
+                              top: "50%",
+                              transform: "translateY(-50%)",
+                              backgroundColor: "rgba(255, 255, 255, 0)",
+                              color: "#ffffffff",
+                              border: "none",
+                              borderRadius: "50%",
+                              width: "36px",
+                              height: "36px",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              cursor: "pointer",
+                              fontSize: "10px",
+                              fontWeight: "bold",
+                              transition: "all 0.3s ease",
+                              zIndex: 10,
+                              boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
+                            }}
+                            onMouseEnter={(e) => {
+                              e.target.style.backgroundColor = "rgba(255, 255, 255, 0)";
+                              e.target.style.transform = "translateY(-50%) scale(1.1)";
+                              e.target.style.boxShadow = "0 4px 12px rgba(0,0,0,0.4)";
+                            }}
+                            onMouseLeave={(e) => {
+                              e.target.style.backgroundColor = "rgba(255, 255, 255, 0)";
+                              e.target.style.transform = "translateY(-50%) scale(1)";
+                              e.target.style.boxShadow = "0 2px 8px rgba(0,0,0,0.3)";
+                            }}
+                          >
+                            ‹
+                          </button>
+
+                          {/* Next Arrow */}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              navigateImage(vehicle.vid, 'next', vehicle.images.length);
+                            }}
+                            style={{
+                              position: "absolute",
+                              right: "12px",
+                              top: "50%",
+                              transform: "translateY(-50%)",
+                              backgroundColor: "rgba(255, 255, 255, 0)",
+                              color: "#ffffffff",
+                              border: "none",
+                              borderRadius: "50%",
+                              width: "36px",
+                              height: "36px",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              cursor: "pointer",
+                              fontSize: "10px",
+                              fontWeight: "bold",
+                              transition: "all 0.3s ease",
+                              zIndex: 10,
+                              boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
+                            }}
+                            onMouseEnter={(e) => {
+                              e.target.style.backgroundColor = "rgba(255, 255, 255, 0)";
+                              e.target.style.transform = "translateY(-50%) scale(1.1)";
+                              e.target.style.boxShadow = "0 4px 12px rgba(0,0,0,0.4)";
+                            }}
+                            onMouseLeave={(e) => {
+                              e.target.style.backgroundColor = "rgba(255, 255, 255, 0)";
+                              e.target.style.transform = "translateY(-50%) scale(1)";
+                              e.target.style.boxShadow = "0 2px 8px rgba(0,0,0,0.3)";
+                            }}
+                          >
+                            ›
+                          </button>
+                        </>
+                      )}
                     </div>
 
                     {/* Vehicle Info */}

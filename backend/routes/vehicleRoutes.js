@@ -44,7 +44,7 @@ router.post(
   "/vehicles/:vid/images",
   authenticateToken,
   authorizeRole("admin"),
-  upload.array("images", 5),
+  upload.array("images", 10), // Increased from 5 to 10 images
   uploadImages
 );
 router.delete(

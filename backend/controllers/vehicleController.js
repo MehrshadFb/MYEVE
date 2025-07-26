@@ -178,15 +178,38 @@ const submitReview = async (req, res) => {
   const { rating, comment } = req.body;
 
   try {
+    console.log("=== SUBMIT REVIEW DEBUG ===");
+    console.log("Vehicle ID:", vid);
+    console.log("User ID:", req.user?.id);
+    console.log("Rating:", rating);
+    console.log("Comment:", comment);
+
     const vehicle = await Vehicle.findByPk(vid);
     if (!vehicle) {
+      console.log("Vehicle not found with ID:", vid);
       return res.status(404).json({ message: "Vehicle not found" });
     }
+    
+    console.log("Vehicle found:", vehicle.brand, vehicle.model);
+
     if (!rating || rating < 1 || rating > 5) {
+      console.log("Invalid rating:", rating);
       return res
         .status(400)
         .json({ message: "Rating must be between 1 and 5" });
     }
+
+    if (!req.user || !req.user.id) {
+      console.log("User not found in request");
+      return res.status(401).json({ message: "User not authenticated" });
+    }
+
+    console.log("Creating review with data:", {
+      vehicleId: vid,
+      userId: req.user.id,
+      rating,
+      comment
+    });
 
     const review = await Review.create({
       vehicleId: vid,
@@ -195,13 +218,19 @@ const submitReview = async (req, res) => {
       comment,
     });
 
+    console.log("Review created successfully:", review.toJSON());
+
     return res.status(201).json({
       message: "Review submitted successfully",
       review,
     });
   } catch (err) {
     console.error("submitReview error:", err);
-    return res.status(500).json({ message: "Internal server error" });
+    console.error("Error stack:", err.stack);
+    return res.status(500).json({ 
+      message: "Internal server error",
+      error: err.message 
+    });
   }
 };
 
