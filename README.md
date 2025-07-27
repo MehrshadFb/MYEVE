@@ -174,6 +174,12 @@ docker-compose up -d mysql
    - Ensure backend is running on port 3001
    - Check CORS configuration in `backend/app.js`
    - Verify API_BASE_URL in `frontend/src/services/api.js`
+  
+4. **Internal server error**
+   - Sometimes when adding a vehicle it gives internal server error.
+   - This can happen due to a mismatch of the database tables. 
+   - Change the False to true in `await syncDatabase(false);` located in `Backend/server.js`
+
 
 ### Development Tips
 
