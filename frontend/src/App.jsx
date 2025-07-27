@@ -13,6 +13,7 @@ import Manage from "./pages/signedin/Manage";
 import Profile from "./pages/signedin/Profile";
 import AddVehicle from "./pages/signedin/AddVehicle";
 import VehicleList from "./pages/signedin/VehicleList";
+import OrderManagement from "./pages/signedin/OrderManagement";
 import LandingPage from "./pages/notsignedin/LandingPage";
 import Featured from "./pages/notsignedin/Featured";
 import Vehicles from "./pages/notsignedin/Vehicles";
@@ -20,6 +21,8 @@ import About from "./pages/notsignedin/About";
 import ShoppingCart from "./pages/notsignedin/ShoppingCart";
 import VehicleDetail from "./pages/notsignedin/VehicleDetail";
 import LoanCalculator from "./pages/notsignedin/LoanCalculator";
+import Checkout from "./pages/notsignedin/Checkout";
+import OrderConfirmation from "./pages/notsignedin/OrderConfirmation";
 
 function AppRoutes() {
   const { isAuthenticated, loading } = useAuth();
@@ -51,6 +54,16 @@ function AppRoutes() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/loan-calculator" element={<LoanCalculator />} />
         <Route
+          path="/checkout"
+          element={isAuthenticated ? <Checkout /> : <Navigate to="/signin" />}
+        />
+        <Route
+          path="/order-confirmation/:orderNumber"
+          element={
+            isAuthenticated ? <OrderConfirmation /> : <Navigate to="/signin" />
+          }
+        />
+        <Route
           path="/manage"
           element={isAuthenticated ? <Manage /> : <Navigate to="/signin" />}
         />
@@ -64,7 +77,15 @@ function AppRoutes() {
         />
         <Route
           path="/vehicle-list"
-          element={isAuthenticated ? <VehicleList /> : <Navigate to="/signin" />}
+          element={
+            isAuthenticated ? <VehicleList /> : <Navigate to="/signin" />
+          }
+        />
+        <Route
+          path="/order-management"
+          element={
+            isAuthenticated ? <OrderManagement /> : <Navigate to="/signin" />
+          }
         />
       </Routes>
     </Router>

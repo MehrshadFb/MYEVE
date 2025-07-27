@@ -1,17 +1,23 @@
 import { useState, useEffect } from "react";
 import useAuth from "../../context/useAuth";
-import { updateProfile, createAddress, getAllAddressesByUserId, deleteAddress } from "../../services/api";
+import {
+  updateProfile,
+  createAddress,
+  getAllAddressesByUserId,
+  deleteAddress,
+} from "../../services/api";
 import Header from "../../components/Header";
+import OrderHistory from "../../components/OrderHistory";
 
 function Profile() {
   const { user } = useAuth();
-  
+
   const [profileData, setProfileData] = useState({
     username: user?.username || "",
     email: user?.email || "",
     currentPassword: "",
     newPassword: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
 
   const [editingField, setEditingField] = useState(null);
@@ -25,7 +31,7 @@ function Profile() {
     province: "",
     country: "",
     zip: "",
-    phone: ""
+    phone: "",
   });
 
   // Fetch user addresses on component mount
@@ -45,12 +51,12 @@ function Profile() {
 
   const handleProfileChange = (e) => {
     const { name, value } = e.target;
-    setProfileData(prev => ({ ...prev, [name]: value }));
+    setProfileData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleAddressChange = (e) => {
     const { name, value } = e.target;
-    setNewAddress(prev => ({ ...prev, [name]: value }));
+    setNewAddress((prev) => ({ ...prev, [name]: value }));
   };
 
   const startEditing = (field, currentValue) => {
@@ -67,13 +73,19 @@ function Profile() {
     try {
       const updateData = { [field]: tempValue };
       const response = await updateProfile(updateData);
-      
-      setProfileData(prev => ({ ...prev, [field]: tempValue }));
-      setMessage({ type: "success", text: response.message || "Profile updated successfully!" });
+
+      setProfileData((prev) => ({ ...prev, [field]: tempValue }));
+      setMessage({
+        type: "success",
+        text: response.message || "Profile updated successfully!",
+      });
       setEditingField(null);
       setTempValue("");
     } catch (err) {
-      setMessage({ type: "error", text: err.response?.data?.message || "Failed to update profile" });
+      setMessage({
+        type: "error",
+        text: err.response?.data?.message || "Failed to update profile",
+      });
     }
   };
 
@@ -88,32 +100,44 @@ function Profile() {
     }
 
     if (profileData.newPassword && profileData.newPassword.length < 8) {
-      setMessage({ type: "error", text: "Password must be at least 8 characters" });
+      setMessage({
+        type: "error",
+        text: "Password must be at least 8 characters",
+      });
       return;
     }
 
-    if (profileData.newPassword && !/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+/.test(profileData.newPassword)) {
-      setMessage({ type: "error", text: "Password must contain at least one special character" });
+    if (
+      profileData.newPassword &&
+      !/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+/.test(profileData.newPassword)
+    ) {
+      setMessage({
+        type: "error",
+        text: "Password must contain at least one special character",
+      });
       return;
     }
 
     try {
       const response = await updateProfile({
         currentPassword: profileData.currentPassword,
-        newPassword: profileData.newPassword
+        newPassword: profileData.newPassword,
       });
-      
+
       setMessage({ type: "success", text: response.message });
-      
+
       // Clear password fields
-      setProfileData(prev => ({
+      setProfileData((prev) => ({
         ...prev,
         currentPassword: "",
         newPassword: "",
-        confirmPassword: ""
+        confirmPassword: "",
       }));
     } catch (err) {
-      setMessage({ type: "error", text: err.response?.data?.message || "Failed to update password" });
+      setMessage({
+        type: "error",
+        text: err.response?.data?.message || "Failed to update password",
+      });
     }
   };
 
@@ -123,12 +147,15 @@ function Profile() {
 
     try {
       const response = await createAddress(newAddress);
-      setMessage({ type: "success", text: response.message || "Address added successfully!" });
-      
+      setMessage({
+        type: "success",
+        text: response.message || "Address added successfully!",
+      });
+
       // Refresh addresses list
       const updatedAddresses = await getAllAddressesByUserId(user.id);
       setAddresses(updatedAddresses);
-      
+
       // Clear address form
       setNewAddress({
         street: "",
@@ -136,10 +163,13 @@ function Profile() {
         province: "",
         country: "",
         zip: "",
-        phone: ""
+        phone: "",
       });
     } catch (err) {
-      setMessage({ type: "error", text: err.response?.data?.message || "Failed to add address" });
+      setMessage({
+        type: "error",
+        text: err.response?.data?.message || "Failed to add address",
+      });
     }
   };
 
@@ -148,37 +178,44 @@ function Profile() {
       try {
         await deleteAddress(addressId);
         setMessage({ type: "success", text: "Address deleted successfully!" });
-        
+
         // Refresh addresses list
         const updatedAddresses = await getAllAddressesByUserId(user.id);
         setAddresses(updatedAddresses);
       } catch (err) {
         console.error("Error deleting address:", err);
-        setMessage({ type: "error", text: err.response?.data?.message || "Failed to delete address" });
+        setMessage({
+          type: "error",
+          text: err.response?.data?.message || "Failed to delete address",
+        });
       }
     }
   };
 
   const renderEditableField = (label, field, value, type = "text") => {
     const isEditing = editingField === field;
-    
+
     return (
-      <div style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        padding: "16px",
-        border: "1px solid #e2e8f0",
-        borderRadius: "8px",
-        marginBottom: "12px",
-        backgroundColor: "white"
-      }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "16px",
+          border: "1px solid #e2e8f0",
+          borderRadius: "8px",
+          marginBottom: "12px",
+          backgroundColor: "white",
+        }}
+      >
         <div style={{ flex: 1 }}>
-          <div style={{
-            fontSize: "14px",
-            color: "#64748b",
-            marginBottom: "4px"
-          }}>
+          <div
+            style={{
+              fontSize: "14px",
+              color: "#64748b",
+              marginBottom: "4px",
+            }}
+          >
             {label}
           </div>
           {isEditing ? (
@@ -192,7 +229,7 @@ function Profile() {
                   borderRadius: "6px",
                   border: "1px solid #d1d5db",
                   fontSize: "14px",
-                  flex: 1
+                  flex: 1,
                 }}
                 autoFocus
               />
@@ -205,7 +242,7 @@ function Profile() {
                   backgroundColor: "#059669",
                   color: "white",
                   fontSize: "12px",
-                  cursor: "pointer"
+                  cursor: "pointer",
                 }}
               >
                 Save
@@ -219,18 +256,20 @@ function Profile() {
                   backgroundColor: "white",
                   color: "#64748b",
                   fontSize: "12px",
-                  cursor: "pointer"
+                  cursor: "pointer",
                 }}
               >
                 Cancel
               </button>
             </div>
           ) : (
-            <div style={{
-              fontSize: "16px",
-              color: "#1e293b",
-              fontWeight: "500"
-            }}>
+            <div
+              style={{
+                fontSize: "16px",
+                color: "#1e293b",
+                fontWeight: "500",
+              }}
+            >
               {value || "Not set"}
             </div>
           )}
@@ -247,7 +286,7 @@ function Profile() {
               cursor: "pointer",
               display: "flex",
               alignItems: "center",
-              justifyContent: "center"
+              justifyContent: "center",
             }}
             title="Edit"
           >
@@ -263,91 +302,112 @@ function Profile() {
   }
 
   return (
-    <div style={{ 
-      minHeight: "100vh", 
-      backgroundColor: "#f8fafc", 
-      width: "100%",
-      overflow: "hidden"
-    }}>
-      <Header />
-      <div style={{
+    <div
+      style={{
+        minHeight: "100vh",
+        backgroundColor: "#f8fafc",
         width: "100%",
-        backgroundColor: "white",
-        padding: "70px 40px",
-        marginTop: "0px"
-      }}>
-        <div style={{
-          marginBottom: "40px",
-          paddingBottom: "20px",
-          borderBottom: "2px solid #e2e8f0"
-        }}>
+        overflow: "hidden",
+      }}
+    >
+      <Header />
+      <div
+        style={{
+          width: "100%",
+          backgroundColor: "white",
+          padding: "70px 40px",
+          marginTop: "0px",
+        }}
+      >
+        <div
+          style={{
+            marginBottom: "40px",
+            paddingBottom: "20px",
+            borderBottom: "2px solid #e2e8f0",
+          }}
+        >
           <div>
-            <h1 style={{
-              fontSize: "2.5rem",
-              fontWeight: "700",
-              color: "#1e293b",
-              margin: "0 0 10px 0"
-            }}>
+            <h1
+              style={{
+                fontSize: "2.5rem",
+                fontWeight: "700",
+                color: "#1e293b",
+                margin: "0 0 10px 0",
+              }}
+            >
               Profile Settings
             </h1>
-            <p style={{
-              fontSize: "1.1rem",
-              color: "#64748b",
-              margin: 0
-            }}>
+            <p
+              style={{
+                fontSize: "1.1rem",
+                color: "#64748b",
+                margin: 0,
+              }}
+            >
               Manage your account information and addresses
             </p>
           </div>
         </div>
 
         {message.text && (
-          <div style={{
-            padding: "12px 16px",
-            borderRadius: "8px",
-            marginBottom: "20px",
-            backgroundColor: message.type === "success" ? "#f0fdf4" : "#fef2f2",
-            color: message.type === "success" ? "#059669" : "#dc2626",
-            border: `1px solid ${message.type === "success" ? "#bbf7d0" : "#fecaca"}`
-          }}>
+          <div
+            style={{
+              padding: "12px 16px",
+              borderRadius: "8px",
+              marginBottom: "20px",
+              backgroundColor:
+                message.type === "success" ? "#f0fdf4" : "#fef2f2",
+              color: message.type === "success" ? "#059669" : "#dc2626",
+              border: `1px solid ${message.type === "success" ? "#bbf7d0" : "#fecaca"}`,
+            }}
+          >
             {message.text}
           </div>
         )}
 
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(500px, 600px))",
-          gap: "100px",
-          maxWidth: "100%",
-          margin: "0 auto"
-        }}>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(500px, 600px))",
+            gap: "100px",
+            maxWidth: "100%",
+            margin: "0 auto",
+          }}
+        >
           {/* Profile Information */}
           <div>
-            <h2 style={{
-              fontSize: "1.5rem",
-              fontWeight: "600",
-              color: "#1e293b",
-              marginBottom: "20px"
-            }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "#1e293b",
+                marginBottom: "20px",
+              }}
+            >
               Account Information
             </h2>
-            
+
             {renderEditableField("Username", "username", profileData.username)}
             {renderEditableField("Email", "email", profileData.email, "email")}
 
             {/* Password Change Section */}
-            <div style={{
-              marginTop: "30px",
-              padding: "20px",
-              backgroundColor: "#f8fafc",
-              borderRadius: "8px",
-              border: "1px solid #e2e8f0"
-            }}>
-              <h3 style={{
-                fontSize: "1.1rem",
-                fontWeight: "600",
-                color: "#1e293b",
-                marginBottom: "16px"
-              }}>
+            <div
+              style={{
+                marginTop: "30px",
+                padding: "20px",
+                backgroundColor: "#f8fafc",
+                borderRadius: "8px",
+                border: "1px solid #e2e8f0",
+              }}
+            >
+              <h3
+                style={{
+                  fontSize: "1.1rem",
+                  fontWeight: "600",
+                  color: "#1e293b",
+                  marginBottom: "16px",
+                }}
+              >
                 Change Password
               </h3>
               <form onSubmit={handlePasswordUpdate}>
@@ -364,7 +424,7 @@ function Profile() {
                       border: "1px solid #d1d5db",
                       fontSize: "14px",
                       width: "100%",
-                      boxSizing: "border-box"
+                      boxSizing: "border-box",
                     }}
                   />
                 </div>
@@ -381,7 +441,7 @@ function Profile() {
                       border: "1px solid #d1d5db",
                       fontSize: "14px",
                       width: "100%",
-                      boxSizing: "border-box"
+                      boxSizing: "border-box",
                     }}
                   />
                 </div>
@@ -398,7 +458,7 @@ function Profile() {
                       border: "1px solid #d1d5db",
                       fontSize: "14px",
                       width: "100%",
-                      boxSizing: "border-box"
+                      boxSizing: "border-box",
                     }}
                   />
                 </div>
@@ -412,7 +472,7 @@ function Profile() {
                     border: "none",
                     fontWeight: "500",
                     cursor: "pointer",
-                    fontSize: "14px"
+                    fontSize: "14px",
                   }}
                 >
                   Update Password
@@ -423,40 +483,54 @@ function Profile() {
 
           {/* Addresses Section */}
           <div>
-            <h2 style={{
-              fontSize: "1.5rem",
-              fontWeight: "600",
-              color: "#1e293b",
-              marginBottom: "20px"
-            }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "#1e293b",
+                marginBottom: "20px",
+              }}
+            >
               Addresses
             </h2>
 
             {/* Display existing addresses */}
             {addresses.length > 0 && (
               <div style={{ marginBottom: "30px" }}>
-                <h3 style={{
-                  fontSize: "1rem",
-                  fontWeight: "600",
-                  color: "#374151",
-                  marginBottom: "12px"
-                }}>
+                <h3
+                  style={{
+                    fontSize: "1rem",
+                    fontWeight: "600",
+                    color: "#374151",
+                    marginBottom: "12px",
+                  }}
+                >
                   Your Addresses
                 </h3>
                 {addresses.map((address) => (
-                  <div key={address.id} style={{
-                    padding: "16px",
-                    border: "1px solid #e2e8f0",
-                    borderRadius: "8px",
-                    marginBottom: "12px",
-                    backgroundColor: "white",
-                    position: "relative"
-                  }}>
+                  <div
+                    key={address.id}
+                    style={{
+                      padding: "16px",
+                      border: "1px solid #e2e8f0",
+                      borderRadius: "8px",
+                      marginBottom: "12px",
+                      backgroundColor: "white",
+                      position: "relative",
+                    }}
+                  >
                     <div style={{ fontSize: "14px", color: "#1e293b" }}>
-                      {address.street}<br />
-                      {address.city}, {address.province} {address.zip}<br />
+                      {address.street}
+                      <br />
+                      {address.city}, {address.province} {address.zip}
+                      <br />
                       {address.country}
-                      {address.phone && <><br />📞 {address.phone}</>}
+                      {address.phone && (
+                        <>
+                          <br />
+                          📞 {address.phone}
+                        </>
+                      )}
                     </div>
                     <button
                       onClick={() => handleDeleteAddress(address.id)}
@@ -471,7 +545,7 @@ function Profile() {
                         color: "white",
                         fontSize: "12px",
                         cursor: "pointer",
-                        fontWeight: "500"
+                        fontWeight: "500",
                       }}
                       title="Delete address"
                     >
@@ -483,18 +557,22 @@ function Profile() {
             )}
 
             {/* Add new address form */}
-            <div style={{
-              padding: "20px",
-              backgroundColor: "#f8fafc",
-              borderRadius: "8px",
-              border: "1px solid #e2e8f0"
-            }}>
-              <h3 style={{
-                fontSize: "1.1rem",
-                fontWeight: "600",
-                color: "#1e293b",
-                marginBottom: "16px"
-              }}>
+            <div
+              style={{
+                padding: "20px",
+                backgroundColor: "#f8fafc",
+                borderRadius: "8px",
+                border: "1px solid #e2e8f0",
+              }}
+            >
+              <h3
+                style={{
+                  fontSize: "1.1rem",
+                  fontWeight: "600",
+                  color: "#1e293b",
+                  marginBottom: "16px",
+                }}
+              >
                 Add New Address
               </h3>
               <form onSubmit={handleAddAddress}>
@@ -512,11 +590,18 @@ function Profile() {
                       border: "1px solid #d1d5db",
                       fontSize: "14px",
                       width: "100%",
-                      boxSizing: "border-box"
+                      boxSizing: "border-box",
                     }}
                   />
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "12px" }}>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: "12px",
+                    marginBottom: "12px",
+                  }}
+                >
                   <input
                     name="city"
                     type="text"
@@ -529,7 +614,7 @@ function Profile() {
                       borderRadius: "6px",
                       border: "1px solid #d1d5db",
                       fontSize: "14px",
-                      boxSizing: "border-box"
+                      boxSizing: "border-box",
                     }}
                   />
                   <input
@@ -544,11 +629,18 @@ function Profile() {
                       borderRadius: "6px",
                       border: "1px solid #d1d5db",
                       fontSize: "14px",
-                      boxSizing: "border-box"
+                      boxSizing: "border-box",
                     }}
                   />
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "12px" }}>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: "12px",
+                    marginBottom: "12px",
+                  }}
+                >
                   <input
                     name="country"
                     type="text"
@@ -561,7 +653,7 @@ function Profile() {
                       borderRadius: "6px",
                       border: "1px solid #d1d5db",
                       fontSize: "14px",
-                      boxSizing: "border-box"
+                      boxSizing: "border-box",
                     }}
                   />
                   <input
@@ -576,7 +668,7 @@ function Profile() {
                       borderRadius: "6px",
                       border: "1px solid #d1d5db",
                       fontSize: "14px",
-                      boxSizing: "border-box"
+                      boxSizing: "border-box",
                     }}
                   />
                 </div>
@@ -593,7 +685,7 @@ function Profile() {
                       border: "1px solid #d1d5db",
                       fontSize: "14px",
                       width: "100%",
-                      boxSizing: "border-box"
+                      boxSizing: "border-box",
                     }}
                   />
                 </div>
@@ -607,7 +699,7 @@ function Profile() {
                     border: "none",
                     fontWeight: "500",
                     cursor: "pointer",
-                    fontSize: "14px"
+                    fontSize: "14px",
                   }}
                 >
                   Add Address
@@ -615,10 +707,13 @@ function Profile() {
               </form>
             </div>
           </div>
+
+          {/* Order History Section */}
+          <OrderHistory />
         </div>
       </div>
     </div>
   );
 }
 
-export default Profile; 
+export default Profile;

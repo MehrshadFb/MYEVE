@@ -1,0 +1,84 @@
+===============================================
+🧪 TEST CREDIT CARD NUMBERS FOR DEVELOPMENT
+===============================================
+
+⚠️  IMPORTANT: These are test numbers only - they won't charge real money!
+✅ All numbers are Luhn algorithm valid and safe for testing
+
+===============================================
+💳 VISA CARDS
+===============================================
+• 4111 1111 1111 1111  (Most common test Visa)
+• 4012 8888 8888 1881
+• 4222 2222 2222 2222
+
+===============================================
+💳 MASTERCARD
+===============================================
+• 5555 5555 5555 4444
+• 5105 1051 0510 5100
+• 2223 0031 2200 3222
+
+===============================================
+💳 AMERICAN EXPRESS
+===============================================
+• 3782 8224 6310 005
+• 3714 4963 5398 431
+
+===============================================
+💳 DISCOVER
+===============================================
+• 6011 1111 1111 1117
+• 6011 0009 9013 9424
+
+===============================================
+💳 DINERS CLUB
+===============================================
+• 3056 9300 0902 0004
+• 3622 7206 2716 67
+
+===============================================
+💳 JCB
+===============================================
+• 3566 0020 2036 0505
+
+===============================================
+📋 TEST DETAILS TO USE WITH ANY CARD
+===============================================
+• Expiry Date: Any future date
+  Examples: 12/25, 06/26, 03/27, 10/28
+
+• CVV: Any 3-4 digit number
+  Examples: 123, 456, 789, 321
+
+• Cardholder Name: Any name
+  Examples: John Doe, Test User, Jane Smith
+
+===============================================
+🔍 CHECKOUT SYSTEM VALIDATION
+===============================================
+Your checkout form will automatically:
+✅ Detect card type as you type
+✅ Validate card number length (13-19 digits)
+✅ Check Luhn algorithm for validity
+✅ Format display with spaces (4111 1111 1111 1111)
+
+===============================================
+🚀 RECOMMENDED FOR QUICK TESTING
+===============================================
+Card Number: 4111 1111 1111 1111
+Expiry Date: 12/25
+CVV: 123
+Name: Test User
+
+===============================================
+🛡️ SECURITY NOTES
+===============================================
+• These numbers are internationally recognized test numbers
+• They pass all validation algorithms but process no real transactions
+• Safe to use in development, staging, and demo environments
+• Never use real credit card numbers in testing!
+
+===============================================
+Last Updated: July 26, 2025
+===============================================
