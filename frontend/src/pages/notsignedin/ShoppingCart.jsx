@@ -317,6 +317,37 @@ function ShoppingCart() {
                 Loan Calculator
               </Link>
             </div>
+
+            {/* Compare Vehicle */}
+            <div
+              style={{
+                marginTop: "40px",
+                textAlign: "right",
+                fontSize: "1.5rem",
+                fontWeight: "700",
+                color: "#1e293b",
+              }}
+            >
+              Or Compare Vehicles{" "}
+              <Link
+                to="/compare-vehicle"
+                style={{
+                  marginTop: "40px",
+                  textAlign: "right",
+                  fontSize: "1.5rem",
+                  fontWeight: "700",
+                  color: "#407fe5ff",
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.color = "#000000";
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.color = "#407fe5ff";
+                }}
+              >
+                Here
+              </Link>
+            </div>
           </>
         ) : user?.id ? (
           <p
