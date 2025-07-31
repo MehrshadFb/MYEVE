@@ -58,5 +58,139 @@
       </div>
     </div>
     <script type="module" src="/src/main.jsx"></script>
+
+    <!-- Chatbot UI -->
+    <div id="chatbot-container">
+      <div id="chat-header">🔋 EV Assistant</div>
+      <div id="chat-window"></div>
+      <div id="chat-input-area">
+        <input type="text" id="user-input" placeholder="Ask about EVs..." />
+        <button id="send-button">➤</button>
+      </div>
+    </div>
+    <!-- Chat Toggle Button -->
+    <button id="chat-toggle-btn">💬</button>
+
+    <style>
+     #chatbot-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 320px;
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        font-family: 'Segoe UI', sans-serif;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        z-index: 1000;
+      }
+
+      #chat-header {
+        background-color: #1e3a8a;
+        color: white;
+        padding: 12px 16px;
+        font-weight: bold;
+        font-size: 16px;
+      }
+
+      #chat-window {
+        height: 200px;
+        padding: 10px;
+        overflow-y: auto;
+        font-size: 14px;
+        background-color: #f9fafb;
+        display: flex;
+        flex-direction: column;
+      }
+
+      #chat-window div {
+        margin-bottom: 8px;
+      }
+
+      #chat-input-area {
+        display: flex;
+        border-top: 1px solid #e5e7eb;
+        background: #fff;
+      }
+
+      #user-input {
+        flex: 1;
+        padding: 10px;
+        border: none;
+        outline: none;
+        font-size: 14px;
+      }
+
+      #send-button {
+        background-color: #1e3a8a;
+        color: white;
+        border: none;
+        padding: 0 16px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      #send-button:hover {
+        background-color: #3b82f6;
+      }
+
+      .user-bubble {
+        background-color: #e0f2fe;
+        color: #000;
+        padding: 8px 12px;
+        margin-bottom: 8px;
+        border-radius: 12px;
+        align-self: flex-end;
+        max-width: 80%;
+      }
+
+      .bot-bubble {
+        background-color: #e5e7eb;
+        color: #000;
+        padding: 8px 12px;
+        margin-bottom: 8px;
+        border-radius: 12px;
+        align-self: flex-start;
+        max-width: 80%;
+      }
+      #chat-toggle-btn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 9999;
+        width: 56px;
+        height: 56px;
+        background-color: #1e3a8a;
+        color: white;
+        font-size: 24px;
+        border: none;
+        border-radius: 50%;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        line-height: 1;
+      }
+
+      #chat-toggle-btn:hover {
+        background-color: #3b82f6;
+      }
+
+      /* Start with chatbot hidden */
+      #chatbot-container {
+        display: none;
+      }
+
+
+    </style>
+    <script src="./chatbot.js"></script>
+
   </body>
 </html>
