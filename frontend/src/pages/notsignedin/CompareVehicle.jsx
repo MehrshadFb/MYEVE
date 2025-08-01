@@ -3,7 +3,7 @@ import { getAllVehicles, addToCart } from "../../services/api";
 import Header from "../../components/Header";
 import { useNavigate } from "react-router-dom";
 import { getAverageRating } from "../../utils/AnalyticsHelper";
-import OrangeCheck from "../../assets/OrangeCheck.png"; // adjust path if needed
+import OrangeCheck from "../../../public/OrangeCheck.png"; // adjust path if needed
 
 
 // Price ranges constant
