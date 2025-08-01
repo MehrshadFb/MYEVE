@@ -24,6 +24,8 @@ import LoanCalculator from "./pages/notsignedin/LoanCalculator";
 import Checkout from "./pages/notsignedin/Checkout";
 import OrderConfirmation from "./pages/notsignedin/OrderConfirmation";
 import CompareVehicle from "./pages/notsignedin/CompareVehicle";
+import Chatbot from "./components/Chatbot";
+
 
 function AppRoutes() {
   const { isAuthenticated, loading } = useAuth();
@@ -98,6 +100,7 @@ function App() {
   return (
     <AuthProvider>
       <AppRoutes />
+      <Chatbot />
     </AuthProvider>
   );
 }
