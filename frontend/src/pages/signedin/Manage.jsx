@@ -196,6 +196,31 @@ function Manage() {
                 >
                   Manage Orders
                 </button>
+
+                <button
+                  onClick={() => navigate("/analytics")}
+                  style={{
+                    background: "#8b5cf6",
+                    color: "white",
+                    padding: "12px 24px",
+                    borderRadius: "8px",
+                    border: "none",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                    fontSize: "1rem",
+                    transition: "all 0.3s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.background = "#7c3aed";
+                    e.target.style.transform = "translateY(-2px)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.background = "#8b5cf6";
+                    e.target.style.transform = "translateY(0)";
+                  }}
+                >
+                  Analytics
+                </button>
               </div>
             </div>
 

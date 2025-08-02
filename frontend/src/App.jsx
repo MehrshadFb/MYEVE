@@ -25,6 +25,7 @@ import Checkout from "./pages/notsignedin/Checkout";
 import OrderConfirmation from "./pages/notsignedin/OrderConfirmation";
 import CompareVehicle from "./pages/notsignedin/CompareVehicle";
 import UserReviews from "./pages/signedin/UserReviews";
+import Analytics from "./pages/signedin/Analytics";
 import Chatbot from "./components/chatbot";
 
 
@@ -96,6 +97,12 @@ function AppRoutes() {
           path="/user-reviews/:userId"
           element={
             isAuthenticated ? <UserReviews /> : <Navigate to="/signin" />
+          }
+        />
+        <Route
+          path="/analytics"
+          element={
+            isAuthenticated ? <Analytics /> : <Navigate to="/signin" />
           }
         />
       </Routes>
