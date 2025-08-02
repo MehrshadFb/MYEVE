@@ -1,0 +1,98 @@
+brand,model,Engines,CC/Battery Capacity kwh,HorsePower,Top Speed km/h,Performance(0 - 100 )KM/H,Cars Prices,Seats,Torque,Range (Km),Type,Year ,Quantity
+MERCEDES,BENZ EQS 53,ELECTRIC MOTOR,107.8,751,250,3.4,"$102,000",5,950 Nm,539.0,Luxury,2025,8
+AUDI,E-TRON,ELECTRIC ,95.0,402,200,5.5,"$75,000",5,664 Nm,475.0,SUV,2025,4
+AUDI,E-TRON SPORTBACK,ELECTRIC,95.0,402,200,5.5,"$78,000",5,664 Nm,475.0,SUV,2025,0
+TOYOTA,BZ4X,ELECTRIC,64.8,218,200,7.5,"$43,400",5,330 Nm,324.0,SUV,2025,9
+TOYOTA,PROACE VERSO ELECTRIC,ELECTRIC MOTOR,75.0,136,130,13.5,"$55,000",7,280 Nm,375.0,Crossover,2025,7
+TOYOTA,BZ3,ELECTRIC MOTOR,65.0,241,160,7.5,"$35,000",5,340 Nm,325.0,Sedan,2025,4
+HYUNDAI,IONIQ 5,ELECTRIC MOTOR,72.6,225,185,7.4,"$41,000",5,350 Nm,363.0,Crossover,2025,2
+HYUNDAI,IONIQ 6 Standard,Electric Motor,53.6,320,185,5.2,"$41,450",5,350 Nm,268.0,Sedan,2024,6
+HYUNDAI,IONIQ 6 Long Range,Electric Motor,77.4,320,185,5.2,"$41,450",5,350 Nm,387.0,Sedan,2025,0
+HYUNDAI,KONA Electric,Electric Motor,39.2,200,200,6.1,"$40,000",5,395 Nm,196.0,SUV,2025,2
+Volkswagen,ID.4,Electric,77.0,201,160,7.8,"$39,735",5,310 Nm,385.0,SUV,2025,0
+Volkswagen,ID.3,Electric,58.0,204,160,7.3,"$35,000",5,310 Nm,290.0,Hatchback,2025,0
+Volkswagen,ID. Buzz,Electric,77.0,204,145,10.2,"$59,995",7,310 Nm,385.0,Crossover,2025,4
+Volkswagen,ID.5,Electric,77.0,174,180,8.4,"$45,000",5,310 Nm,385.0,SUV,2025,6
+Volkswagen,ID. Buzz Cargo,Electric,77.0,204,145,10.2,"$55,000",3,310 Nm,385.0,Crossover,2025,3
+Volkswagen,ID.4 GTX,Electric AWD,77.0,299,180,6.2,"$50,000",5,460 Nm,385.0,SUV,2025,2
+Volkswagen,ID.3 Pro,Electric,58.0,204,160,7.3,"$35,000",5,310 Nm,290.0,Hatchback,2024,5
+Volkswagen,Golf Electric,Electric,35.8,136,140,10.4,"$33,000",5,290 Nm,179.0,Hatchback,2023,5
+Volkswagen,ID.2,Electric,50.0,170,160,8.0,"$25,000",5,220 Nm,250.0,Compact,2025,9
+Volkswagen,ID.4 Pro S,Electric,77.0,201,180,7.8,"$45,000",5,310 Nm,385.0,SUV,2025,2
+Volkswagen,ID. Buzz Pro,Electric,77.0,204,145,10.2,"$60,000",7,310 Nm,385.0,Crossover,2025,5
+Volkswagen,ID.3 GTX,Electric,77.0,299,180,6.2,"$45,000",5,310 Nm,385.0,Hatchback,2025,1
+Volkswagen,ID. Buzz Cargo Pro,Electric,77.0,204,145,10.2,"$55,000",2,310 Nm,385.0,Crossover,2025,3
+Volkswagen,Up! e-up!,Electric,32.3,83,130,11.9,"$23,000",4,210 Nm,161.5,Compact,2023,10
+Volkswagen,ID. Buzz Cargo EV,Electric,77.0,204,145,10.2,"$55,000",2,310 Nm,385.0,Crossover,2025,5
+Nissan,Ariya ,Dual Electric Motors,87.0,389,200,5.1,"$58,950",5,600 Nm,435.0,SUV,2024,8
+Nissan,Ariya E-4ORCE,Dual Electric Motors,87.0,389,200,5.1,"$60,000",5,600 Nm,435.0,SUV,2025,2
+Nissan,Ariya Lounge Edition,Dual Electric Motors,87.0,389,200,5.1,"$63,000",5,600 Nm,435.0,SUV,2025,8
+Nissan,Ariya Premiere,Dual Electric Motors,87.0,389,200,5.1,"$67,000",5,600 Nm,435.0,SUV,2025,4
+Nissan,Ariya Empower+,Dual Electric Motors,87.0,389,200,5.1,"$68,000",5,600 Nm,435.0,SUV,2025,3
+Nissan,Ariya Dual Motor AWD,Dual Electric Motors,87.0,389,200,5.1,"$70,000",5,600 Nm,435.0,SUV,2024,5
+Porsche,Taycan,Dual Electric Motors,79.2,402,230,5.4,"$86,700",4,344 Nm,396.0,Sedan,2025,8
+Porsche,Taycan 4S,Dual Electric Motors,79.2,522,250,4.0,"$103,800",4,640 Nm,396.0,Sedan,2025,4
+Porsche,Taycan Turbo,Dual Electric Motors,93.4,670,260,3.2,"$150,900",4,850 Nm,467.0,Sedan,2024,7
+Porsche,Taycan Turbo S,Dual Electric Motors,93.4,750,260,2.8,"$185,000",4,1050 Nm,467.0,Sedan,2025,2
+Porsche,Taycan GTS,Dual Electric Motors,93.4,590,250,3.5,"$132,750",4,850 Nm,467.0,Sedan,2025,1
+Porsche,Taycan Cross Turismo,Dual Electric Motors,93.4,469,220,4.8,"$97,700",5,500 Nm,467.0,Crossover,2025,10
+Porsche,Taycan Sport Turismo,Dual Electric Motors,79.2,509,240,4.1,"$104,000",5,650 Nm,396.0,Crossover,2024,4
+Porsche,Macan EV ,Dual Electric Motors,95.0,603,240,4.0,"$85,000",5,750 Nm,475.0,SUV,2025,6
+Porsche,Taycan Base,Dual Electric Motors,79.2,321,230,5.4,"$86,700",4,345 Nm,396.0,Sedan,2025,8
+Porsche,Taycan Cross Turismo 4,Dual Electric Motors,93.4,375,240,5.1,"$94,800",4,500 Nm,467.0,Crossover,2025,5
+Porsche,Taycan Cross Turismo GTS,Dual Electric Motors,93.4,590,250,3.8,"$139,400",4,620 Nm,467.0,Crossover,2025,3
+Porsche,Taycan Sport Turismo Base,Dual Electric Motors,79.2,375,230,5.4,"$90,500",4,500 Nm,396.0,Crossover,2025,7
+Porsche,Taycan Sport Turismo GTS,Dual Electric Motors,93.4,590,250,3.7,"$136,700",4,620 Nm,467.0,Crossover,2025,6
+Porsche,Taycan Turbo S Cross Turismo,Dual Electric Motors,93.4,750,260,2.9,"$190,000",4,1050 Nm,467.0,Crossover,2025,4
+Tata Motors,Nexon EV Max,Permanent Magnet Synchronous,40.5,143,140,9.0,"$25,000",5,250 Nm,202.5,SUV,2025,6
+Tata Motors,Nexon EV Prime,Permanent Magnet Synchronous,30.2,129,120,9.4,"$22,000",5,245 Nm,151.0,SUV,2025,1
+Tata Motors,Tiago EV,Permanent Magnet Synchronous,24.0,74,120,5.7,"$11,000",5,114 Nm,120.0,Sedan,2024,6
+Tesla,Model S,Dual Electric Motors,100.0,670,250,3.1,"$88,490",5,967 Nm,500.0,Luxury,2025,3
+Tesla,Model S Plaid,Tri Electric Motors,100.0,"1,020",322,2.1,"$108,490",5,"1,400 Nm",500.0,Luxury,2024,1
+Tesla,Model 3,Single Electric Motor (RWD),60.0,283,225,5.8,"$40,240",5,420 Nm,300.0,Sedan,2025,2
+Tesla,Model 3 Performance,Dual Electric Motors (AWD),82.0,450,261,3.1,"$53,240",5,660 Nm,410.0,Sedan,2024,5
+Tesla,Model X,Dual Electric Motors (AWD),100.0,670,250,3.8,"$98,490",7,967 Nm,500.0,SUV,2025,2
+Tesla,Model X Plaid,Tri Electric Motors,100.0,"1,020",262,2.6,"$113,490",6,"1,400 Nm",500.0,SUV,2024,8
+Tesla,Model Y,Single Electric Motor (RWD),75.0,346,217,5.0,"$47,490",5,498 Nm,375.0,Crossover,2024,3
+Tesla,Model Y Long Range,Dual Electric Motors (AWD),82.0,384,217,4.8,"$50,490",5,559 Nm,410.0,Crossover,2025,4
+Tesla,Cybertruck,Tri Electric Motors,200.0,800,209,2.9,"$69,900",6,"1,355 Nm",1000.0,Truck,2025,10
+Tesla,Roadster 2,Quad Electric Motors,200.0,"1,288",402,1.9,"$200,000",4,"10,000 Nm",1000.0,Sports Car,2025,3
+Jeep,Wagoneer S (Electric),Dual Electric Motors,100.0,600,177,4.5,"$80,000",5,850 Nm,500.0,Luxury,2025,10
+Cadillac,Lyriq EV,Single Electric Motor,100.0,340,190,5.7,"$58,590",5,440 Nm,500.0,Luxury,2025,7
+Cadillac,Lyriq Launch Edition,Single Electric Motor,100.0,340,190,5.7,"$59,990",5,440 Nm,500.0,Luxury,2025,5
+Cadillac,Lyriq EV Premium,Dual Electric Motors,100.0,500,210,4.5,"$64,990",5,620 Nm,500.0,Luxury,2025,4
+Chevrolet,Bolt EV,Single Electric Motor,66.0,200,150,6.5,"$27,495",5,360 Nm,330.0,Hatchback,2023,6
+Chevrolet,Bolt EUV,Single Electric Motor,66.0,200,150,7.0,"$28,795",5,360 Nm,330.0,Crossover,2023,9
+Chevrolet,Bolt EV 2LT,Single Electric Motor,66.0,200,150,6.7,"$28,795",5,360 Nm,330.0,Hatchback,2023,7
+Chevrolet,Bolt EV Premier,Single Electric Motor,66.0,200,150,6.5,"$31,700",5,360 Nm,330.0,Hatchback,2025,8
+GMC,Hummer EV Pickup,Dual-Motor Electric,212.0,625,170,3.0,"$108,700",5,1000+ Nm,1060.0,Truck,2025,6
+GMC,Hummer EV SUV,Dual-Motor Electric,212.0,625,170,3.5,"$105,600",5,1000+ Nm,1060.0,SUV,2024,10
+GMC,Hummer EV SUV Edition 1,"Electric motors with up to 11,500 lb-ft torque",200.0,830,170,3.5,"$96,550",5,"15,590 Nm",1000.0,SUV,2025,1
+GMC,Hummer EV Pickup Edition 1,"Electric motors with up to 11,500 lb-ft torque",200.0,"1,000",170,3.0,"$96,550",5,"15,590 Nm",1000.0,Truck,2024,5
+GMC,Hummer EV SUV Extreme Off-Road,"Electric motors with up to 11,500 lb-ft torque",200.0,830,170,3.6,"$110,000",5,"15,590 Nm",1000.0,SUV,2025,3
+GMC,Sierra EV Denali,Electric motors with advanced AWD,200.0,754,170,4.5,"$108,700",5,"1,064 Nm",1000.0,Truck,2024,7
+GMC,Hummer EV Omega Edition,"Electric motors with up to 11,500 lb-ft torque",200.0,"1,000",170,3.0,"$112,700",5,"15,590 Nm",1000.0,Truck,2025,2
+GMC,Hummer EV Adventure Series,"Electric motors with up to 11,500 lb-ft torque",200.0,830,170,3.6,"$105,000",5,"15,590 Nm",1000.0,Truck,2025,8
+Kia,EV6 Wind,Electric Motor,77.4,225,190,5.2,"$50,000",5,350 Nm,387.0,Crossover,2025,0
+Kia,EV6 First Edition,Electric Motor,77.4,320,230,5.0,"$58,000",5,450 Nm,387.0,Crossover,2025,8
+Kia,EV6 Light,Electric Motor,77.4,225,190,5.2,"$46,000",5,350 Nm,387.0,Crossover,2024,3
+Kia,EV6 GT Performance,Electric Motor,77.4,577,260,3.5,"$65,000",5,740 Nm,387.0,Crossover,2025,2
+Kia,EV6 AWD GT-Line,Electric Motor,77.4,320,230,5.0,"$60,000",5,450 Nm,387.0,Crossover,2025,9
+Peugeot,e-2008 GT,Electric Motor,50.0,136,200,8.5,"$40,000",5,260 Nm,250.0,SUV,2024,8
+Kia,EV6 First Edition AWD,Electric Motor,77.4,320,230,5.0,"$62,000",5,450 Nm,387.0,Crossover,2025,3
+Jaguar Land Rover,Jaguar I-PACE,Electric (Dual Motor),90.0,400,200,4.8,"$70,000",5,696 Nm,450.0,Luxury,2025,6
+Jaguar Land Rover,Jaguar I-PACE Electric Performance,Electric (Dual Motor),90.0,400,200,4.5,"$85,000",5,696 Nm,450.0,Luxury,2025,6
+Jaguar Land Rover,Jaguar I-PACE HSE,Electric (Dual Motor),90.0,400,200,4.5,"$90,000",5,696 Nm,450.0,Luxury,2025,5
+Jaguar Land Rover,Jaguar I-PACE EV400 HSE,Electric (Dual Motor),90.0,400,200,4.5,"$85,000",5,696 Nm,450.0,Luxury,2024,6
+Jaguar Land Rover,Jaguar I-PACE First Edition,Electric (Dual Motor),90.0,400,200,4.5,"$85,000",5,696 Nm,450.0,Luxury,2025,10
+Peugeot,e-208,Electric Motor,50.0,136,150,8.1,"$35,000",5,260 Nm,250.0,Hatchback,2025,4
+Peugeot,e-2008,Electric Motor,50.0,136,150,8.5,"$38,000",5,260 Nm,250.0,SUV,2024,4
+Peugeot,Partner Electric,Electric Motor,50.0,136,130,9.0,"$40,000",5,260 Nm,250.0,Crossover,2025,6
+Peugeot,Expert Electric,Electric Motor,50.0,136,130,9.5,"$45,000",5,260 Nm,250.0,Crossover,2025,9
+Ford,Mustang Mach-E (Standard,Electric Motor,68.0,290,180,3.5,"$43,000",5,430 Nm (GT Model),340.0,SUV,2025,4
+Ford,Mustang Mach-E (Long Range),Electric Motor,98.0,480,180,3.5,"$61,000",5,430 Nm (GT Model),490.0,SUV,2025,6
+Ford,F-150 Lightning,Electric Motor,98.0,452,180,4.5,"80,000",5,1051 Nm,490.0,Truck,2025,0
+Ford,Transit Electric (E-Transit),Electric Motor,89.0,266,140,9.0,"$52,000",15468468,430 Nm,445.0,Crossover,2024,8
+Mitsubishi,i-MiEV (Electric),Electric Motor,16.0,66,130,15.0,"$26,000",4,196 Nm,80.0,Compact,2023,0
+Mitsubishi,Minicab MiEV,Electric Motor,16.0,64,100,15.0,"$20,000",2,196 Nm,80.0,Compact,2023,9
+Mazda,MX-30 Electric,Electric Motor,35.5,143,140,9.7,"$37,000",5,271 Nm,177.5,Crossover,2025,10

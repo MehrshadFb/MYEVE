@@ -24,7 +24,8 @@ import LoanCalculator from "./pages/notsignedin/LoanCalculator";
 import Checkout from "./pages/notsignedin/Checkout";
 import OrderConfirmation from "./pages/notsignedin/OrderConfirmation";
 import CompareVehicle from "./pages/notsignedin/CompareVehicle";
-import Chatbot from "./components/Chatbot";
+import UserReviews from "./pages/signedin/UserReviews";
+import Chatbot from "./components/chatbot";
 
 
 function AppRoutes() {
@@ -89,6 +90,12 @@ function AppRoutes() {
           path="/order-management"
           element={
             isAuthenticated ? <OrderManagement /> : <Navigate to="/signin" />
+          }
+        />
+        <Route
+          path="/user-reviews/:userId"
+          element={
+            isAuthenticated ? <UserReviews /> : <Navigate to="/signin" />
           }
         />
       </Routes>

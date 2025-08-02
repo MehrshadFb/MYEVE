@@ -185,14 +185,21 @@ function ShoppingCart() {
                         marginBottom: "16px",
                       }}
                     >
-                      ${vehicle?.price} × {item.quantity} = $
-                      {(parseFloat(vehicle?.price) * item.quantity).toFixed(2)}
+                      ${Number(vehicle?.price).toLocaleString('en-US', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                      })} × {item.quantity} = $
+                      {Number(parseFloat(vehicle?.price) * item.quantity).toLocaleString('en-US', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                      })}
                     </p>
 
                     <div
                       style={{
                         display: "flex",
                         alignItems: "center",
+                        color: "black",
                         gap: "12px",
                       }}
                     >
@@ -250,7 +257,10 @@ function ShoppingCart() {
                 color: "#1e293b",
               }}
             >
-              Total: ${parseFloat(totalAmount).toFixed(2)}
+              Total: ${Number(totalAmount).toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+              })}
             </div>
 
             {/* Checkout Button */}

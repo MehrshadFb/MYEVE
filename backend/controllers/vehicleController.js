@@ -1,5 +1,38 @@
 const express = require("express");
-const { Vehicle, Image, Review, User } = require("../models");
+const { Vehicle, Image, Review, User, OrderItem } = require("../models");
+const { addVehicleToCSV, exportVehiclesToCSV, importVehiclesFromCSV } = require("../utils/csvHandler");
+const { Op } = require("sequelize");
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+
+// Configure multer for CSV upload
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const uploadDir = path.join(__dirname, '../uploads');
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    cb(null, uploadDir);
+  },
+  filename: (req, file, cb) => {
+    cb(null, `import-${Date.now()}-${file.originalname}`);
+  }
+});
+
+const csvUpload = multer({
+  storage: storage,
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype === 'text/csv' || path.extname(file.originalname).toLowerCase() === '.csv') {
+      cb(null, true);
+    } else {
+      cb(new Error('Only CSV files are allowed'), false);
+    }
+  },
+  limits: {
+    fileSize: 10 * 1024 * 1024 // 10MB limit
+  }
+});
 
 // Create a new vehicle
 const createVehicle = async (req, res) => {
@@ -25,6 +58,14 @@ const createVehicle = async (req, res) => {
       quantity: quantity || 0,
       price,
     });
+
+    // Add to CSV file automatically
+    try {
+      await addVehicleToCSV(vehicle);
+    } catch (csvError) {
+      console.error("Failed to add vehicle to CSV:", csvError);
+      // Don't fail the request if CSV update fails
+    }
 
     return res.status(201).json({
       message: "Vehicle created successfully",
@@ -59,7 +100,22 @@ const getAllVehicles = async (req, res) => {
       ],
       order: [["createdAt", "DESC"]],
     });
-    return res.status(200).json(vehicles);
+
+    // Calculate amount sold for each vehicle
+    const vehiclesWithSales = await Promise.all(
+      vehicles.map(async (vehicle) => {
+        const orderCount = await OrderItem.count({
+          where: { vehicleId: vehicle.vid }
+        });
+        
+        return {
+          ...vehicle.toJSON(),
+          amountSold: orderCount || 0
+        };
+      })
+    );
+
+    return res.status(200).json(vehiclesWithSales);
   } catch (err) {
     console.error("getAllVehicles error:", err);
     return res.status(500).json({ message: "Internal server error" });
@@ -256,6 +312,69 @@ const deleteReview = async (req, res) => {
   }
 };
 
+// Export vehicles to CSV
+const exportCSV = async (req, res) => {
+  try {
+    const result = await exportVehiclesToCSV();
+    return res.status(200).json(result);
+  } catch (error) {
+    console.error("Export CSV error:", error);
+    return res.status(500).json({ message: "Failed to export vehicles to CSV" });
+  }
+};
+
+// Import vehicles from CSV
+const importCSV = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: "No CSV file uploaded" });
+    }
+
+    const result = await importVehiclesFromCSV(req.file.path);
+    
+    // Clean up uploaded file
+    fs.unlinkSync(req.file.path);
+    
+    return res.status(200).json(result);
+  } catch (error) {
+    console.error("Import CSV error:", error);
+    
+    // Clean up uploaded file if it exists
+    if (req.file && fs.existsSync(req.file.path)) {
+      fs.unlinkSync(req.file.path);
+    }
+    
+    return res.status(500).json({ 
+      message: "Failed to import vehicles from CSV",
+      error: error.message 
+    });
+  }
+};
+
+// Download CSV file
+const downloadCSV = async (req, res) => {
+  try {
+    // First export current data to CSV
+    await exportVehiclesToCSV();
+    
+    const csvPath = path.join(__dirname, '../data/vehicles.csv');
+    
+    if (!fs.existsSync(csvPath)) {
+      return res.status(404).json({ message: "CSV file not found" });
+    }
+    
+    res.download(csvPath, 'vehicles.csv', (err) => {
+      if (err) {
+        console.error("Download error:", err);
+        return res.status(500).json({ message: "Failed to download CSV file" });
+      }
+    });
+  } catch (error) {
+    console.error("Download CSV error:", error);
+    return res.status(500).json({ message: "Failed to prepare CSV download" });
+  }
+};
+
 module.exports = {
   createVehicle,
   getAllVehicles,
@@ -265,4 +384,8 @@ module.exports = {
   uploadImages,
   submitReview,
   deleteReview,
+  exportCSV,
+  importCSV,
+  downloadCSV,
+  csvUpload, // Export multer middleware
 };

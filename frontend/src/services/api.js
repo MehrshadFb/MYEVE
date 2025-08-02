@@ -234,4 +234,40 @@ export const updateOrderStatus = async (orderId, statusData) => {
   return response.data;
 };
 
+// CSV API functions
+export const exportVehiclesCSV = async () => {
+  const response = await api.post("/vehicles/csv/export");
+  return response.data;
+};
+
+export const importVehiclesCSV = async (csvFile) => {
+  const formData = new FormData();
+  formData.append('csvFile', csvFile);
+  
+  const response = await api.post("/vehicles/csv/import", formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return response.data;
+};
+
+export const downloadVehiclesCSV = async () => {
+  const response = await api.get("/vehicles/csv/download", {
+    responseType: 'blob',
+  });
+  
+  // Create blob link to download the file
+  const url = window.URL.createObjectURL(new Blob([response.data]));
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute('download', 'vehicles.csv');
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.URL.revokeObjectURL(url);
+  
+  return { success: true, message: 'CSV downloaded successfully' };
+};
+
 export default api;

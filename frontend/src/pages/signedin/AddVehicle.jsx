@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../context/useAuth";
-import { createVehicle, uploadVehicleImages } from "../../services/api";
+import { createVehicle, uploadVehicleImages, importVehiclesCSV, exportVehiclesCSV, downloadVehiclesCSV } from "../../services/api";
 
 function AddVehicle() {
   const { user } = useAuth();
@@ -22,6 +22,8 @@ function AddVehicle() {
   const [message, setMessage] = useState({ type: "", text: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const [csvFile, setCsvFile] = useState(null);
+  const [csvMessage, setCsvMessage] = useState({ type: "", text: "" });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -143,6 +145,78 @@ function AddVehicle() {
 
   const handleBack = () => {
     navigate("/manage");
+  };
+
+  // CSV handling functions
+  const handleCSVFileSelect = (e) => {
+    const file = e.target.files[0];
+    setCsvFile(file);
+    setCsvMessage({ type: "", text: "" });
+  };
+
+  const handleCSVImport = async () => {
+    if (!csvFile) {
+      setCsvMessage({ type: "error", text: "Please select a CSV file first" });
+      return;
+    }
+
+    try {
+      setCsvMessage({ type: "", text: "Importing vehicles..." });
+      const result = await importVehiclesCSV(csvFile);
+      
+      if (result.success) {
+        let message = `Successfully imported ${result.imported} vehicles.`;
+        if (result.skipped > 0) {
+          message += ` ${result.skipped} vehicles were skipped (duplicates or errors).`;
+        }
+        if (result.errors && result.errors.length > 0) {
+          message += ` Errors: ${result.errors.slice(0, 3).join('; ')}`;
+          if (result.errors.length > 3) {
+            message += ` and ${result.errors.length - 3} more...`;
+          }
+        }
+        setCsvMessage({ type: "success", text: message });
+      } else {
+        setCsvMessage({ 
+          type: "error", 
+          text: `Import failed: ${result.errors ? result.errors.join('; ') : 'Unknown error'}` 
+        });
+      }
+      
+      setCsvFile(null);
+      // Reset file input
+      const fileInput = document.querySelector('input[type="file"][accept=".csv"]');
+      if (fileInput) fileInput.value = '';
+    } catch (error) {
+      setCsvMessage({ 
+        type: "error", 
+        text: error.message || "Failed to import CSV file" 
+      });
+    }
+  };
+
+  const handleCSVExport = async () => {
+    try {
+      await exportVehiclesCSV();
+      setCsvMessage({ type: "success", text: "Vehicles exported to CSV successfully" });
+    } catch (error) {
+      setCsvMessage({ 
+        type: "error", 
+        text: error.message || "Failed to export CSV file" 
+      });
+    }
+  };
+
+  const handleCSVDownload = async () => {
+    try {
+      await downloadVehiclesCSV();
+      setCsvMessage({ type: "success", text: "CSV file downloaded successfully" });
+    } catch (error) {
+      setCsvMessage({ 
+        type: "error", 
+        text: error.message || "Failed to download CSV file" 
+      });
+    }
   };
 
   // Check if user is admin
@@ -288,6 +362,174 @@ function AddVehicle() {
             {message.text}
           </div>
         )}
+
+        {/* CSV Management Section */}
+        <div
+          style={{
+            backgroundColor: "#f1f5f9",
+            padding: "24px",
+            borderRadius: "12px",
+            marginBottom: "32px",
+            border: "1px solid #e2e8f0",
+          }}
+        >
+          <h2
+            style={{
+              fontSize: "1.5rem",
+              fontWeight: "600",
+              color: "#1e293b",
+              margin: "0 0 16px 0",
+            }}
+          >
+            CSV Management
+          </h2>
+          <p
+            style={{
+              fontSize: "0.9rem",
+              color: "#64748b",
+              margin: "0 0 20px 0",
+            }}
+          >
+            Import vehicles from CSV file or export current inventory to CSV. The CSV can have any columns - only matching fields (brand, model, type, year, seats, range, price, quantity, description) will be imported. VIDs are automatically generated.
+          </p>
+
+          {/* CSV Message Display */}
+          {csvMessage.text && (
+            <div
+              style={{
+                padding: "12px 16px",
+                borderRadius: "6px",
+                marginBottom: "16px",
+                backgroundColor:
+                  csvMessage.type === "success" ? "#dcfce7" : "#fee2e2",
+                color: csvMessage.type === "success" ? "#059669" : "#dc2626",
+                border: `1px solid ${
+                  csvMessage.type === "success" ? "#bbf7d0" : "#fecaca"
+                }`,
+                fontSize: "0.9rem",
+              }}
+            >
+              {csvMessage.text}
+            </div>
+          )}
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr auto",
+              gap: "16px",
+              alignItems: "center",
+              marginBottom: "16px",
+            }}
+          >
+            <div>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "8px",
+                  fontWeight: "500",
+                  color: "#374151",
+                  fontSize: "0.9rem",
+                }}
+              >
+                Select CSV file to import:
+              </label>
+              <input
+                type="file"
+                accept=".csv"
+                onChange={handleCSVFileSelect}
+                style={{
+                  width: "100%",
+                  padding: "8px 12px",
+                  borderRadius: "6px",
+                  border: "1px solid #d1d5db",
+                  fontSize: "0.9rem",
+                  backgroundColor: "white",
+                }}
+              />
+            </div>
+            <button
+              type="button"
+              onClick={handleCSVImport}
+              style={{
+                padding: "10px 20px",
+                borderRadius: "6px",
+                border: "none",
+                background: "#10b981",
+                color: "white",
+                fontWeight: "500",
+                cursor: "pointer",
+                fontSize: "0.9rem",
+                transition: "all 0.3s ease",
+                alignSelf: "end",
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.background = "#059669";
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = "#10b981";
+              }}
+            >
+              Import CSV
+            </button>
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              gap: "12px",
+              paddingTop: "16px",
+              borderTop: "1px solid #e2e8f0",
+            }}
+          >
+            <button
+              type="button"
+              onClick={handleCSVExport}
+              style={{
+                padding: "10px 20px",
+                borderRadius: "6px",
+                border: "1px solid #3b82f6",
+                background: "white",
+                color: "#3b82f6",
+                fontWeight: "500",
+                cursor: "pointer",
+                fontSize: "0.9rem",
+                transition: "all 0.3s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.background = "#eff6ff";
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = "white";
+              }}
+            >
+              Export to CSV
+            </button>
+            <button
+              type="button"
+              onClick={handleCSVDownload}
+              style={{
+                padding: "10px 20px",
+                borderRadius: "6px",
+                border: "none",
+                background: "#3b82f6",
+                color: "white",
+                fontWeight: "500",
+                cursor: "pointer",
+                fontSize: "0.9rem",
+                transition: "all 0.3s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.background = "#2563eb";
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = "#3b82f6";
+              }}
+            >
+              Download CSV
+            </button>
+          </div>
+        </div>
 
         <form onSubmit={handleSubmit}>
           <div

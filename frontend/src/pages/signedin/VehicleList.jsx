@@ -11,8 +11,13 @@ function VehicleList() {
   const [filteredVehicles, setFilteredVehicles] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterBrand, setFilterBrand] = useState("all");
+  const [sortBy, setSortBy] = useState("");
+  const [sortOrder, setSortOrder] = useState("asc");
   const [editingId, setEditingId] = useState(null);
   const [editingData, setEditingData] = useState({});
+  const [descriptionModalOpen, setDescriptionModalOpen] = useState(false);
+  const [currentDescription, setCurrentDescription] = useState("");
+  const [editingDescriptionId, setEditingDescriptionId] = useState(null);
 
   // Redirect non-admin users
   useEffect(() => {
@@ -54,8 +59,32 @@ function VehicleList() {
       filtered = filtered.filter(vehicle => vehicle.brand === filterBrand);
     }
 
+    // Apply sorting
+    if (sortBy) {
+      filtered.sort((a, b) => {
+        let aValue = a[sortBy];
+        let bValue = b[sortBy];
+
+        // Handle numeric fields
+        if (sortBy === "price" || sortBy === "quantity" || sortBy === "year" || sortBy === "amountSold") {
+          aValue = Number(aValue) || 0;
+          bValue = Number(bValue) || 0;
+        } else {
+          // Handle string fields
+          aValue = String(aValue).toLowerCase();
+          bValue = String(bValue).toLowerCase();
+        }
+
+        if (sortOrder === "asc") {
+          return aValue > bValue ? -1 : aValue < bValue ? 1 : 0;
+        } else {
+          return aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
+        }
+      });
+    }
+
     setFilteredVehicles(filtered);
-  }, [vehicles, searchTerm, filterBrand]);
+  }, [vehicles, searchTerm, filterBrand, sortBy, sortOrder]);
 
   const handleDelete = async (vid) => {
     try {
@@ -97,6 +126,46 @@ function VehicleList() {
 
   const handleEditingDataChange = (field, value) => {
     setEditingData({ ...editingData, [field]: value });
+  };
+
+  const handleEditDescription = (vehicle) => {
+    setEditingDescriptionId(vehicle.vid);
+    setCurrentDescription(vehicle.description || "");
+    setDescriptionModalOpen(true);
+  };
+
+  const handleSaveDescription = async () => {
+    try {
+      await updateVehicle(editingDescriptionId, { description: currentDescription });
+      setDescriptionModalOpen(false);
+      setEditingDescriptionId(null);
+      setCurrentDescription("");
+      fetchVehicles();
+    } catch (error) {
+      console.error("Error updating description:", error);
+    }
+  };
+
+  const handleCancelDescription = () => {
+    setDescriptionModalOpen(false);
+    setEditingDescriptionId(null);
+    setCurrentDescription("");
+  };
+
+  const handleSort = (field) => {
+    if (sortBy === field) {
+      // If clicking the same field, toggle order
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    } else {
+      // If clicking a different field, sort ascending
+      setSortBy(field);
+      setSortOrder("asc");
+    }
+  };
+
+  const getSortIcon = (field) => {
+    if (sortBy !== field) return " ↕";
+    return sortOrder === "asc" ? " ↑" : " ↓";
   };
 
   // Get unique brands for filter
@@ -229,6 +298,66 @@ function VehicleList() {
                 ))}
               </select>
             </div>
+            <div>
+              <label style={{
+                display: "block",
+                marginBottom: "6px",
+                fontWeight: "500",
+                color: "#374151",
+                fontSize: "14px"
+              }}>
+                Sort By
+              </label>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                style={{
+                  padding: "12px",
+                  borderRadius: "8px",
+                  border: "1px solid #d1d5db",
+                  fontSize: "14px",
+                  backgroundColor: "white",
+                  color: "#1e293b",
+                  width: "100%",
+                  boxSizing: "border-box"
+                }}
+              >
+                <option value="">No Sorting</option>
+                <option value="model">Model</option>
+                <option value="year">Year</option>
+                <option value="quantity">Quantity</option>
+                <option value="price">Price</option>
+                <option value="amountSold">Times Ordered</option>
+              </select>
+            </div>
+            <div>
+              <label style={{
+                display: "block",
+                marginBottom: "6px",
+                fontWeight: "500",
+                color: "#374151",
+                fontSize: "14px"
+              }}>
+                Sort Order
+              </label>
+              <select
+                value={sortOrder}
+                onChange={(e) => setSortOrder(e.target.value)}
+                style={{
+                  padding: "12px",
+                  borderRadius: "8px",
+                  border: "1px solid #d1d5db",
+                  fontSize: "14px",
+                  backgroundColor: "white",
+                  color: "#1e293b",
+                  width: "100%",
+                  boxSizing: "border-box"
+                }}
+              >
+                <option value="asc">Ascending</option>
+                <option value="desc">Descending</option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -280,42 +409,156 @@ function VehicleList() {
                       fontWeight: "600",
                       color: "#374151",
                       fontSize: "14px"
-                    }}>Name</th>
+                    }}>
+                      <button
+                        style={{
+                          background: "none",
+                          border: "none",
+                          fontWeight: "600",
+                          color: "#374151",
+                          fontSize: "14px",
+                          cursor: "pointer",
+                          padding: 0,
+                          textAlign: "left",
+                          width: "100%",
+                          minWidth: "70px"
+                        }}
+                      >
+                        Brand
+                      </button>
+                    </th>
                     <th style={{
                       padding: "16px",
                       textAlign: "left",
                       fontWeight: "600",
                       color: "#374151",
                       fontSize: "14px"
-                    }}>Brand</th>
+                    }}>
+                      <button
+                        
+                        style={{
+                          background: "none",
+                          border: "none",
+                          fontWeight: "600",
+                          color: "#374151",
+                          fontSize: "14px",
+                          cursor: "pointer",
+                          padding: 0,
+                          textAlign: "left",
+                          width: "100%",
+                          minWidth: "70px"
+                        }}
+                      >
+                        Model
+                      </button>
+                    </th>
                     <th style={{
                       padding: "16px",
                       textAlign: "left",
                       fontWeight: "600",
                       color: "#374151",
                       fontSize: "14px"
-                    }}>Model</th>
+                    }}>
+                      <button
+                        onClick={() => handleSort("year")}
+                        style={{
+                          background: "none",
+                          border: "none",
+                          fontWeight: "600",
+                          color: "#374151",
+                          fontSize: "14px",
+                          cursor: "pointer",
+                          padding: 0,
+                          textAlign: "left",
+                          width: "100%",
+                          minWidth: "60px"
+                        }}
+                      >
+                        Year{getSortIcon("year")}
+                      </button>
+                    </th>
                     <th style={{
                       padding: "16px",
                       textAlign: "left",
                       fontWeight: "600",
                       color: "#374151",
                       fontSize: "14px"
-                    }}>Year</th>
+                    }}>
+                      <button
+                        onClick={() => handleSort("quantity")}
+                        style={{
+                          background: "none",
+                          border: "none",
+                          fontWeight: "600",
+                          color: "#374151",
+                          fontSize: "14px",
+                          cursor: "pointer",
+                          padding: 0,
+                          textAlign: "left",
+                          width: "100%",
+                          minWidth: "80px"
+                        }}
+                      >
+                        Quantity{getSortIcon("quantity")}
+                      </button>
+                    </th>
                     <th style={{
                       padding: "16px",
                       textAlign: "left",
                       fontWeight: "600",
                       color: "#374151",
                       fontSize: "14px"
-                    }}>Quantity</th>
+                    }}>
+                      <button
+                        onClick={() => handleSort("price")}
+                        style={{
+                          background: "none",
+                          border: "none",
+                          fontWeight: "600",
+                          color: "#374151",
+                          fontSize: "14px",
+                          cursor: "pointer",
+                          padding: 0,
+                          textAlign: "left",
+                          width: "100%",
+                          minWidth: "60px"
+                        }}
+                      >
+                        Price{getSortIcon("price")}
+                      </button>
+                    </th>
                     <th style={{
                       padding: "16px",
                       textAlign: "left",
                       fontWeight: "600",
                       color: "#374151",
                       fontSize: "14px"
-                    }}>Price</th>
+                    }}>
+                      <button
+                        onClick={() => handleSort("amountSold")}
+                        style={{
+                          background: "none",
+                          border: "none",
+                          fontWeight: "600",
+                          color: "#374151",
+                          fontSize: "14px",
+                          cursor: "pointer",
+                          padding: 0,
+                          textAlign: "left",
+                          width: "100%",
+                          minWidth: "120px"
+                        }}
+                      >
+                        Times Ordered{getSortIcon("amountSold")}
+                      </button>
+                    </th>
+                    <th style={{
+                      padding: "16px",
+                      textAlign: "left",
+                      fontWeight: "600",
+                      color: "#374151",
+                      fontSize: "14px"
+                    }}>Description</th>
                     <th style={{
                       padding: "16px",
                       textAlign: "left",
@@ -330,27 +573,7 @@ function VehicleList() {
                   <tr key={vehicle.vid} style={{
                     borderBottom: "1px solid #f1f5f9"
                   }}>
-                    <td style={{
-                      padding: "16px",
-                      color: "#1e293b"
-                    }}>
-                      {editingId === vehicle.vid ? (
-                        <input
-                          type="text"
-                          value={editingData.name}
-                          onChange={(e) => handleEditingDataChange("name", e.target.value)}
-                          style={{
-                            padding: "8px",
-                            borderRadius: "4px",
-                            border: "1px solid #d1d5db",
-                            fontSize: "14px",
-                            width: "100%"
-                          }}
-                        />
-                      ) : (
-                        vehicle.name
-                      )}
-                    </td>
+                    
                     <td style={{
                       padding: "16px",
                       color: "#1e293b"
@@ -455,8 +678,34 @@ function VehicleList() {
                           }}
                         />
                       ) : (
-                        `$${vehicle.price}`
+                        `$${Number(vehicle.price).toLocaleString()}`
                       )}
+                    </td>
+                    <td style={{
+                      padding: "16px",
+                      color: "#1e293b",
+                      fontWeight: "500"
+                    }}>
+                      {vehicle.amountSold || 0}
+                    </td>
+                    <td style={{
+                      padding: "16px",
+                      color: "#1e293b"
+                    }}>
+                      <button
+                        onClick={() => handleEditDescription(vehicle)}
+                        style={{
+                          background: "#8b5cf6",
+                          color: "white",
+                          padding: "6px 12px",
+                          borderRadius: "4px",
+                          border: "none",
+                          fontSize: "12px",
+                          cursor: "pointer"
+                        }}
+                      >
+                        Edit Description
+                      </button>
                     </td>
                     <td style={{
                       padding: "16px",
@@ -533,6 +782,98 @@ function VehicleList() {
           </div>
         )}
         </div>
+
+        {/* Description Edit Modal */}
+        {descriptionModalOpen && (
+          <div style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 1000
+          }}>
+            <div style={{
+              backgroundColor: "white",
+              borderRadius: "12px",
+              padding: "24px",
+              maxWidth: "600px",
+              width: "90%",
+              maxHeight: "80vh",
+              overflow: "auto",
+              boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
+            }}>
+              <h3 style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                marginBottom: "16px",
+                color: "#1e293b"
+              }}>
+                Edit Description
+              </h3>
+              <textarea
+                value={currentDescription}
+                onChange={(e) => setCurrentDescription(e.target.value)}
+                placeholder="Enter vehicle description..."
+                style={{
+                  width: "100%",
+                  height: "200px",
+                  padding: "12px",
+                  borderRadius: "8px",
+                  border: "1px solid #d1d5db",
+                  fontSize: "14px",
+                  backgroundColor: "white",
+                  color: "#1e293b",
+                  resize: "vertical",
+                  fontFamily: "inherit",
+                  lineHeight: "1.5",
+                  boxSizing: "border-box"
+                }}
+              />
+              <div style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: "12px",
+                marginTop: "16px"
+              }}>
+                <button
+                  onClick={handleCancelDescription}
+                  style={{
+                    background: "#6b7280",
+                    color: "white",
+                    padding: "10px 20px",
+                    borderRadius: "6px",
+                    border: "none",
+                    fontSize: "14px",
+                    cursor: "pointer",
+                    fontWeight: "500"
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSaveDescription}
+                  style={{
+                    background: "#059669",
+                    color: "white",
+                    padding: "10px 20px",
+                    borderRadius: "6px",
+                    border: "none",
+                    fontSize: "14px",
+                    cursor: "pointer",
+                    fontWeight: "500"
+                  }}
+                >
+                  Save Description
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

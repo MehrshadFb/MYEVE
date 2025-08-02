@@ -1407,7 +1407,10 @@ function Checkout() {
                 >
                   {loading
                     ? "Processing..."
-                    : `Complete Order - $${totalAmount.toFixed(2)}`}
+                    : `Complete Order - $${Number(totalAmount).toLocaleString('en-US', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                      })}`}
                 </button>
               </div>
             </form>
@@ -1442,9 +1445,10 @@ function Checkout() {
                   </div>
                   <div style={{ fontWeight: "600" }}>
                     $
-                    {(parseFloat(item.vehicle.price) * item.quantity).toFixed(
-                      2
-                    )}
+                    {Number(parseFloat(item.vehicle.price) * item.quantity).toLocaleString('en-US', {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2
+                    })}
                   </div>
                 </div>
               ))}
@@ -1464,7 +1468,10 @@ function Checkout() {
                   }}
                 >
                   <span>Subtotal:</span>
-                  <span>${subtotal.toFixed(2)}</span>
+                  <span>${Number(subtotal).toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                  })}</span>
                 </div>
                 <div
                   style={{
@@ -1474,7 +1481,10 @@ function Checkout() {
                   }}
                 >
                   <span>Tax (HST 13%):</span>
-                  <span>${taxAmount.toFixed(2)}</span>
+                  <span>${Number(taxAmount).toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                  })}</span>
                 </div>
                 <div
                   style={{
@@ -1487,7 +1497,10 @@ function Checkout() {
                   }}
                 >
                   <span>Total:</span>
-                  <span>${totalAmount.toFixed(2)}</span>
+                  <span>${Number(totalAmount).toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                  })}</span>
                 </div>
               </div>
             </div>

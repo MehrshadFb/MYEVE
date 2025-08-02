@@ -25,7 +25,8 @@ function Vehicles() {
   const [selectedTypes, setSelectedTypes] = useState([]);
   const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
   const [selectedSeats, setSelectedSeats] = useState([]);
-  const [selectedRanges, setSelectedRanges] = useState([]);
+  const [minRange, setMinRange] = useState("");
+  const [maxRange, setMaxRange] = useState("");
   const [sortOption, setSortOption] = useState("");
   const [minReviewRating, setMinReviewRating] = useState(0);
   const [hoveredCard, setHoveredCard] = useState(null);
@@ -54,9 +55,6 @@ function Vehicles() {
   const uniqueTypes = [...new Set(vehicles.map((vehicle) => vehicle.type))];
   const uniqueSeats = [
     ...new Set(vehicles.map((vehicle) => vehicle.seats)),
-  ].sort((a, b) => a - b);
-  const uniqueRanges = [
-    ...new Set(vehicles.map((vehicle) => vehicle.range)),
   ].sort((a, b) => a - b);
 
   // Filter and search vehicles
@@ -99,10 +97,13 @@ function Vehicles() {
     }
 
     // Apply range filter
-    if (selectedRanges.length > 0) {
-      filtered = filtered.filter((vehicle) =>
-        selectedRanges.includes(vehicle.range)
-      );
+    if (minRange || maxRange) {
+      filtered = filtered.filter((vehicle) => {
+        const vehicleRange = vehicle.range;
+        const min = minRange ? parseInt(minRange) : 0;
+        const max = maxRange ? parseInt(maxRange) : Infinity;
+        return vehicleRange >= min && vehicleRange <= max;
+      });
     }
 
     // Apply price range filter
@@ -174,7 +175,8 @@ function Vehicles() {
     selectedBrands,
     selectedTypes,
     selectedSeats,
-    selectedRanges,
+    minRange,
+    maxRange,
     selectedPriceRanges,
     sortOption,
     minReviewRating,
@@ -199,12 +201,6 @@ function Vehicles() {
     );
   };
 
-  const toggleRange = (range) => {
-    setSelectedRanges((prev) =>
-      prev.includes(range) ? prev.filter((r) => r !== range) : [...prev, range]
-    );
-  };
-
   const togglePriceRange = (rangeLabel) => {
     setSelectedPriceRanges((prev) =>
       prev.includes(rangeLabel)
@@ -218,7 +214,8 @@ function Vehicles() {
     setSelectedBrands([]);
     setSelectedTypes([]);
     setSelectedSeats([]);
-    setSelectedRanges([]);
+    setMinRange("");
+    setMaxRange("");
     setSelectedPriceRanges([]);
     setSearchTerm("");
     setSortOption("");
@@ -231,7 +228,7 @@ function Vehicles() {
       selectedBrands.length +
       selectedTypes.length +
       selectedSeats.length +
-      selectedRanges.length +
+      (minRange || maxRange ? 1 : 0) +
       selectedPriceRanges.length
     );
   };
@@ -587,7 +584,7 @@ function Vehicles() {
                     {
                       id: "range",
                       label: "Range",
-                      count: selectedRanges.length,
+                      count: minRange || maxRange ? 1 : 0,
                     },
                     {
                       id: "pricing",
@@ -839,55 +836,94 @@ function Vehicles() {
                           color: "#1e293b",
                         }}
                       >
-                        Select Range (miles)
+                        Filter by Range (miles)
                       </h4>
                       <div
                         style={{
                           display: "grid",
-                          gridTemplateColumns:
-                            "repeat(auto-fill, minmax(150px, 1fr))",
-                          gap: "12px",
+                          gridTemplateColumns: "1fr 1fr",
+                          gap: "16px",
+                          maxWidth: "400px",
                         }}
                       >
-                        {uniqueRanges.map((range) => (
+                        <div>
                           <label
-                            key={range}
                             style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: "8px",
-                              cursor: "pointer",
-                              padding: "8px",
-                              borderRadius: "6px",
-                              backgroundColor: selectedRanges.includes(range)
-                                ? "#eff6ff"
-                                : "transparent",
-                              border: selectedRanges.includes(range)
-                                ? "1px solid #3b82f6"
-                                : "1px solid transparent",
+                              display: "block",
+                              marginBottom: "8px",
+                              fontSize: "14px",
+                              fontWeight: "500",
+                              color: "#374151",
                             }}
                           >
-                            <input
-                              type="checkbox"
-                              checked={selectedRanges.includes(range)}
-                              onChange={() => toggleRange(range)}
-                              style={{
-                                width: "16px",
-                                height: "16px",
-                                accentColor: "#3b82f6",
-                              }}
-                            />
-                            <span
-                              style={{
-                                fontSize: "14px",
-                                color: "#374151",
-                              }}
-                            >
-                              {range.toLocaleString()} miles
-                            </span>
+                            Minimum Range
                           </label>
-                        ))}
+                          <input
+                            type="number"
+                            placeholder="0"
+                            value={minRange}
+                            onChange={(e) => setMinRange(e.target.value)}
+                            style={{
+                              width: "100%",
+                              padding: "12px",
+                              fontSize: "14px",
+                              border: "1px solid #d1d5db",
+                              borderRadius: "6px",
+                              backgroundColor: "white",
+                              color: "#1e293b",
+                              boxSizing: "border-box",
+                            }}
+                          />
+                        </div>
+                        <div>
+                          <label
+                            style={{
+                              display: "block",
+                              marginBottom: "8px",
+                              fontSize: "14px",
+                              fontWeight: "500",
+                              color: "#374151",
+                            }}
+                          >
+                            Maximum Range
+                          </label>
+                          <input
+                            type="number"
+                            placeholder="No limit"
+                            value={maxRange}
+                            onChange={(e) => setMaxRange(e.target.value)}
+                            style={{
+                              width: "100%",
+                              padding: "12px",
+                              fontSize: "14px",
+                              border: "1px solid #d1d5db",
+                              borderRadius: "6px",
+                              backgroundColor: "white",
+                              color: "#1e293b",
+                              boxSizing: "border-box",
+                            }}
+                          />
+                        </div>
                       </div>
+                      {(minRange || maxRange) && (
+                        <div
+                          style={{
+                            marginTop: "12px",
+                            padding: "8px 12px",
+                            backgroundColor: "#eff6ff",
+                            border: "1px solid #3b82f6",
+                            borderRadius: "6px",
+                            fontSize: "14px",
+                            color: "#1e293b",
+                          }}
+                        >
+                          {minRange && maxRange
+                            ? `Showing vehicles with range between ${Number(minRange).toLocaleString()} and ${Number(maxRange).toLocaleString()} miles`
+                            : minRange
+                            ? `Showing vehicles with range ≥ ${Number(minRange).toLocaleString()} miles`
+                            : `Showing vehicles with range ≤ ${Number(maxRange).toLocaleString()} miles`}
+                        </div>
+                      )}
                     </div>
                   )}
 

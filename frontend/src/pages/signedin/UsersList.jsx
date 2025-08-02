@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
 import { getAllUsers, deleteUserById, signUp } from "../../services/api";
+import { useNavigate } from "react-router-dom";
 
 function UsersList() {
+  const navigate = useNavigate();
   const [users, setUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [newUser, setNewUser] = useState({
     username: "",
     email: "",
@@ -14,6 +18,19 @@ function UsersList() {
     const data = await getAllUsers();
     setUsers(data);
   };
+
+  // Filter users based on search term
+  useEffect(() => {
+    if (!searchTerm) {
+      setFilteredUsers(users);
+    } else {
+      const filtered = users.filter(user =>
+        user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredUsers(filtered);
+    }
+  }, [users, searchTerm]);
 
   useEffect(() => {
     fetchUsers();
@@ -225,6 +242,40 @@ function UsersList() {
         </form>
       </div>
 
+      {/* Search Bar for Users */}
+      <div style={{
+        backgroundColor: "#f8fafc",
+        padding: "24px",
+        borderRadius: "12px",
+        marginBottom: "24px",
+        border: "1px solid #e2e8f0"
+      }}>
+        <h3 style={{
+          fontSize: "1.25rem",
+          fontWeight: "600",
+          marginBottom: "16px",
+          color: "#1e293b"
+        }}>
+          Search Users
+        </h3>
+        <input
+          type="text"
+          placeholder="Search users by username or email..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          style={{
+            width: "100%",
+            padding: "12px 16px",
+            borderRadius: "8px",
+            border: "1px solid #d1d5db",
+            fontSize: "14px",
+            backgroundColor: "white",
+            color: "#1e293b",
+            boxSizing: "border-box"
+          }}
+        />
+      </div>
+
       <h2 style={{
         fontSize: "1.5rem",
         fontWeight: "600",
@@ -236,7 +287,7 @@ function UsersList() {
         Users List
       </h2>
 
-      {users.length === 0 ? (
+      {filteredUsers.length === 0 ? (
         <div style={{
           textAlign: "center",
           padding: "40px",
@@ -246,7 +297,7 @@ function UsersList() {
           border: "2px dashed #cbd5e1"
         }}>
           <p style={{ fontSize: "1.1rem", margin: 0 }}>
-            No users found. Add your first user above!
+            {searchTerm ? `No users found matching "${searchTerm}"` : "No users found. Add your first user above!"}
           </p>
         </div>
       ) : (
@@ -301,11 +352,18 @@ function UsersList() {
                   fontWeight: "600",
                   color: "#374151",
                   fontSize: "14px"
+                }}>Reviews</th>
+                <th style={{
+                  padding: "16px",
+                  textAlign: "left",
+                  fontWeight: "600",
+                  color: "#374151",
+                  fontSize: "14px"
                 }}>Action</th>
               </tr>
             </thead>
             <tbody>
-              {users.map((user) => (
+              {filteredUsers.map((user) => (
                 <tr key={user.id} style={{
                   borderBottom: "1px solid #f1f5f9"
                 }}>
@@ -354,6 +412,31 @@ function UsersList() {
                     ) : (
                       <span style={{ color: "#9ca3af", fontSize: "12px" }}>No addresses</span>
                     )}
+                  </td>
+                  <td style={{
+                    padding: "16px"
+                  }}>
+                    <button
+                      onClick={() => navigate(`/user-reviews/${user.id}`, { state: { username: user.username } })}
+                      style={{
+                        background: "#8b5cf6",
+                        color: "white",
+                        padding: "6px 12px",
+                        borderRadius: "4px",
+                        border: "none",
+                        fontWeight: "500",
+                        cursor: "pointer",
+                        fontSize: "12px"
+                      }}
+                      onMouseEnter={(e) => {
+                        e.target.style.background = "#7c3aed";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.background = "#8b5cf6";
+                      }}
+                    >
+                      View Reviews
+                    </button>
                   </td>
                   <td style={{
                     padding: "16px"

@@ -45,7 +45,7 @@ const Chatbot = () => {
 
       {isOpen && (
         <div id="chatbot-container">
-          <div id="chat-header">🔋 EV Assistant</div>
+          <div id="chat-header">My EVE</div>
           <div id="chat-window" ref={chatWindowRef}>
             {messages.map((msg, index) => (
               <div key={index} className={msg.isUser ? "user-bubble" : "bot-bubble"}>

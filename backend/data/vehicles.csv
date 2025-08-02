@@ -1,0 +1,583 @@
+VID,Type,Brand,Model,Year,Seats,Range,Quantity,Price,Description
+017a7b9c-4d73-464f-9dbc-ea59235e0bdf,SUV,Tata Motors,Nexon EV Prime,2025,5,151,1,22000.00,"Engines: Permanent Magnet Synchronous
+CC/Battery Capacity kwh: 30.2
+HorsePower: 129
+Top Speed km/h: 120
+Performance(0 - 100 )KM/H: 9.4
+Torque: 245 Nm"
+075033fe-a25b-49cd-a53d-7c3a63cc62a4,Crossover,Porsche,Taycan Sport Turismo Base,2025,4,396,7,90500.00,"Engines: Dual Electric Motors
+CC/Battery Capacity kwh: 79.2
+HorsePower: 375
+Top Speed km/h: 230
+Performance(0 - 100 )KM/H: 5.4
+Torque: 500 Nm"
+09356bb9-023f-4aee-82b5-d9ac44798d07,Truck,GMC,Hummer EV Adventure Series,2025,5,1000,8,105000.00,"Engines: Electric motors with up to 11,500 lb-ft torque
+CC/Battery Capacity kwh: 200
+HorsePower: 830
+Top Speed km/h: 170
+Performance(0 - 100 )KM/H: 3.6
+Torque: 15,590 Nm"
+0addb38e-8c84-49af-95d2-ab2e37d29a5c,SUV,Nissan,Ariya Lounge Edition,2025,5,435,8,63000.00,"Engines: Dual Electric Motors
+CC/Battery Capacity kwh: 87
+HorsePower: 389
+Top Speed km/h: 200
+Performance(0 - 100 )KM/H: 5.1
+Torque: 600 Nm"
+0b7505bf-c7a2-4d6a-b1a3-3be91bfac4e2,Luxury,Tesla,Model S,2025,5,500,3,88490.00,"Engines: Dual Electric Motors
+CC/Battery Capacity kwh: 100
+HorsePower: 670
+Top Speed km/h: 250
+Performance(0 - 100 )KM/H: 3.1
+Torque: 967 Nm"
+0ddab059-fbcb-4c71-a6ca-ce1a42a75f92,Crossover,Volkswagen,ID. Buzz Pro,2025,7,385,5,60000.00,"Engines: Electric
+CC/Battery Capacity kwh: 77
+HorsePower: 204
+Top Speed km/h: 145
+Performance(0 - 100 )KM/H: 10.2
+Torque: 310 Nm"
+0f26dd06-d314-41e2-9ec6-82e88ea6f27c,SUV,Nissan,Ariya Dual Motor AWD,2024,5,435,5,70000.00,"Engines: Dual Electric Motors
+CC/Battery Capacity kwh: 87
+HorsePower: 389
+Top Speed km/h: 200
+Performance(0 - 100 )KM/H: 5.1
+Torque: 600 Nm"
+10be1891-5301-4802-b172-ca40a8d10a52,Hatchback,Volkswagen,ID.3,2025,5,290,1,35000.00,"Engines: Electric
+CC/Battery Capacity kwh: 58
+HorsePower: 204
+Top Speed km/h: 160
+Performance(0 - 100 )KM/H: 7.3
+Torque: 310 Nm"
+14d56e9f-f604-4291-8960-268ebebb3e7e,SUV,Ford,Mustang Mach-E (Long Range),2025,5,490,6,61000.00,"Engines: Electric Motor
+CC/Battery Capacity kwh: 98
+HorsePower: 480
+Top Speed km/h: 180
+Performance(0 - 100 )KM/H: 3.5
+Torque: 430 Nm (GT Model)"
+16e1ad01-3a88-42f6-a031-03508aa8171a,Crossover,Kia,EV6 AWD GT-Line,2025,5,387,9,60000.00,"Engines: Electric Motor
+CC/Battery Capacity kwh: 77.4
+HorsePower: 320
+Top Speed km/h: 230
+Performance(0 - 100 )KM/H: 5
+Torque: 450 Nm"
+1757c620-7547-41be-912b-27012a3cd3e2,Luxury,Jeep,Wagoneer S (Electric),2025,5,500,10,80000.00,"Engines: Dual Electric Motors
+CC/Battery Capacity kwh: 100
+HorsePower: 600
+Top Speed km/h: 177
+Performance(0 - 100 )KM/H: 4.5
+Torque: 850 Nm"
+1aacf421-76ca-4c3a-bd5c-a33714a1289c,Sedan,Porsche,Taycan Turbo S,2025,4,467,2,185000.00,"Engines: Dual Electric Motors
+CC/Battery Capacity kwh: 93.4
+HorsePower: 750
+Top Speed km/h: 260
+Performance(0 - 100 )KM/H: 2.8
+Torque: 1050 Nm"
+1e611254-ecbb-4b50-868c-a72ec95a3197,Crossover,Kia,EV6 GT Performance,2025,5,387,2,65000.00,"Engines: Electric Motor
+CC/Battery Capacity kwh: 77.4
+HorsePower: 577
+Top Speed km/h: 260
+Performance(0 - 100 )KM/H: 3.5
+Torque: 740 Nm"
+1e8e3a8f-2799-463c-91a8-682787943569,Crossover,Tesla,Model Y Long Range,2025,5,410,4,50490.00,"Engines: Dual Electric Motors (AWD)
+CC/Battery Capacity kwh: 82
+HorsePower: 384
+Top Speed km/h: 217
+Performance(0 - 100 )KM/H: 4.8
+Torque: 559 Nm"
+222e1edc-1ea4-40b5-b72a-4734e366cffa,SUV,GMC,Hummer EV SUV,2024,5,1060,10,105600.00,"Engines: Dual-Motor Electric
+CC/Battery Capacity kwh: 212
+HorsePower: 625
+Top Speed km/h: 170
+Performance(0 - 100 )KM/H: 3.5
+Torque: 1000+ Nm"
+230acf52-7efb-4e79-b597-5c73c4d28e55,Sedan,Tesla,Model 3 Performance,2024,5,410,5,53240.00,"Engines: Dual Electric Motors (AWD)
+CC/Battery Capacity kwh: 82
+HorsePower: 450
+Top Speed km/h: 261
+Performance(0 - 100 )KM/H: 3.1
+Torque: 660 Nm"
+28c5b534-dbb0-421d-89fb-61ef5b08eb2e,Crossover,Porsche,Taycan Sport Turismo,2024,5,396,4,104000.00,"Engines: Dual Electric Motors
+CC/Battery Capacity kwh: 79.2
+HorsePower: 509
+Top Speed km/h: 240
+Performance(0 - 100 )KM/H: 4.1
+Torque: 650 Nm"
+29df6fb0-1c5e-48e7-b3bb-a788281351d6,SUV,TOYOTA,BZ4X,2025,5,324,9,43400.00,"Engines: ELECTRIC
+CC/Battery Capacity kwh: 64.8
+HorsePower: 218
+Top Speed km/h: 200
+Performance(0 - 100 )KM/H: 7.5
+Torque: 330 Nm"
+2cfbf4ef-1966-4654-83bf-7bdbfc178cd6,Truck,GMC,Sierra EV Denali,2024,5,1000,7,108700.00,"Engines: Electric motors with advanced AWD
+CC/Battery Capacity kwh: 200
+HorsePower: 754
+Top Speed km/h: 170
+Performance(0 - 100 )KM/H: 4.5
+Torque: 1,064 Nm"
+2fe60ab0-e66f-46fa-bb8d-163ff2621b89,Crossover,Kia,EV6 First Edition,2025,5,387,8,58000.00,"Engines: Electric Motor
+CC/Battery Capacity kwh: 77.4
+HorsePower: 320
+Top Speed km/h: 230
+Performance(0 - 100 )KM/H: 5
+Torque: 450 Nm"
+30e8b022-ecc6-49af-84b8-c3cd5ee87aea,Luxury,Jaguar Land Rover,Jaguar I-PACE HSE,2025,5,450,5,90000.00,"Engines: Electric (Dual Motor)
+CC/Battery Capacity kwh: 90
+HorsePower: 400
+Top Speed km/h: 200
+Performance(0 - 100 )KM/H: 4.5
+Torque: 696 Nm"
+3422aac3-036a-4fdc-bf12-22434f032267,Hatchback,Peugeot,e-208,2025,5,250,4,35000.00,"Engines: Electric Motor
+CC/Battery Capacity kwh: 50
+HorsePower: 136
+Top Speed km/h: 150
+Performance(0 - 100 )KM/H: 8.1
+Torque: 260 Nm"
+343058b2-59cf-41bc-8c11-ceebad02d8e6,SUV,AUDI,E-TRON SPORTBACK,2025,5,475,1,78000.00,"Engines: ELECTRIC
+CC/Battery Capacity kwh: 95
+HorsePower: 402
+Top Speed km/h: 200
+Performance(0 - 100 )KM/H: 5.5
+Torque: 664 Nm"
+38b0170b-98e0-4709-9781-31f7e3e76a8d,Luxury,MERCEDES,BENZ EQS 53,2025,5,539,8,102000.00,"Engines: ELECTRIC MOTOR
+CC/Battery Capacity kwh: 107.8
+HorsePower: 751
+Top Speed km/h: 250
+Performance(0 - 100 )KM/H: 3.4
+Torque: 950 Nm"
+3addb8b3-d356-437e-a225-82adde39db05,Sedan,Porsche,Taycan,2025,4,396,8,86700.00,"Engines: Dual Electric Motors
+CC/Battery Capacity kwh: 79.2
+HorsePower: 402
+Top Speed km/h: 230
+Performance(0 - 100 )KM/H: 5.4
+Torque: 344 Nm"
+3bd2003b-899e-4d8c-91b2-fae4ad3ced57,Sedan,Porsche,Taycan GTS,2025,4,467,1,132750.00,"Engines: Dual Electric Motors
+CC/Battery Capacity kwh: 93.4
+HorsePower: 590
+Top Speed km/h: 250
+Performance(0 - 100 )KM/H: 3.5
+Torque: 850 Nm"
+401e8b72-f602-4ba9-b2fd-6807972bc580,Compact,Volkswagen,ID.2,2025,5,250,9,25000.00,"Engines: Electric
+CC/Battery Capacity kwh: 50
+HorsePower: 170
+Top Speed km/h: 160
+Performance(0 - 100 )KM/H: 8
+Torque: 220 Nm"
+4969b6b3-22da-4833-9814-a2905f415ea5,Crossover,Porsche,Taycan Sport Turismo GTS,2025,4,467,6,136700.00,"Engines: Dual Electric Motors
+CC/Battery Capacity kwh: 93.4
+HorsePower: 590
+Top Speed km/h: 250
+Performance(0 - 100 )KM/H: 3.7
+Torque: 620 Nm"
+57f52a6c-060d-4736-af5b-1bb0b7ca3c44,Crossover,Chevrolet,Bolt EUV,2023,5,330,9,28795.00,"Engines: Single Electric Motor
+CC/Battery Capacity kwh: 66
+HorsePower: 200
+Top Speed km/h: 150
+Performance(0 - 100 )KM/H: 7
+Torque: 360 Nm"
+5806fae6-07ef-4ca5-90e6-6c7dab4097f1,Hatchback,Volkswagen,ID.3 Pro,2024,5,290,5,35000.00,"Engines: Electric
+CC/Battery Capacity kwh: 58
+HorsePower: 204
+Top Speed km/h: 160
+Performance(0 - 100 )KM/H: 7.3
+Torque: 310 Nm"
+5d4039d4-15d6-4783-b25e-0a771213367d,Sedan,Porsche,Taycan Turbo,2024,4,467,7,150900.00,"Engines: Dual Electric Motors
+CC/Battery Capacity kwh: 93.4
+HorsePower: 670
+Top Speed km/h: 260
+Performance(0 - 100 )KM/H: 3.2
+Torque: 850 Nm"
+630abed1-1861-4726-9340-6e1d8a0fece9,Luxury,Jaguar Land Rover,Jaguar I-PACE,2025,5,450,6,70000.00,"Engines: Electric (Dual Motor)
+CC/Battery Capacity kwh: 90
+HorsePower: 400
+Top Speed km/h: 200
+Performance(0 - 100 )KM/H: 4.8
+Torque: 696 Nm"
+66acc6de-50e0-4462-97d8-872e385b014f,Crossover,Porsche,Taycan Turbo S Cross Turismo,2025,4,467,4,190000.00,"Engines: Dual Electric Motors
+CC/Battery Capacity kwh: 93.4
+HorsePower: 750
+Top Speed km/h: 260
+Performance(0 - 100 )KM/H: 2.9
+Torque: 1050 Nm"
+66cbfc85-81a1-43ab-aac7-7c1fb058f70b,Sedan,Porsche,Taycan 4S,2025,4,396,4,103800.00,"Engines: Dual Electric Motors
+CC/Battery Capacity kwh: 79.2
+HorsePower: 522
+Top Speed km/h: 250
+Performance(0 - 100 )KM/H: 4
+Torque: 640 Nm"
+69d7fe74-1986-4c1e-a06e-b521913cd2cb,Sedan,HYUNDAI,IONIQ 6 Long Range,2025,5,387,1,41450.00,"Engines: Electric Motor
+CC/Battery Capacity kwh: 77.4
+HorsePower: 320
+Top Speed km/h: 185
+Performance(0 - 100 )KM/H: 5.2
+Torque: 350 Nm"
+6ad2ea07-102e-48c9-a11d-c22e8bee955e,SUV,Volkswagen,ID.4,2025,5,385,1,39735.00,"Engines: Electric
+CC/Battery Capacity kwh: 77
+HorsePower: 201
+Top Speed km/h: 160
+Performance(0 - 100 )KM/H: 7.8
+Torque: 310 Nm"
+6ffbf144-bab9-47f8-b689-457f3c157c82,SUV,GMC,Hummer EV SUV Edition 1,2025,5,1000,1,96550.00,"Engines: Electric motors with up to 11,500 lb-ft torque
+CC/Battery Capacity kwh: 200
+HorsePower: 830
+Top Speed km/h: 170
+Performance(0 - 100 )KM/H: 3.5
+Torque: 15,590 Nm"
+712a13cc-8457-415c-9a41-4e4f48807446,Compact,Volkswagen,Up! e-up!,2023,4,161,10,23000.00,"Engines: Electric
+CC/Battery Capacity kwh: 32.3
+HorsePower: 83
+Top Speed km/h: 130
+Performance(0 - 100 )KM/H: 11.9
+Torque: 210 Nm"
+73fbc8bb-b276-480c-80a4-2ee762d875c3,SUV,GMC,Hummer EV SUV Extreme Off-Road,2025,5,1000,3,110000.00,"Engines: Electric motors with up to 11,500 lb-ft torque
+CC/Battery Capacity kwh: 200
+HorsePower: 830
+Top Speed km/h: 170
+Performance(0 - 100 )KM/H: 3.6
+Torque: 15,590 Nm"
+7aa04e54-f7ed-4b29-b633-fc63426d5d20,Crossover,Volkswagen,ID. Buzz,2025,7,385,4,59995.00,"Engines: Electric
+CC/Battery Capacity kwh: 77
+HorsePower: 204
+Top Speed km/h: 145
+Performance(0 - 100 )KM/H: 10.2
+Torque: 310 Nm"
+801cfbb8-8597-44a3-a83a-29bea736cf67,Crossover,Kia,EV6 First Edition AWD,2025,5,387,3,62000.00,"Engines: Electric Motor
+CC/Battery Capacity kwh: 77.4
+HorsePower: 320
+Top Speed km/h: 230
+Performance(0 - 100 )KM/H: 5
+Torque: 450 Nm"
+802e1a9a-98c0-4fd9-86e9-55b06497f4ea,Crossover,Porsche,Taycan Cross Turismo,2025,5,467,10,97700.00,"Engines: Dual Electric Motors
+CC/Battery Capacity kwh: 93.4
+HorsePower: 469
+Top Speed km/h: 220
+Performance(0 - 100 )KM/H: 4.8
+Torque: 500 Nm"
+83bbcbae-23b6-4e53-8ec7-3276ce338fc5,Sedan,Porsche,Taycan Base,2025,4,396,8,86700.00,"Engines: Dual Electric Motors
+CC/Battery Capacity kwh: 79.2
+HorsePower: 321
+Top Speed km/h: 230
+Performance(0 - 100 )KM/H: 5.4
+Torque: 345 Nm"
+8728f903-8734-449f-add5-848e67a759e3,Truck,GMC,Hummer EV Omega Edition,2025,5,1000,2,112700.00,"Engines: Electric motors with up to 11,500 lb-ft torque
+CC/Battery Capacity kwh: 200
+HorsePower: 1,000
+Top Speed km/h: 170
+Performance(0 - 100 )KM/H: 3
+Torque: 15,590 Nm"
+87df95c3-4381-4c3a-acad-1e3faeac9baf,Sports Car,Tesla,Roadster 2,2025,4,1000,3,200000.00,"Engines: Quad Electric Motors
+CC/Battery Capacity kwh: 200
+HorsePower: 1,288
+Top Speed km/h: 402
+Performance(0 - 100 )KM/H: 1.9
+Torque: 10,000 Nm"
+88ec4fa9-01dc-41d8-bb1a-69b1e842c284,Luxury,Jaguar Land Rover,Jaguar I-PACE First Edition,2025,5,450,10,85000.00,"Engines: Electric (Dual Motor)
+CC/Battery Capacity kwh: 90
+HorsePower: 400
+Top Speed km/h: 200
+Performance(0 - 100 )KM/H: 4.5
+Torque: 696 Nm"
+8d510876-f535-485e-b326-fc018f43a082,Hatchback,Chevrolet,Bolt EV Premier,2025,5,330,8,31700.00,"Engines: Single Electric Motor
+CC/Battery Capacity kwh: 66
+HorsePower: 200
+Top Speed km/h: 150
+Performance(0 - 100 )KM/H: 6.5
+Torque: 360 Nm"
+8db5fdf5-d755-4ea5-a9f7-a157d6c58ed1,Crossover,Peugeot,Partner Electric,2025,5,250,6,40000.00,"Engines: Electric Motor
+CC/Battery Capacity kwh: 50
+HorsePower: 136
+Top Speed km/h: 130
+Performance(0 - 100 )KM/H: 9
+Torque: 260 Nm"
+8e0322a3-2863-43f4-bad7-84f1a8185ff3,Crossover,Peugeot,Expert Electric,2025,5,250,9,45000.00,"Engines: Electric Motor
+CC/Battery Capacity kwh: 50
+HorsePower: 136
+Top Speed km/h: 130
+Performance(0 - 100 )KM/H: 9.5
+Torque: 260 Nm"
+919280ce-60a5-477d-9ce3-c02ec7288e6b,Truck,GMC,Hummer EV Pickup,2025,5,1060,6,108700.00,"Engines: Dual-Motor Electric
+CC/Battery Capacity kwh: 212
+HorsePower: 625
+Top Speed km/h: 170
+Performance(0 - 100 )KM/H: 3
+Torque: 1000+ Nm"
+92a5569d-15b1-4393-9455-da88b803a174,SUV,Porsche,Macan EV,2025,5,475,6,85000.00,"Engines: Dual Electric Motors
+CC/Battery Capacity kwh: 95
+HorsePower: 603
+Top Speed km/h: 240
+Performance(0 - 100 )KM/H: 4
+Torque: 750 Nm"
+96455b07-93f1-4a80-8adb-88e12ac66f05,Crossover,Volkswagen,ID. Buzz Cargo Pro,2025,2,385,3,55000.00,"Engines: Electric
+CC/Battery Capacity kwh: 77
+HorsePower: 204
+Top Speed km/h: 145
+Performance(0 - 100 )KM/H: 10.2
+Torque: 310 Nm"
+9888371e-cd90-41c7-83ae-a7af10ebe66a,SUV,Volkswagen,ID.4 GTX,2025,5,385,2,50000.00,"Engines: Electric AWD
+CC/Battery Capacity kwh: 77
+HorsePower: 299
+Top Speed km/h: 180
+Performance(0 - 100 )KM/H: 6.2
+Torque: 460 Nm"
+99800f64-4437-4a37-b976-209ea8273006,Hatchback,Volkswagen,ID.3 GTX,2025,5,385,1,45000.00,"Engines: Electric
+CC/Battery Capacity kwh: 77
+HorsePower: 299
+Top Speed km/h: 180
+Performance(0 - 100 )KM/H: 6.2
+Torque: 310 Nm"
+a1946d0e-e5c8-4942-9b6c-ef537d84af1e,Luxury,Cadillac,Lyriq EV Premium,2025,5,500,4,64990.00,"Engines: Dual Electric Motors
+CC/Battery Capacity kwh: 100
+HorsePower: 500
+Top Speed km/h: 210
+Performance(0 - 100 )KM/H: 4.5
+Torque: 620 Nm"
+a465869e-6bdc-46a2-8e07-8731e397e8b1,Crossover,TOYOTA,PROACE VERSO ELECTRIC,2025,7,375,7,55000.00,"Engines: ELECTRIC MOTOR
+CC/Battery Capacity kwh: 75
+HorsePower: 136
+Top Speed km/h: 130
+Performance(0 - 100 )KM/H: 13.5
+Torque: 280 Nm"
+a5c76442-e7ba-4217-8352-d9072e73f20e,SUV,Peugeot,e-2008 GT,2024,5,250,8,40000.00,"Engines: Electric Motor
+CC/Battery Capacity kwh: 50
+HorsePower: 136
+Top Speed km/h: 200
+Performance(0 - 100 )KM/H: 8.5
+Torque: 260 Nm"
+a755841a-af95-46b5-892e-49d2d142c30b,Crossover,Mazda,MX-30 Electric,2025,5,177,10,37000.00,"Engines: Electric Motor
+CC/Battery Capacity kwh: 35.5
+HorsePower: 143
+Top Speed km/h: 140
+Performance(0 - 100 )KM/H: 9.7
+Torque: 271 Nm"
+a787c581-750c-4aeb-a706-8db9752fadb9,SUV,Volkswagen,ID.5,2025,5,385,6,45000.00,"Engines: Electric
+CC/Battery Capacity kwh: 77
+HorsePower: 174
+Top Speed km/h: 180
+Performance(0 - 100 )KM/H: 8.4
+Torque: 310 Nm"
+b2891d64-1b0f-4f3c-8e5c-9a22e75bfca7,Hatchback,Chevrolet,Bolt EV 2LT,2023,5,330,7,28795.00,"Engines: Single Electric Motor
+CC/Battery Capacity kwh: 66
+HorsePower: 200
+Top Speed km/h: 150
+Performance(0 - 100 )KM/H: 6.7
+Torque: 360 Nm"
+b3fac618-11e1-4fc4-a776-4b9ae7848677,Crossover,Porsche,Taycan Cross Turismo GTS,2025,4,467,3,139400.00,"Engines: Dual Electric Motors
+CC/Battery Capacity kwh: 93.4
+HorsePower: 590
+Top Speed km/h: 250
+Performance(0 - 100 )KM/H: 3.8
+Torque: 620 Nm"
+b5325b3e-5154-4084-a3f5-4bc679a33a99,Compact,Mitsubishi,Minicab MiEV,2023,2,80,9,20000.00,"Engines: Electric Motor
+CC/Battery Capacity kwh: 16
+HorsePower: 64
+Top Speed km/h: 100
+Performance(0 - 100 )KM/H: 15
+Torque: 196 Nm"
+b901c383-254f-41df-9539-2fc7f0cabea5,Hatchback,Volkswagen,Golf Electric,2023,5,179,5,33000.00,"Engines: Electric
+CC/Battery Capacity kwh: 35.8
+HorsePower: 136
+Top Speed km/h: 140
+Performance(0 - 100 )KM/H: 10.4
+Torque: 290 Nm"
+b91bacc4-4392-4013-ac45-89a3f4b58520,SUV,Nissan,Ariya Premiere,2025,5,435,4,67000.00,"Engines: Dual Electric Motors
+CC/Battery Capacity kwh: 87
+HorsePower: 389
+Top Speed km/h: 200
+Performance(0 - 100 )KM/H: 5.1
+Torque: 600 Nm"
+b9496118-448e-4e56-b460-2c7fe5f30a38,SUV,Tesla,Model X,2025,7,500,2,98490.00,"Engines: Dual Electric Motors (AWD)
+CC/Battery Capacity kwh: 100
+HorsePower: 670
+Top Speed km/h: 250
+Performance(0 - 100 )KM/H: 3.8
+Torque: 967 Nm"
+b9d71756-20ad-45fe-b6fd-514f3ddda28b,Crossover,Volkswagen,ID. Buzz Cargo EV,2025,2,385,5,55000.00,"Engines: Electric
+CC/Battery Capacity kwh: 77
+HorsePower: 204
+Top Speed km/h: 145
+Performance(0 - 100 )KM/H: 10.2
+Torque: 310 Nm"
+bf2bef5b-af09-4cd1-9b71-22ce0afd2ec2,SUV,Ford,Mustang Mach-E (Standard,2025,5,340,4,43000.00,"Engines: Electric Motor
+CC/Battery Capacity kwh: 68
+HorsePower: 290
+Top Speed km/h: 180
+Performance(0 - 100 )KM/H: 3.5
+Torque: 430 Nm (GT Model)"
+c6efa795-8626-4c5f-ab5e-84ab2d0f4d86,Compact,Mitsubishi,i-MiEV (Electric),2023,4,80,1,26000.00,"Engines: Electric Motor
+CC/Battery Capacity kwh: 16
+HorsePower: 66
+Top Speed km/h: 130
+Performance(0 - 100 )KM/H: 15
+Torque: 196 Nm"
+ce7f82cd-9a68-4fe0-89ef-eed790257ead,Sedan,Tesla,Model 3,2025,5,300,2,40240.00,"Engines: Single Electric Motor (RWD)
+CC/Battery Capacity kwh: 60
+HorsePower: 283
+Top Speed km/h: 225
+Performance(0 - 100 )KM/H: 5.8
+Torque: 420 Nm"
+d09b3b83-7777-408e-be72-a171668abff1,SUV,Nissan,Ariya,2024,5,435,8,58950.00,"Engines: Dual Electric Motors
+CC/Battery Capacity kwh: 87
+HorsePower: 389
+Top Speed km/h: 200
+Performance(0 - 100 )KM/H: 5.1
+Torque: 600 Nm"
+d0ac7529-8719-4047-8c75-3f261ed47926,Sedan,TOYOTA,BZ3,2025,5,325,4,35000.00,"Engines: ELECTRIC MOTOR
+CC/Battery Capacity kwh: 65
+HorsePower: 241
+Top Speed km/h: 160
+Performance(0 - 100 )KM/H: 7.5
+Torque: 340 Nm"
+d1151e1b-1f9f-4a8a-96a6-1376731ff17d,Crossover,Porsche,Taycan Cross Turismo 4,2025,4,467,5,94800.00,"Engines: Dual Electric Motors
+CC/Battery Capacity kwh: 93.4
+HorsePower: 375
+Top Speed km/h: 240
+Performance(0 - 100 )KM/H: 5.1
+Torque: 500 Nm"
+d25e5860-ecfc-4ebe-b38e-1267c22c3f93,Crossover,Ford,Transit Electric (E-Transit),2024,5,445,8,52000.00,"Engines: Electric Motor
+CC/Battery Capacity kwh: 89
+HorsePower: 266
+Top Speed km/h: 140
+Performance(0 - 100 )KM/H: 9
+Torque: 430 Nm"
+d37373f5-b645-4f64-ab30-f181e1007563,Luxury,Jaguar Land Rover,Jaguar I-PACE EV400 HSE,2024,5,450,6,85000.00,"Engines: Electric (Dual Motor)
+CC/Battery Capacity kwh: 90
+HorsePower: 400
+Top Speed km/h: 200
+Performance(0 - 100 )KM/H: 4.5
+Torque: 696 Nm"
+d3e9a4eb-b412-4a07-82f1-4d155e36b1fa,Sedan,HYUNDAI,IONIQ 6 Standard,2024,5,268,6,41450.00,"Engines: Electric Motor
+CC/Battery Capacity kwh: 53.6
+HorsePower: 320
+Top Speed km/h: 185
+Performance(0 - 100 )KM/H: 5.2
+Torque: 350 Nm"
+d6ca38fa-87eb-43e1-9163-40a46b0eec0c,Luxury,Cadillac,Lyriq EV,2025,5,500,7,58590.00,"Engines: Single Electric Motor
+CC/Battery Capacity kwh: 100
+HorsePower: 340
+Top Speed km/h: 190
+Performance(0 - 100 )KM/H: 5.7
+Torque: 440 Nm"
+d6f1e117-092a-4bb0-8ff9-0083053f846f,SUV,AUDI,E-TRON,2025,5,475,4,75000.00,"Engines: ELECTRIC
+CC/Battery Capacity kwh: 95
+HorsePower: 402
+Top Speed km/h: 200
+Performance(0 - 100 )KM/H: 5.5
+Torque: 664 Nm"
+d74617d7-234a-4e88-b8e2-68346aedfc6e,Luxury,Cadillac,Lyriq Launch Edition,2025,5,500,5,59990.00,"Engines: Single Electric Motor
+CC/Battery Capacity kwh: 100
+HorsePower: 340
+Top Speed km/h: 190
+Performance(0 - 100 )KM/H: 5.7
+Torque: 440 Nm"
+d78990f6-5c20-444a-bb16-0c23fa975aa8,Crossover,Volkswagen,ID. Buzz Cargo,2025,3,385,3,55000.00,"Engines: Electric
+CC/Battery Capacity kwh: 77
+HorsePower: 204
+Top Speed km/h: 145
+Performance(0 - 100 )KM/H: 10.2
+Torque: 310 Nm"
+d7e4d470-7bec-4f98-845e-7139bda05210,Hatchback,Chevrolet,Bolt EV,2023,5,330,6,27495.00,"Engines: Single Electric Motor
+CC/Battery Capacity kwh: 66
+HorsePower: 200
+Top Speed km/h: 150
+Performance(0 - 100 )KM/H: 6.5
+Torque: 360 Nm"
+dcd87a11-9306-41aa-b195-4f9f0a6ac325,Crossover,Tesla,Model Y,2024,5,375,3,47490.00,"Engines: Single Electric Motor (RWD)
+CC/Battery Capacity kwh: 75
+HorsePower: 346
+Top Speed km/h: 217
+Performance(0 - 100 )KM/H: 5
+Torque: 498 Nm"
+dd0c545a-2b2c-4013-9885-05d99566762e,Crossover,Kia,EV6 Light,2024,5,387,3,46000.00,"Engines: Electric Motor
+CC/Battery Capacity kwh: 77.4
+HorsePower: 225
+Top Speed km/h: 190
+Performance(0 - 100 )KM/H: 5.2
+Torque: 350 Nm"
+dd506ade-29c6-4bd8-b4c9-4c1a1a252c0d,Truck,Tesla,Cybertruck,2025,6,1000,10,69900.00,"Engines: Tri Electric Motors
+CC/Battery Capacity kwh: 200
+HorsePower: 800
+Top Speed km/h: 209
+Performance(0 - 100 )KM/H: 2.9
+Torque: 1,355 Nm"
+e2f99ac7-fb1e-43a5-b05d-cdf0d81a0b11,SUV,Nissan,Ariya Empower+,2025,5,435,3,68000.00,"Engines: Dual Electric Motors
+CC/Battery Capacity kwh: 87
+HorsePower: 389
+Top Speed km/h: 200
+Performance(0 - 100 )KM/H: 5.1
+Torque: 600 Nm"
+e3fd9447-fca0-45e4-94a6-a57f0278a839,Luxury,Jaguar Land Rover,Jaguar I-PACE Electric Performance,2025,5,450,6,85000.00,"Engines: Electric (Dual Motor)
+CC/Battery Capacity kwh: 90
+HorsePower: 400
+Top Speed km/h: 200
+Performance(0 - 100 )KM/H: 4.5
+Torque: 696 Nm"
+e59e8011-fd9e-4fb5-9b96-562355a4dd2b,SUV,Tata Motors,Nexon EV Max,2025,5,202,6,25000.00,"Engines: Permanent Magnet Synchronous
+CC/Battery Capacity kwh: 40.5
+HorsePower: 143
+Top Speed km/h: 140
+Performance(0 - 100 )KM/H: 9
+Torque: 250 Nm"
+e69b7ca5-f3a0-4917-8d6d-1b3a9ae89a9d,SUV,Nissan,Ariya E-4ORCE,2025,5,435,2,60000.00,"Engines: Dual Electric Motors
+CC/Battery Capacity kwh: 87
+HorsePower: 389
+Top Speed km/h: 200
+Performance(0 - 100 )KM/H: 5.1
+Torque: 600 Nm"
+ebd2e541-7738-4614-888c-0a4af16e0004,Truck,Ford,F-150 Lightning,2025,5,490,1,80000.00,"Engines: Electric Motor
+CC/Battery Capacity kwh: 98
+HorsePower: 452
+Top Speed km/h: 180
+Performance(0 - 100 )KM/H: 4.5
+Torque: 1051 Nm"
+ecbcf6b9-a608-42de-ab89-afb9d135b473,SUV,Volkswagen,ID.4 Pro S,2025,5,385,2,45000.00,"Engines: Electric
+CC/Battery Capacity kwh: 77
+HorsePower: 201
+Top Speed km/h: 180
+Performance(0 - 100 )KM/H: 7.8
+Torque: 310 Nm"
+ed6b51a1-2f1c-4beb-b06a-c2efaab2df89,Crossover,HYUNDAI,IONIQ 5,2025,5,363,2,41000.00,"Engines: ELECTRIC MOTOR
+CC/Battery Capacity kwh: 72.6
+HorsePower: 225
+Top Speed km/h: 185
+Performance(0 - 100 )KM/H: 7.4
+Torque: 350 Nm"
+ef5ee855-fe01-4bcd-8fe4-67e743dc9da2,Crossover,Kia,EV6 Wind,2025,5,387,1,50000.00,"Engines: Electric Motor
+CC/Battery Capacity kwh: 77.4
+HorsePower: 225
+Top Speed km/h: 190
+Performance(0 - 100 )KM/H: 5.2
+Torque: 350 Nm"
+f11aff9c-34b4-480f-a2c6-47226c1d748b,Truck,GMC,Hummer EV Pickup Edition 1,2024,5,1000,5,96550.00,"Engines: Electric motors with up to 11,500 lb-ft torque
+CC/Battery Capacity kwh: 200
+HorsePower: 1,000
+Top Speed km/h: 170
+Performance(0 - 100 )KM/H: 3
+Torque: 15,590 Nm"
+f24e3ba6-bc59-4773-a4c7-947aeb96e3f9,SUV,Peugeot,e-2008,2024,5,250,4,38000.00,"Engines: Electric Motor
+CC/Battery Capacity kwh: 50
+HorsePower: 136
+Top Speed km/h: 150
+Performance(0 - 100 )KM/H: 8.5
+Torque: 260 Nm"
+f5be0eb0-fdf2-4e70-81ed-6825253f0fc5,SUV,Tesla,Model X Plaid,2024,6,500,8,113490.00,"Engines: Tri Electric Motors
+CC/Battery Capacity kwh: 100
+HorsePower: 1,020
+Top Speed km/h: 262
+Performance(0 - 100 )KM/H: 2.6
+Torque: 1,400 Nm"
+fdcf92f2-fcb3-4bfc-a4a1-964596d249df,Luxury,Tesla,Model S Plaid,2024,5,500,1,108490.00,"Engines: Tri Electric Motors
+CC/Battery Capacity kwh: 100
+HorsePower: 1,020
+Top Speed km/h: 322
+Performance(0 - 100 )KM/H: 2.1
+Torque: 1,400 Nm"
+ff04e15f-39b9-47f4-ab7d-c32021ceb540,SUV,HYUNDAI,KONA Electric,2025,5,196,2,40000.00,"Engines: Electric Motor
+CC/Battery Capacity kwh: 39.2
+HorsePower: 200
+Top Speed km/h: 200
+Performance(0 - 100 )KM/H: 6.1
+Torque: 395 Nm"
+ffd823fe-0663-4055-9e76-ba6dd2f47ee5,Sedan,Tata Motors,Tiago EV,2024,5,120,6,11000.00,"Engines: Permanent Magnet Synchronous
+CC/Battery Capacity kwh: 24
+HorsePower: 74
+Top Speed km/h: 120
+Performance(0 - 100 )KM/H: 5.7
+Torque: 114 Nm"
