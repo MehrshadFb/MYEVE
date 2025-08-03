@@ -8,8 +8,13 @@ const {
   updateVehicle,
   deleteVehicle,
   uploadImages,
+  uploadImageUrls,
   submitReview,
   deleteReview,
+  exportCSV,
+  importCSV,
+  downloadCSV,
+  csvUpload,
 } = require("../controllers/vehicleController");
 
 const router = express.Router();
@@ -47,11 +52,40 @@ router.post(
   upload.array("images", 10), // Increased from 5 to 10 images
   uploadImages
 );
+router.post(
+  "/vehicles/:vid/image-urls",
+  authenticateToken,
+  authorizeRole("admin"),
+  uploadImageUrls
+);
 router.delete(
   "/vehicles/:vid/reviews/:reviewId",
   authenticateToken,
   authorizeRole("admin"),
   deleteReview
+);
+
+// CSV routes (admin only)
+router.post(
+  "/vehicles/csv/export",
+  authenticateToken,
+  authorizeRole("admin"),
+  exportCSV
+);
+
+router.post(
+  "/vehicles/csv/import",
+  authenticateToken,
+  authorizeRole("admin"),
+  csvUpload.single('csvFile'),
+  importCSV
+);
+
+router.get(
+  "/vehicles/csv/download",
+  authenticateToken,
+  authorizeRole("admin"),
+  downloadCSV
 );
 
 module.exports = router;

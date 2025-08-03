@@ -153,6 +153,10 @@ docker-compose down -v
 docker-compose up -d mysql
 ```
 
+### Database import
+
+#### To import vehicles to the server you can go to "add vehicles" in manage and drag the csv file in the root dir to it. It should import all the vehicles.
+
 ## Troubleshooting
 
 ### Common Issues
