@@ -39,9 +39,11 @@ function Profile() {
     const fetchAddresses = async () => {
       try {
         const response = await getAllAddressesByUserId(user.id);
-        setAddresses(response);
+        const addressesArray = Array.isArray(response) ? response : [];
+        setAddresses(addressesArray);
       } catch (error) {
         console.error("Error fetching addresses:", error);
+        setAddresses([]);
       }
     };
     if (user?.id) {
@@ -154,7 +156,7 @@ function Profile() {
 
       // Refresh addresses list
       const updatedAddresses = await getAllAddressesByUserId(user.id);
-      setAddresses(updatedAddresses);
+      setAddresses(Array.isArray(updatedAddresses) ? updatedAddresses : []);
 
       // Clear address form
       setNewAddress({
@@ -181,7 +183,7 @@ function Profile() {
 
         // Refresh addresses list
         const updatedAddresses = await getAllAddressesByUserId(user.id);
-        setAddresses(updatedAddresses);
+        setAddresses(Array.isArray(updatedAddresses) ? updatedAddresses : []);
       } catch (err) {
         console.error("Error deleting address:", err);
         setMessage({
@@ -298,7 +300,23 @@ function Profile() {
   };
 
   if (!user) {
-    return <div>Loading...</div>;
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          backgroundColor: "#f8fafc",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div style={{ textAlign: "center" }}>
+          <div style={{ fontSize: "1.2rem", color: "#64748b" }}>
+            Loading profile...
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -497,64 +515,66 @@ function Profile() {
             {/* Display existing addresses */}
             {addresses.length > 0 && (
               <div style={{ marginBottom: "30px" }}>
-                <h3
-                  style={{
-                    fontSize: "1rem",
-                    fontWeight: "600",
-                    color: "#374151",
-                    marginBottom: "12px",
-                  }}
-                >
-                  Your Addresses
-                </h3>
-                {addresses &&
-                  addresses.length > 0 &&
-                  addresses.map((address) => (
-                    <div
-                      key={address.id}
+                {Array.isArray(addresses) && addresses.length > 0 && (
+                  <>
+                    <h3
                       style={{
-                        padding: "16px",
-                        border: "1px solid #e2e8f0",
-                        borderRadius: "8px",
+                        fontSize: "1rem",
+                        fontWeight: "600",
+                        color: "#374151",
                         marginBottom: "12px",
-                        backgroundColor: "white",
-                        position: "relative",
                       }}
                     >
-                      <div style={{ fontSize: "14px", color: "#1e293b" }}>
-                        {address.street}
-                        <br />
-                        {address.city}, {address.province} {address.zip}
-                        <br />
-                        {address.country}
-                        {address.phone && (
-                          <>
-                            <br />
-                            📞 {address.phone}
-                          </>
-                        )}
-                      </div>
-                      <button
-                        onClick={() => handleDeleteAddress(address.id)}
+                      Your Addresses
+                    </h3>
+                    {addresses.map((address) => (
+                      <div
+                        key={address.id}
                         style={{
-                          position: "absolute",
-                          top: "12px",
-                          right: "12px",
-                          padding: "6px 10px",
-                          borderRadius: "6px",
-                          border: "none",
-                          backgroundColor: "#ef4444",
-                          color: "white",
-                          fontSize: "12px",
-                          cursor: "pointer",
-                          fontWeight: "500",
+                          padding: "16px",
+                          border: "1px solid #e2e8f0",
+                          borderRadius: "8px",
+                          marginBottom: "12px",
+                          backgroundColor: "white",
+                          position: "relative",
                         }}
-                        title="Delete address"
                       >
-                        Delete
-                      </button>
-                    </div>
-                  ))}
+                        <div style={{ fontSize: "14px", color: "#1e293b" }}>
+                          {address.street}
+                          <br />
+                          {address.city}, {address.province} {address.zip}
+                          <br />
+                          {address.country}
+                          {address.phone && (
+                            <>
+                              <br />
+                              📞 {address.phone}
+                            </>
+                          )}
+                        </div>
+                        <button
+                          onClick={() => handleDeleteAddress(address.id)}
+                          style={{
+                            position: "absolute",
+                            top: "12px",
+                            right: "12px",
+                            padding: "6px 10px",
+                            borderRadius: "6px",
+                            border: "none",
+                            backgroundColor: "#ef4444",
+                            color: "white",
+                            fontSize: "12px",
+                            cursor: "pointer",
+                            fontWeight: "500",
+                          }}
+                          title="Delete address"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    ))}
+                  </>
+                )}
               </div>
             )}
 
