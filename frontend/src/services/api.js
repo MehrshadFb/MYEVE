@@ -1,6 +1,10 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:3001/api";
+// const API_BASE_URL = "http://localhost:3001/api";
+// Replace localhost with the EC2 public IP
+// const API_BASE_URL = "http://3.144.80.71:3000/api";
+// Use CloudFront distribution for HTTPS
+const API_BASE_URL = "https://d2jb6md6y4s5zo.cloudfront.net/api";
 
 const api = axios.create({
   baseURL: API_BASE_URL,

@@ -19,3 +19,6 @@ frontend/dist/
 
 # Optional: Editor settings
 .vscode/
+
+#AWS
+frontend/eecs4413-keypair.pem
