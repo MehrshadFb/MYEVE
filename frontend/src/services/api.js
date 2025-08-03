@@ -164,6 +164,11 @@ export const uploadVehicleImages = async (vid, files) => {
   return response.data;
 };
 
+export const uploadVehicleImageUrls = async (vid, urls) => {
+  const response = await api.post(`/vehicles/${vid}/image-urls`, { urls });
+  return response.data;
+};
+
 export const submitReview = async (vid, reviewData) => {
   const response = await api.post(`/vehicles/${vid}/reviews`, reviewData);
   return response.data;

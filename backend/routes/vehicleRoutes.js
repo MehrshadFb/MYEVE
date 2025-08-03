@@ -8,6 +8,7 @@ const {
   updateVehicle,
   deleteVehicle,
   uploadImages,
+  uploadImageUrls,
   submitReview,
   deleteReview,
   exportCSV,
@@ -50,6 +51,12 @@ router.post(
   authorizeRole("admin"),
   upload.array("images", 10), // Increased from 5 to 10 images
   uploadImages
+);
+router.post(
+  "/vehicles/:vid/image-urls",
+  authenticateToken,
+  authorizeRole("admin"),
+  uploadImageUrls
 );
 router.delete(
   "/vehicles/:vid/reviews/:reviewId",

@@ -229,6 +229,48 @@ const uploadImages = async (req, res) => {
   }
 };
 
+const uploadImageUrls = async (req, res) => {
+  try {
+    const { vid } = req.params;
+    const { urls } = req.body;
+
+    if (!urls || !Array.isArray(urls) || urls.length === 0) {
+      return res.status(400).json({ message: "URLs array is required and cannot be empty" });
+    }
+
+    const vehicle = await Vehicle.findByPk(vid);
+    if (!vehicle) return res.status(404).json({ message: "Vehicle not found" });
+
+    // Validate URLs
+    const validUrls = urls.filter(url => {
+      try {
+        new URL(url);
+        return true;
+      } catch {
+        return false;
+      }
+    });
+
+    if (validUrls.length === 0) {
+      return res.status(400).json({ message: "No valid URLs provided" });
+    }
+
+    const imageEntries = validUrls.map((url) => ({
+      url: url,
+      vehicleId: vid,
+    }));
+
+    await Image.bulkCreate(imageEntries);
+
+    res
+      .status(201)
+      .json({ message: "Image URLs added successfully", images: imageEntries });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to add image URLs" });
+  }
+};
+
 const submitReview = async (req, res) => {
   const { vid } = req.params;
   const { rating, comment } = req.body;
@@ -382,6 +424,7 @@ module.exports = {
   updateVehicle,
   deleteVehicle,
   uploadImages,
+  uploadImageUrls,
   submitReview,
   deleteReview,
   exportCSV,

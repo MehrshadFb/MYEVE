@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAllVehicles, deleteVehicle, updateVehicle, uploadVehicleImages } from "../../services/api";
+import { getAllVehicles, deleteVehicle, updateVehicle, uploadVehicleImages, uploadVehicleImageUrls } from "../../services/api";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../context/useAuth";
 import Header from "../../components/Header";
@@ -22,6 +22,8 @@ function VehicleList() {
   const [editingPhotoId, setEditingPhotoId] = useState(null);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [uploadLoading, setUploadLoading] = useState(false);
+  const [imageUrls, setImageUrls] = useState(['']);
+  const [uploadMethod, setUploadMethod] = useState('files'); // 'files' or 'urls'
 
   // Redirect non-admin users
   useEffect(() => {
@@ -160,6 +162,8 @@ function VehicleList() {
   const handleEditPhotos = (vehicle) => {
     setEditingPhotoId(vehicle.vid);
     setSelectedFiles([]);
+    setImageUrls(['']);
+    setUploadMethod('files');
     setPhotoModalOpen(true);
   };
 
@@ -168,18 +172,48 @@ function VehicleList() {
     setSelectedFiles(files);
   };
 
+  const handleAddUrlField = () => {
+    setImageUrls([...imageUrls, '']);
+  };
+
+  const handleRemoveUrlField = (index) => {
+    if (imageUrls.length > 1) {
+      setImageUrls(imageUrls.filter((_, i) => i !== index));
+    }
+  };
+
+  const handleUrlChange = (index, value) => {
+    const newUrls = [...imageUrls];
+    newUrls[index] = value;
+    setImageUrls(newUrls);
+  };
+
   const handleUploadPhotos = async () => {
-    if (selectedFiles.length === 0) {
-      alert("Please select at least one file to upload.");
-      return;
+    if (uploadMethod === 'files') {
+      if (selectedFiles.length === 0) {
+        alert("Please select at least one file to upload.");
+        return;
+      }
+    } else {
+      const validUrls = imageUrls.filter(url => url.trim() !== '');
+      if (validUrls.length === 0) {
+        alert("Please enter at least one valid image URL.");
+        return;
+      }
     }
 
     setUploadLoading(true);
     try {
-      await uploadVehicleImages(editingPhotoId, selectedFiles);
+      if (uploadMethod === 'files') {
+        await uploadVehicleImages(editingPhotoId, selectedFiles);
+      } else {
+        const validUrls = imageUrls.filter(url => url.trim() !== '');
+        await uploadVehicleImageUrls(editingPhotoId, validUrls);
+      }
       setPhotoModalOpen(false);
       setEditingPhotoId(null);
       setSelectedFiles([]);
+      setImageUrls(['']);
       fetchVehicles(); // Refresh the vehicle list
       alert("Photos uploaded successfully!");
     } catch (error) {
@@ -194,6 +228,7 @@ function VehicleList() {
     setPhotoModalOpen(false);
     setEditingPhotoId(null);
     setSelectedFiles([]);
+    setImageUrls(['']);
   };
 
   const handleSort = (field) => {
@@ -977,63 +1012,206 @@ function VehicleList() {
               }}>
                 Upload Vehicle Photos
               </h3>
+
+              {/* Upload Method Selection */}
               <div style={{
-                marginBottom: "16px"
+                marginBottom: "20px",
+                padding: "16px",
+                backgroundColor: "#f8fafc",
+                borderRadius: "8px",
+                border: "1px solid #e2e8f0"
               }}>
-                <label style={{
-                  display: "block",
-                  marginBottom: "8px",
+                <p style={{
+                  margin: "0 0 12px 0",
                   fontWeight: "500",
                   color: "#374151",
                   fontSize: "14px"
                 }}>
-                  Select Photos (Multiple files allowed)
-                </label>
-                <input
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  onChange={handleFileSelect}
-                  style={{
-                    width: "100%",
-                    padding: "12px",
-                    borderRadius: "8px",
-                    border: "2px dashed #d1d5db",
-                    fontSize: "14px",
-                    backgroundColor: "#f9fafb",
-                    color: "#1e293b",
-                    cursor: "pointer",
-                    boxSizing: "border-box"
-                  }}
-                />
-              </div>
-              {selectedFiles.length > 0 && (
+                  Choose upload method:
+                </p>
                 <div style={{
-                  marginBottom: "16px",
-                  padding: "12px",
-                  backgroundColor: "#f0f9ff",
-                  borderRadius: "8px",
-                  border: "1px solid #bfdbfe"
+                  display: "flex",
+                  gap: "16px"
                 }}>
-                  <p style={{
-                    margin: "0 0 8px 0",
+                  <label style={{
+                    display: "flex",
+                    alignItems: "center",
+                    cursor: "pointer",
+                    fontSize: "14px",
+                    color: "#374151"
+                  }}>
+                    <input
+                      type="radio"
+                      name="uploadMethod"
+                      value="files"
+                      checked={uploadMethod === 'files'}
+                      onChange={(e) => setUploadMethod(e.target.value)}
+                      style={{
+                        marginRight: "8px"
+                      }}
+                    />
+                    Upload Files
+                  </label>
+                  <label style={{
+                    display: "flex",
+                    alignItems: "center",
+                    cursor: "pointer",
+                    fontSize: "14px",
+                    color: "#374151"
+                  }}>
+                    <input
+                      type="radio"
+                      name="uploadMethod"
+                      value="urls"
+                      checked={uploadMethod === 'urls'}
+                      onChange={(e) => setUploadMethod(e.target.value)}
+                      style={{
+                        marginRight: "8px"
+                      }}
+                    />
+                    Add Image URLs
+                  </label>
+                </div>
+              </div>
+
+              {/* File Upload Section */}
+              {uploadMethod === 'files' && (
+                <div style={{
+                  marginBottom: "16px"
+                }}>
+                  <label style={{
+                    display: "block",
+                    marginBottom: "8px",
                     fontWeight: "500",
-                    color: "#1e40af",
+                    color: "#374151",
                     fontSize: "14px"
                   }}>
-                    Selected Files ({selectedFiles.length}):
-                  </p>
-                  {selectedFiles.map((file, index) => (
-                    <div key={index} style={{
-                      fontSize: "12px",
-                      color: "#1e40af",
-                      marginBottom: "4px"
+                    Select Photos (Multiple files allowed)
+                  </label>
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={handleFileSelect}
+                    style={{
+                      width: "100%",
+                      padding: "12px",
+                      borderRadius: "8px",
+                      border: "2px dashed #d1d5db",
+                      fontSize: "14px",
+                      backgroundColor: "#f9fafb",
+                      color: "#1e293b",
+                      cursor: "pointer",
+                      boxSizing: "border-box"
+                    }}
+                  />
+                  {selectedFiles.length > 0 && (
+                    <div style={{
+                      marginTop: "12px",
+                      padding: "12px",
+                      backgroundColor: "#f0f9ff",
+                      borderRadius: "8px",
+                      border: "1px solid #bfdbfe"
                     }}>
-                      • {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
+                      <p style={{
+                        margin: "0 0 8px 0",
+                        fontWeight: "500",
+                        color: "#1e40af",
+                        fontSize: "14px"
+                      }}>
+                        Selected Files ({selectedFiles.length}):
+                      </p>
+                      {selectedFiles.map((file, index) => (
+                        <div key={index} style={{
+                          fontSize: "12px",
+                          color: "#1e40af",
+                          marginBottom: "4px"
+                        }}>
+                          • {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  )}
                 </div>
               )}
+
+              {/* URL Input Section */}
+              {uploadMethod === 'urls' && (
+                <div style={{
+                  marginBottom: "16px"
+                }}>
+                  <label style={{
+                    display: "block",
+                    marginBottom: "8px",
+                    fontWeight: "500",
+                    color: "#374151",
+                    fontSize: "14px"
+                  }}>
+                    Image URLs
+                  </label>
+                  {imageUrls.map((url, index) => (
+                    <div key={index} style={{
+                      display: "flex",
+                      gap: "8px",
+                      marginBottom: "8px",
+                      alignItems: "center"
+                    }}>
+                      <input
+                        type="url"
+                        placeholder="Enter image URL (e.g., https://example.com/image.jpg)"
+                        value={url}
+                        onChange={(e) => handleUrlChange(index, e.target.value)}
+                        style={{
+                          flex: 1,
+                          padding: "12px",
+                          borderRadius: "8px",
+                          border: "1px solid #d1d5db",
+                          fontSize: "14px",
+                          backgroundColor: "white",
+                          color: "#1e293b",
+                          boxSizing: "border-box"
+                        }}
+                      />
+                      {imageUrls.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveUrlField(index)}
+                          style={{
+                            background: "#dc2626",
+                            color: "white",
+                            padding: "12px",
+                            borderRadius: "6px",
+                            border: "none",
+                            fontSize: "12px",
+                            cursor: "pointer",
+                            fontWeight: "500"
+                          }}
+                        >
+                          ✕
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={handleAddUrlField}
+                    style={{
+                      background: "#3b82f6",
+                      color: "white",
+                      padding: "8px 16px",
+                      borderRadius: "6px",
+                      border: "none",
+                      fontSize: "12px",
+                      cursor: "pointer",
+                      fontWeight: "500",
+                      marginTop: "8px"
+                    }}
+                  >
+                    + Add Another URL
+                  </button>
+                </div>
+              )}
+
               <div style={{
                 display: "flex",
                 justifyContent: "flex-end",
@@ -1058,20 +1236,20 @@ function VehicleList() {
                 </button>
                 <button
                   onClick={handleUploadPhotos}
-                  disabled={uploadLoading || selectedFiles.length === 0}
+                  disabled={uploadLoading || (uploadMethod === 'files' ? selectedFiles.length === 0 : imageUrls.filter(url => url.trim() !== '').length === 0)}
                   style={{
-                    background: selectedFiles.length === 0 ? "#9ca3af" : "#f59e0b",
+                    background: (uploadMethod === 'files' ? selectedFiles.length === 0 : imageUrls.filter(url => url.trim() !== '').length === 0) ? "#9ca3af" : "#f59e0b",
                     color: "white",
                     padding: "10px 20px",
                     borderRadius: "6px",
                     border: "none",
                     fontSize: "14px",
-                    cursor: (uploadLoading || selectedFiles.length === 0) ? "not-allowed" : "pointer",
+                    cursor: (uploadLoading || (uploadMethod === 'files' ? selectedFiles.length === 0 : imageUrls.filter(url => url.trim() !== '').length === 0)) ? "not-allowed" : "pointer",
                     fontWeight: "500",
-                    opacity: (uploadLoading || selectedFiles.length === 0) ? 0.6 : 1
+                    opacity: (uploadLoading || (uploadMethod === 'files' ? selectedFiles.length === 0 : imageUrls.filter(url => url.trim() !== '').length === 0)) ? 0.6 : 1
                   }}
                 >
-                  {uploadLoading ? "Uploading..." : "Upload Photos"}
+                  {uploadLoading ? "Uploading..." : `Upload ${uploadMethod === 'files' ? 'Photos' : 'URLs'}`}
                 </button>
               </div>
             </div>
