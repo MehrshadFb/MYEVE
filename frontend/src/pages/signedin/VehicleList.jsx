@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAllVehicles, deleteVehicle, updateVehicle, uploadVehicleImages, uploadVehicleImageUrls } from "../../services/api";
+import { getAllVehicles, deleteVehicle, updateVehicle, uploadVehicleImages, uploadVehicleImageUrls, downloadVehiclesCSV } from "../../services/api";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../context/useAuth";
 import Header from "../../components/Header";
@@ -231,6 +231,15 @@ function VehicleList() {
     setImageUrls(['']);
   };
 
+  const handleDownloadCSV = async () => {
+    try {
+      await downloadVehiclesCSV();
+    } catch (error) {
+      console.error("Error downloading CSV:", error);
+      alert("Failed to download CSV. Please try again.");
+    }
+  };
+
   const handleSort = (field) => {
     if (sortBy === field) {
       // If clicking the same field, toggle order
@@ -307,14 +316,43 @@ function VehicleList() {
           border: "1px solid #e2e8f0",
           boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)"
         }}>
-          <h3 style={{
-            fontSize: "1.25rem",
-            fontWeight: "600",
-            marginBottom: "16px",
-            color: "#1e293b"
+          <div style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "16px"
           }}>
-            Search & Filter Vehicles
-          </h3>
+            <h3 style={{
+              fontSize: "1.25rem",
+              fontWeight: "600",
+              margin: 0,
+              color: "#1e293b"
+            }}>
+              Search & Filter Vehicles
+            </h3>
+            <button
+              onClick={handleDownloadCSV}
+              style={{
+                background: "#059669",
+                color: "white",
+                padding: "10px 20px",
+                borderRadius: "8px",
+                border: "none",
+                fontSize: "14px",
+                fontWeight: "500",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                transition: "background-color 0.2s"
+              }}
+              onMouseOver={(e) => e.target.style.backgroundColor = "#047857"}
+              onMouseOut={(e) => e.target.style.backgroundColor = "#059669"}
+            >
+              <span>📥</span>
+              Download CSV
+            </button>
+          </div>
           <div style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
