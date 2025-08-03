@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAllVehicles, deleteVehicle, updateVehicle } from "../../services/api";
+import { getAllVehicles, deleteVehicle, updateVehicle, uploadVehicleImages } from "../../services/api";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../context/useAuth";
 import Header from "../../components/Header";
@@ -18,6 +18,10 @@ function VehicleList() {
   const [descriptionModalOpen, setDescriptionModalOpen] = useState(false);
   const [currentDescription, setCurrentDescription] = useState("");
   const [editingDescriptionId, setEditingDescriptionId] = useState(null);
+  const [photoModalOpen, setPhotoModalOpen] = useState(false);
+  const [editingPhotoId, setEditingPhotoId] = useState(null);
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [uploadLoading, setUploadLoading] = useState(false);
 
   // Redirect non-admin users
   useEffect(() => {
@@ -150,6 +154,46 @@ function VehicleList() {
     setDescriptionModalOpen(false);
     setEditingDescriptionId(null);
     setCurrentDescription("");
+  };
+
+  // Photo upload handlers
+  const handleEditPhotos = (vehicle) => {
+    setEditingPhotoId(vehicle.vid);
+    setSelectedFiles([]);
+    setPhotoModalOpen(true);
+  };
+
+  const handleFileSelect = (event) => {
+    const files = Array.from(event.target.files);
+    setSelectedFiles(files);
+  };
+
+  const handleUploadPhotos = async () => {
+    if (selectedFiles.length === 0) {
+      alert("Please select at least one file to upload.");
+      return;
+    }
+
+    setUploadLoading(true);
+    try {
+      await uploadVehicleImages(editingPhotoId, selectedFiles);
+      setPhotoModalOpen(false);
+      setEditingPhotoId(null);
+      setSelectedFiles([]);
+      fetchVehicles(); // Refresh the vehicle list
+      alert("Photos uploaded successfully!");
+    } catch (error) {
+      console.error("Error uploading photos:", error);
+      alert("Failed to upload photos. Please try again.");
+    } finally {
+      setUploadLoading(false);
+    }
+  };
+
+  const handleCancelPhotoUpload = () => {
+    setPhotoModalOpen(false);
+    setEditingPhotoId(null);
+    setSelectedFiles([]);
   };
 
   const handleSort = (field) => {
@@ -565,6 +609,13 @@ function VehicleList() {
                       fontWeight: "600",
                       color: "#374151",
                       fontSize: "14px"
+                    }}>Photos</th>
+                    <th style={{
+                      padding: "16px",
+                      textAlign: "left",
+                      fontWeight: "600",
+                      color: "#374151",
+                      fontSize: "14px"
                     }}>Actions</th>
                   </tr>
                 </thead>
@@ -705,6 +756,25 @@ function VehicleList() {
                         }}
                       >
                         Edit Description
+                      </button>
+                    </td>
+                    <td style={{
+                      padding: "16px",
+                      color: "#1e293b"
+                    }}>
+                      <button
+                        onClick={() => handleEditPhotos(vehicle)}
+                        style={{
+                          background: "#f59e0b",
+                          color: "white",
+                          padding: "6px 12px",
+                          borderRadius: "4px",
+                          border: "none",
+                          fontSize: "12px",
+                          cursor: "pointer"
+                        }}
+                      >
+                        Add Photos
                       </button>
                     </td>
                     <td style={{
@@ -869,6 +939,139 @@ function VehicleList() {
                   }}
                 >
                   Save Description
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Photo Upload Modal */}
+        {photoModalOpen && (
+          <div style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 1000
+          }}>
+            <div style={{
+              backgroundColor: "white",
+              borderRadius: "12px",
+              padding: "24px",
+              maxWidth: "600px",
+              width: "90%",
+              maxHeight: "80vh",
+              overflow: "auto",
+              boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
+            }}>
+              <h3 style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                marginBottom: "16px",
+                color: "#1e293b"
+              }}>
+                Upload Vehicle Photos
+              </h3>
+              <div style={{
+                marginBottom: "16px"
+              }}>
+                <label style={{
+                  display: "block",
+                  marginBottom: "8px",
+                  fontWeight: "500",
+                  color: "#374151",
+                  fontSize: "14px"
+                }}>
+                  Select Photos (Multiple files allowed)
+                </label>
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={handleFileSelect}
+                  style={{
+                    width: "100%",
+                    padding: "12px",
+                    borderRadius: "8px",
+                    border: "2px dashed #d1d5db",
+                    fontSize: "14px",
+                    backgroundColor: "#f9fafb",
+                    color: "#1e293b",
+                    cursor: "pointer",
+                    boxSizing: "border-box"
+                  }}
+                />
+              </div>
+              {selectedFiles.length > 0 && (
+                <div style={{
+                  marginBottom: "16px",
+                  padding: "12px",
+                  backgroundColor: "#f0f9ff",
+                  borderRadius: "8px",
+                  border: "1px solid #bfdbfe"
+                }}>
+                  <p style={{
+                    margin: "0 0 8px 0",
+                    fontWeight: "500",
+                    color: "#1e40af",
+                    fontSize: "14px"
+                  }}>
+                    Selected Files ({selectedFiles.length}):
+                  </p>
+                  {selectedFiles.map((file, index) => (
+                    <div key={index} style={{
+                      fontSize: "12px",
+                      color: "#1e40af",
+                      marginBottom: "4px"
+                    }}>
+                      • {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
+                    </div>
+                  ))}
+                </div>
+              )}
+              <div style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: "12px"
+              }}>
+                <button
+                  onClick={handleCancelPhotoUpload}
+                  disabled={uploadLoading}
+                  style={{
+                    background: "#6b7280",
+                    color: "white",
+                    padding: "10px 20px",
+                    borderRadius: "6px",
+                    border: "none",
+                    fontSize: "14px",
+                    cursor: uploadLoading ? "not-allowed" : "pointer",
+                    fontWeight: "500",
+                    opacity: uploadLoading ? 0.6 : 1
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleUploadPhotos}
+                  disabled={uploadLoading || selectedFiles.length === 0}
+                  style={{
+                    background: selectedFiles.length === 0 ? "#9ca3af" : "#f59e0b",
+                    color: "white",
+                    padding: "10px 20px",
+                    borderRadius: "6px",
+                    border: "none",
+                    fontSize: "14px",
+                    cursor: (uploadLoading || selectedFiles.length === 0) ? "not-allowed" : "pointer",
+                    fontWeight: "500",
+                    opacity: (uploadLoading || selectedFiles.length === 0) ? 0.6 : 1
+                  }}
+                >
+                  {uploadLoading ? "Uploading..." : "Upload Photos"}
                 </button>
               </div>
             </div>
