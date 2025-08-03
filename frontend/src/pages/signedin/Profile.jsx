@@ -507,52 +507,54 @@ function Profile() {
                 >
                   Your Addresses
                 </h3>
-                {addresses.map((address) => (
-                  <div
-                    key={address.id}
-                    style={{
-                      padding: "16px",
-                      border: "1px solid #e2e8f0",
-                      borderRadius: "8px",
-                      marginBottom: "12px",
-                      backgroundColor: "white",
-                      position: "relative",
-                    }}
-                  >
-                    <div style={{ fontSize: "14px", color: "#1e293b" }}>
-                      {address.street}
-                      <br />
-                      {address.city}, {address.province} {address.zip}
-                      <br />
-                      {address.country}
-                      {address.phone && (
-                        <>
-                          <br />
-                          📞 {address.phone}
-                        </>
-                      )}
-                    </div>
-                    <button
-                      onClick={() => handleDeleteAddress(address.id)}
+                {addresses &&
+                  addresses.length > 0 &&
+                  addresses.map((address) => (
+                    <div
+                      key={address.id}
                       style={{
-                        position: "absolute",
-                        top: "12px",
-                        right: "12px",
-                        padding: "6px 10px",
-                        borderRadius: "6px",
-                        border: "none",
-                        backgroundColor: "#ef4444",
-                        color: "white",
-                        fontSize: "12px",
-                        cursor: "pointer",
-                        fontWeight: "500",
+                        padding: "16px",
+                        border: "1px solid #e2e8f0",
+                        borderRadius: "8px",
+                        marginBottom: "12px",
+                        backgroundColor: "white",
+                        position: "relative",
                       }}
-                      title="Delete address"
                     >
-                      Delete
-                    </button>
-                  </div>
-                ))}
+                      <div style={{ fontSize: "14px", color: "#1e293b" }}>
+                        {address.street}
+                        <br />
+                        {address.city}, {address.province} {address.zip}
+                        <br />
+                        {address.country}
+                        {address.phone && (
+                          <>
+                            <br />
+                            📞 {address.phone}
+                          </>
+                        )}
+                      </div>
+                      <button
+                        onClick={() => handleDeleteAddress(address.id)}
+                        style={{
+                          position: "absolute",
+                          top: "12px",
+                          right: "12px",
+                          padding: "6px 10px",
+                          borderRadius: "6px",
+                          border: "none",
+                          backgroundColor: "#ef4444",
+                          color: "white",
+                          fontSize: "12px",
+                          cursor: "pointer",
+                          fontWeight: "500",
+                        }}
+                        title="Delete address"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  ))}
               </div>
             )}
 
