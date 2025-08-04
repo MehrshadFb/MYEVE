@@ -35,10 +35,12 @@ function VehicleList() {
   const fetchVehicles = async () => {
     try {
       const data = await getAllVehicles();
+      console.log("Fetched vehicles data:", data); // Debug log
       setVehicles(data);
       setFilteredVehicles(data);
     } catch (error) {
       console.error("Error fetching vehicles:", error);
+      alert("Failed to load vehicles. Please refresh the page.");
     }
   };
 
@@ -48,48 +50,56 @@ function VehicleList() {
 
   // Filter and search vehicles
   useEffect(() => {
-    let filtered = vehicles;
+    try {
+      let filtered = vehicles;
 
-    // Apply search filter
-    if (searchTerm) {
-      filtered = filtered.filter(vehicle =>
-        vehicle.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        vehicle.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        vehicle.model.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        vehicle.description.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+      // Apply search filter
+      if (searchTerm) {
+        filtered = filtered.filter(vehicle => {
+          const searchLower = searchTerm.toLowerCase();
+          return (
+            (vehicle.brand && vehicle.brand.toLowerCase().includes(searchLower)) ||
+            (vehicle.model && vehicle.model.toLowerCase().includes(searchLower)) ||
+            (vehicle.type && vehicle.type.toLowerCase().includes(searchLower)) ||
+            (vehicle.description && vehicle.description.toLowerCase().includes(searchLower))
+          );
+        });
+      }
+
+      // Apply brand filter
+      if (filterBrand !== "all") {
+        filtered = filtered.filter(vehicle => vehicle.brand === filterBrand);
+      }
+
+      // Apply sorting
+      if (sortBy) {
+        filtered.sort((a, b) => {
+          let aValue = a[sortBy];
+          let bValue = b[sortBy];
+
+          // Handle numeric fields
+          if (sortBy === "price" || sortBy === "quantity" || sortBy === "year" || sortBy === "amountSold") {
+            aValue = Number(aValue) || 0;
+            bValue = Number(bValue) || 0;
+          } else {
+            // Handle string fields
+            aValue = String(aValue).toLowerCase();
+            bValue = String(bValue).toLowerCase();
+          }
+
+          if (sortOrder === "asc") {
+            return aValue > bValue ? -1 : aValue < bValue ? 1 : 0;
+          } else {
+            return aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
+          }
+        });
+      }
+
+      setFilteredVehicles(filtered);
+    } catch (error) {
+      console.error("Error filtering vehicles:", error);
+      setFilteredVehicles(vehicles); // Fallback to show all vehicles
     }
-
-    // Apply brand filter
-    if (filterBrand !== "all") {
-      filtered = filtered.filter(vehicle => vehicle.brand === filterBrand);
-    }
-
-    // Apply sorting
-    if (sortBy) {
-      filtered.sort((a, b) => {
-        let aValue = a[sortBy];
-        let bValue = b[sortBy];
-
-        // Handle numeric fields
-        if (sortBy === "price" || sortBy === "quantity" || sortBy === "year" || sortBy === "amountSold") {
-          aValue = Number(aValue) || 0;
-          bValue = Number(bValue) || 0;
-        } else {
-          // Handle string fields
-          aValue = String(aValue).toLowerCase();
-          bValue = String(bValue).toLowerCase();
-        }
-
-        if (sortOrder === "asc") {
-          return aValue > bValue ? -1 : aValue < bValue ? 1 : 0;
-        } else {
-          return aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
-        }
-      });
-    }
-
-    setFilteredVehicles(filtered);
   }, [vehicles, searchTerm, filterBrand, sortBy, sortOrder]);
 
   const handleDelete = async (vid) => {
