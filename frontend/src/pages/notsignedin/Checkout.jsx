@@ -10,7 +10,7 @@ import useAuth from "../../context/useAuth";
 
 function Checkout() {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [cartItems, setCartItems] = useState([]);
   const [subtotal, setSubtotal] = useState(0);
   const [taxAmount, setTaxAmount] = useState(0);
@@ -153,7 +153,9 @@ function Checkout() {
   // Fetch cart data
   const fetchCart = async () => {
     try {
+      console.log("Fetching cart for user:", user?.id);
       const data = await getCart();
+      console.log("Cart data received:", data);
       const items = data.CartItems || data.items || [];
 
       const normalizedItems = items.map((item) => ({
@@ -175,15 +177,29 @@ function Checkout() {
       setTotalAmount(total);
     } catch (err) {
       console.error("Error fetching cart:", err);
+      // Don't fail silently - show error to user
+      setErrors({ cart: "Failed to load cart. Please refresh the page." });
     }
   };
 
   useEffect(() => {
-    if (user?.id) {
-      fetchCart();
-      fetchSavedAddresses();
-    }
-  }, [user]);
+    const fetchData = async () => {
+      if (user?.id) {
+        console.log("User authenticated, fetching data for user:", user.id);
+        try {
+          await fetchCart();
+          await fetchSavedAddresses();
+        } catch (error) {
+          console.error("Error fetching checkout data:", error);
+        }
+      } else {
+        console.log("User not authenticated or missing ID:", user);
+      }
+    };
+    
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id]); // Only depend on user.id
 
   // Handle input changes
   const handleBillingChange = (field, value) => {
@@ -423,6 +439,22 @@ function Checkout() {
     }
   };
 
+  // Add debugging and proper auth state handling
+  console.log("Checkout - Auth state:", { user, authLoading });
+
+  if (authLoading) {
+    return (
+      <div style={{ minHeight: "100vh", backgroundColor: "#f8fafc" }}>
+        <Header />
+        <div style={{ padding: "200px 20px", textAlign: "center" }}>
+          <p style={{ color: "#1e293b", fontSize: "1.1rem" }}>
+            Loading...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   if (!user?.id) {
     return (
       <div style={{ minHeight: "100vh", backgroundColor: "#f8fafc" }}>
@@ -436,7 +468,7 @@ function Checkout() {
     );
   }
 
-  if (cartItems.length === 0) {
+  if (cartItems.length === 0 && !errors.cart) {
     return (
       <div style={{ minHeight: "100vh", backgroundColor: "#f8fafc" }}>
         <Header />
@@ -444,6 +476,33 @@ function Checkout() {
           <p style={{ color: "#1e293b", fontSize: "1.1rem" }}>
             Your cart is empty. Add some vehicles before checkout.
           </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (errors.cart) {
+    return (
+      <div style={{ minHeight: "100vh", backgroundColor: "#f8fafc" }}>
+        <Header />
+        <div style={{ padding: "200px 20px", textAlign: "center" }}>
+          <p style={{ color: "#ef4444", fontSize: "1.1rem" }}>
+            {errors.cart}
+          </p>
+          <button
+            onClick={() => window.location.reload()}
+            style={{
+              marginTop: "20px",
+              padding: "10px 20px",
+              backgroundColor: "#059669",
+              color: "white",
+              border: "none",
+              borderRadius: "8px",
+              cursor: "pointer"
+            }}
+          >
+            Refresh Page
+          </button>
         </div>
       </div>
     );
