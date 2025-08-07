@@ -14,6 +14,16 @@ const addToCart = async (req, res) => {
   }
 
   try {
+    // Check if vehicle exists and has stock
+    const vehicle = await Vehicle.findByPk(vehicleId);
+    if (!vehicle) {
+      return res.status(404).json({ message: "Vehicle not found" });
+    }
+
+    if (vehicle.quantity === 0) {
+      return res.status(400).json({ message: "This vehicle is out of stock" });
+    }
+
     let cart = await ShoppingCart.findOne({ where: { userId } });
     if (!cart) {
       cart = await ShoppingCart.create({ userId });
@@ -24,9 +34,22 @@ const addToCart = async (req, res) => {
     });
 
     if (item) {
-      item.quantity += quantity;
+      // Check if adding more would exceed available stock
+      const newQuantity = item.quantity + quantity;
+      if (newQuantity > vehicle.quantity) {
+        return res.status(400).json({ 
+          message: `Only ${vehicle.quantity} units available. You already have ${item.quantity} in your cart.` 
+        });
+      }
+      item.quantity = newQuantity;
       await item.save();
     } else {
+      // Check if requested quantity exceeds available stock
+      if (quantity > vehicle.quantity) {
+        return res.status(400).json({ 
+          message: `Only ${vehicle.quantity} units available` 
+        });
+      }
       await CartItem.create({ cartId: cart.id, vehicleId, quantity });
     }
 

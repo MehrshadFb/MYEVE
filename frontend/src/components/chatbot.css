@@ -341,6 +341,7 @@ body:has(#chatbot-container) {
   outline: none;
   font-size: 14px;
   background: #f8fafc;
+  color: #1e293b;
   transition: all 0.2s ease;
   min-width: 0; /* Prevent input from growing too wide */
 }

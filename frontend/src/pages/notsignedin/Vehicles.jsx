@@ -326,11 +326,25 @@ function Vehicles() {
 
    const handleAddToCart = async (vid) => {
      try {
+       // Find the vehicle to check stock
+       const vehicle = vehicles.find(v => v.vid === vid);
+       if (!vehicle) {
+         alert("Vehicle not found");
+         return;
+       }
+       
+       if (vehicle.quantity === 0) {
+         alert("This vehicle is out of stock");
+         return;
+       }
+       
        await addToCart({ vehicleId: vid, quantity: 1 }); // quantity must be passed
        alert("Added to cart!");
      } catch (error) {
        console.error("Add to cart failed:", error);
-       alert("Failed to add to cart");
+       // Show specific error message from backend if available
+       const errorMessage = error.response?.data?.message || "Failed to add to cart";
+       alert(errorMessage);
      }
    };
 
@@ -1517,6 +1531,25 @@ function Vehicles() {
                         </p>
                       )}
 
+                      {/* Stock Status */}
+                      <div style={{ marginBottom: "16px" }}>
+                        <span style={{
+                          color: vehicle.quantity === 0
+                            ? "#ef4444"
+                            : vehicle.quantity <= 3
+                            ? "#f59e0b"
+                            : "#22c55e",
+                          fontWeight: "600",
+                          fontSize: "0.875rem"
+                        }}>
+                          {vehicle.quantity === 0
+                            ? "Out of Stock"
+                            : vehicle.quantity <= 3
+                            ? `Low Stock (${vehicle.quantity} left)`
+                            : "In Stock"}
+                        </span>
+                      </div>
+
                       {/* Action Buttons */}
                       <div
                         style={{
@@ -1553,26 +1586,32 @@ function Vehicles() {
                         </button>
                         <button
                           onClick={() => handleAddToCart(vehicle.vid)}
+                          disabled={vehicle.quantity === 0}
                           style={{
                             flex: 1,
                             padding: "10px 16px",
                             borderRadius: "8px",
                             border: "none",
-                            backgroundColor: "#3b82f6",
-                            color: "white",
+                            backgroundColor: vehicle.quantity === 0 ? "#9ca3af" : "#3b82f6",
+                            color: vehicle.quantity === 0 ? "#6b7280" : "white",
                             fontWeight: "600",
-                            cursor: "pointer",
+                            cursor: vehicle.quantity === 0 ? "not-allowed" : "pointer",
                             fontSize: "0.875rem",
                             transition: "all 0.3s ease",
+                            opacity: vehicle.quantity === 0 ? 0.6 : 1,
                           }}
                           onMouseEnter={(e) => {
-                            e.target.style.backgroundColor = "#2563eb";
+                            if (vehicle.quantity > 0) {
+                              e.target.style.backgroundColor = "#2563eb";
+                            }
                           }}
                           onMouseLeave={(e) => {
-                            e.target.style.backgroundColor = "#3b82f6";
+                            if (vehicle.quantity > 0) {
+                              e.target.style.backgroundColor = "#3b82f6";
+                            }
                           }}
                         >
-                          Add to Cart
+                          {vehicle.quantity === 0 ? "Out of Stock" : "Add to Cart"}
                         </button>
                       </div>
                     </div>

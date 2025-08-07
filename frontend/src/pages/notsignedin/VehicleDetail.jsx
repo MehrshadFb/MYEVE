@@ -83,11 +83,18 @@ const VehicleDetail = () => {
 
   const handleAddToCart = async () => {
     try {
+      if (vehicle.quantity === 0) {
+        alert("This vehicle is out of stock");
+        return;
+      }
+      
       await addToCart({ vehicleId: vehicle.vid, quantity: 1 });
       alert(`Added ${vehicle.brand} ${vehicle.model} to cart!`);
     } catch (error) {
       console.error("Add to cart failed:", error);
-      alert("Failed to add to cart");
+      // Show specific error message from backend if available
+      const errorMessage = error.response?.data?.message || "Failed to add to cart";
+      alert(errorMessage);
     }
   };
 
