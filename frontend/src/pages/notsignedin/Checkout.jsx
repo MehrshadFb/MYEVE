@@ -117,12 +117,13 @@ function Checkout() {
   const fetchSavedAddresses = async () => {
     try {
       const addresses = await getAllAddressesByUserId(user.id);
-      setSavedAddresses(addresses);
+      const addressArray = Array.isArray(addresses) ? addresses : [];
+      setSavedAddresses(addressArray);
 
       // If user has saved addresses, select the first one by default
-      if (addresses.length > 0) {
-        setSelectedBillingAddress(addresses[0]);
-        setSelectedShippingAddress(addresses[0]);
+      if (addressArray.length > 0) {
+        setSelectedBillingAddress(addressArray[0]);
+        setSelectedShippingAddress(addressArray[0]);
         setUseShippingAsBilling(true);
 
         // Populate billing info with selected address
@@ -130,12 +131,12 @@ function Checkout() {
           firstName: user.username?.split(" ")[0] || "",
           lastName: user.username?.split(" ")[1] || "",
           email: user.email || "",
-          phone: addresses[0].phone || "",
-          street: addresses[0].street,
-          city: addresses[0].city,
-          province: addresses[0].province,
-          country: addresses[0].country,
-          zip: addresses[0].zip,
+          phone: addressArray[0].phone || "",
+          street: addressArray[0].street,
+          city: addressArray[0].city,
+          province: addressArray[0].province,
+          country: addressArray[0].country,
+          zip: addressArray[0].zip,
         });
       } else {
         // No saved addresses, user needs to enter new address
@@ -144,7 +145,8 @@ function Checkout() {
       }
     } catch (err) {
       console.error("Error fetching addresses:", err);
-      // If no addresses found, enable new address forms
+      // If no addresses found, ensure savedAddresses is an empty array and enable new address forms
+      setSavedAddresses([]);
       setUseNewBillingAddress(true);
       setUseNewShippingAddress(true);
     }
@@ -158,10 +160,12 @@ function Checkout() {
       console.log("Cart data received:", data);
       const items = data.CartItems || data.items || [];
 
-      const normalizedItems = items.map((item) => ({
-        ...item,
-        vehicle: item.Vehicle || item.vehicle || {},
-      }));
+      const normalizedItems = Array.isArray(items)
+        ? items.map((item) => ({
+            ...item,
+            vehicle: item.Vehicle || item.vehicle || {},
+          }))
+        : [];
 
       setCartItems(normalizedItems);
 
@@ -177,7 +181,8 @@ function Checkout() {
       setTotalAmount(total);
     } catch (err) {
       console.error("Error fetching cart:", err);
-      // Don't fail silently - show error to user
+      // Don't fail silently - show error to user and ensure cartItems is an array
+      setCartItems([]);
       setErrors({ cart: "Failed to load cart. Please refresh the page." });
     }
   };
@@ -196,7 +201,7 @@ function Checkout() {
         console.log("User not authenticated or missing ID:", user);
       }
     };
-    
+
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]); // Only depend on user.id
@@ -271,7 +276,11 @@ function Checkout() {
     const newErrors = {};
 
     // Only validate if using new address or no saved addresses
-    if (useNewBillingAddress || savedAddresses.length === 0) {
+    if (
+      useNewBillingAddress ||
+      !Array.isArray(savedAddresses) ||
+      savedAddresses.length === 0
+    ) {
       if (!billingInfo.firstName.trim())
         newErrors["billing.firstName"] = "First name is required";
       if (!billingInfo.lastName.trim())
@@ -303,7 +312,11 @@ function Checkout() {
     const newErrors = {};
 
     // Only validate if using new address or no saved addresses
-    if (useNewShippingAddress || savedAddresses.length === 0) {
+    if (
+      useNewShippingAddress ||
+      !Array.isArray(savedAddresses) ||
+      savedAddresses.length === 0
+    ) {
       if (!shippingInfo.firstName.trim())
         newErrors["shipping.firstName"] = "First name is required";
       if (!shippingInfo.lastName.trim())
@@ -447,9 +460,7 @@ function Checkout() {
       <div style={{ minHeight: "100vh", backgroundColor: "#f8fafc" }}>
         <Header />
         <div style={{ padding: "200px 20px", textAlign: "center" }}>
-          <p style={{ color: "#1e293b", fontSize: "1.1rem" }}>
-            Loading...
-          </p>
+          <p style={{ color: "#1e293b", fontSize: "1.1rem" }}>Loading...</p>
         </div>
       </div>
     );
@@ -468,7 +479,7 @@ function Checkout() {
     );
   }
 
-  if (cartItems.length === 0 && !errors.cart) {
+  if (!Array.isArray(cartItems) || (cartItems.length === 0 && !errors.cart)) {
     return (
       <div style={{ minHeight: "100vh", backgroundColor: "#f8fafc" }}>
         <Header />
@@ -486,9 +497,7 @@ function Checkout() {
       <div style={{ minHeight: "100vh", backgroundColor: "#f8fafc" }}>
         <Header />
         <div style={{ padding: "200px 20px", textAlign: "center" }}>
-          <p style={{ color: "#ef4444", fontSize: "1.1rem" }}>
-            {errors.cart}
-          </p>
+          <p style={{ color: "#ef4444", fontSize: "1.1rem" }}>{errors.cart}</p>
           <button
             onClick={() => window.location.reload()}
             style={{
@@ -498,7 +507,7 @@ function Checkout() {
               color: "white",
               border: "none",
               borderRadius: "8px",
-              cursor: "pointer"
+              cursor: "pointer",
             }}
           >
             Refresh Page
@@ -663,7 +672,7 @@ function Checkout() {
                 <h3 style={sectionTitleStyle}>Billing Information</h3>
 
                 {/* Show saved addresses if available */}
-                {savedAddresses.length > 0 && (
+                {Array.isArray(savedAddresses) && savedAddresses.length > 0 && (
                   <div style={{ marginBottom: "20px" }}>
                     <div style={{ marginBottom: "15px" }}>
                       <h4
@@ -735,7 +744,9 @@ function Checkout() {
                 )}
 
                 {/* Show billing form only if using new address or no saved addresses */}
-                {(useNewBillingAddress || savedAddresses.length === 0) && (
+                {(useNewBillingAddress ||
+                  !Array.isArray(savedAddresses) ||
+                  savedAddresses.length === 0) && (
                   <>
                     <div
                       style={{
@@ -992,79 +1003,83 @@ function Checkout() {
                   </label>
                 </div>
 
-                {!useShippingAsBilling && savedAddresses.length > 0 && (
-                  <div style={{ marginBottom: "20px" }}>
-                    <div style={{ marginBottom: "15px" }}>
-                      <h4
+                {!useShippingAsBilling &&
+                  Array.isArray(savedAddresses) &&
+                  savedAddresses.length > 0 && (
+                    <div style={{ marginBottom: "20px" }}>
+                      <div style={{ marginBottom: "15px" }}>
+                        <h4
+                          style={{
+                            color: "#374151",
+                            fontSize: "1.1rem",
+                            marginBottom: "10px",
+                          }}
+                        >
+                          Choose shipping address:
+                        </h4>
+                        {savedAddresses.map((address) => (
+                          <AddressCard
+                            key={address.id}
+                            address={address}
+                            isSelected={
+                              selectedShippingAddress?.id === address.id
+                            }
+                            onSelect={(addr) => {
+                              handleAddressSelection(addr, "shipping");
+                              setUseNewShippingAddress(false);
+                            }}
+                            type="shipping"
+                          />
+                        ))}
+                      </div>
+
+                      <div
                         style={{
-                          color: "#374151",
-                          fontSize: "1.1rem",
-                          marginBottom: "10px",
+                          border: useNewShippingAddress
+                            ? "2px solid #059669"
+                            : "2px solid #e5e7eb",
+                          borderRadius: "8px",
+                          padding: "15px",
+                          cursor: "pointer",
+                          backgroundColor: useNewShippingAddress
+                            ? "#f0fdf4"
+                            : "#ffffff",
+                          transition: "all 0.3s ease",
+                          marginBottom: "20px",
+                        }}
+                        onClick={() => {
+                          setUseNewShippingAddress(true);
+                          setSelectedShippingAddress(null);
+                          setShippingInfo({
+                            firstName: "",
+                            lastName: "",
+                            street: "",
+                            city: "",
+                            province: "",
+                            country: "Canada",
+                            zip: "",
+                          });
                         }}
                       >
-                        Choose shipping address:
-                      </h4>
-                      {savedAddresses.map((address) => (
-                        <AddressCard
-                          key={address.id}
-                          address={address}
-                          isSelected={
-                            selectedShippingAddress?.id === address.id
-                          }
-                          onSelect={(addr) => {
-                            handleAddressSelection(addr, "shipping");
-                            setUseNewShippingAddress(false);
-                          }}
-                          type="shipping"
-                        />
-                      ))}
-                    </div>
-
-                    <div
-                      style={{
-                        border: useNewShippingAddress
-                          ? "2px solid #059669"
-                          : "2px solid #e5e7eb",
-                        borderRadius: "8px",
-                        padding: "15px",
-                        cursor: "pointer",
-                        backgroundColor: useNewShippingAddress
-                          ? "#f0fdf4"
-                          : "#ffffff",
-                        transition: "all 0.3s ease",
-                        marginBottom: "20px",
-                      }}
-                      onClick={() => {
-                        setUseNewShippingAddress(true);
-                        setSelectedShippingAddress(null);
-                        setShippingInfo({
-                          firstName: "",
-                          lastName: "",
-                          street: "",
-                          city: "",
-                          province: "",
-                          country: "Canada",
-                          zip: "",
-                        });
-                      }}
-                    >
-                      <div style={{ display: "flex", alignItems: "center" }}>
-                        <input
-                          type="radio"
-                          checked={useNewShippingAddress}
-                          onChange={() => setUseNewShippingAddress(true)}
-                          style={{ marginRight: "10px" }}
-                        />
-                        <strong style={{ color: "#1e293b" }}>
-                          Use New Address
-                        </strong>
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                          <input
+                            type="radio"
+                            checked={useNewShippingAddress}
+                            onChange={() => setUseNewShippingAddress(true)}
+                            style={{ marginRight: "10px" }}
+                          />
+                          <strong style={{ color: "#1e293b" }}>
+                            Use New Address
+                          </strong>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
                 {!useShippingAsBilling &&
-                  (useNewShippingAddress || savedAddresses.length === 0) && (
+                  (useNewShippingAddress ||
+                    !Array.isArray(savedAddresses) ||
+                    savedAddresses.length === 0) && (
                     <>
                       <div
                         style={{
@@ -1466,10 +1481,13 @@ function Checkout() {
                 >
                   {loading
                     ? "Processing..."
-                    : `Complete Order - $${Number(totalAmount).toLocaleString('en-US', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
-                      })}`}
+                    : `Complete Order - $${Number(totalAmount).toLocaleString(
+                        "en-US",
+                        {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        }
+                      )}`}
                 </button>
               </div>
             </form>
@@ -1480,37 +1498,42 @@ function Checkout() {
             <div style={sectionStyle}>
               <h3 style={sectionTitleStyle}>Order Summary</h3>
 
-              {cartItems.map((item, index) => (
-                <div
-                  key={index}
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    padding: "15px 0",
-                    borderBottom:
-                      index < cartItems.length - 1
-                        ? "1px solid #e5e7eb"
-                        : "none",
-                  }}
-                >
-                  <div>
-                    <div style={{ fontWeight: "500" }}>
-                      {item.vehicle.brand} {item.vehicle.model}
+              {Array.isArray(cartItems) &&
+                cartItems.map((item, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "15px 0",
+                      borderBottom:
+                        index < cartItems.length - 1
+                          ? "1px solid #e5e7eb"
+                          : "none",
+                    }}
+                  >
+                    <div>
+                      <div style={{ fontWeight: "500" }}>
+                        {item.vehicle?.brand || "Unknown"}{" "}
+                        {item.vehicle?.model || "Vehicle"}
+                      </div>
+                      <div style={{ fontSize: "0.875rem", color: "#64748b" }}>
+                        Qty: {item.quantity || 0}
+                      </div>
                     </div>
-                    <div style={{ fontSize: "0.875rem", color: "#64748b" }}>
-                      Qty: {item.quantity}
+                    <div style={{ fontWeight: "600" }}>
+                      $
+                      {Number(
+                        parseFloat(item.vehicle?.price || 0) *
+                          (item.quantity || 0)
+                      ).toLocaleString("en-US", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
                     </div>
                   </div>
-                  <div style={{ fontWeight: "600" }}>
-                    $
-                    {Number(parseFloat(item.vehicle.price) * item.quantity).toLocaleString('en-US', {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2
-                    })}
-                  </div>
-                </div>
-              ))}
+                ))}
 
               <div
                 style={{
@@ -1527,10 +1550,13 @@ function Checkout() {
                   }}
                 >
                   <span>Subtotal:</span>
-                  <span>${Number(subtotal).toLocaleString('en-US', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                  })}</span>
+                  <span>
+                    $
+                    {Number(subtotal).toLocaleString("en-US", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                  </span>
                 </div>
                 <div
                   style={{
@@ -1540,10 +1566,13 @@ function Checkout() {
                   }}
                 >
                   <span>Tax (HST 13%):</span>
-                  <span>${Number(taxAmount).toLocaleString('en-US', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                  })}</span>
+                  <span>
+                    $
+                    {Number(taxAmount).toLocaleString("en-US", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                  </span>
                 </div>
                 <div
                   style={{
@@ -1556,10 +1585,13 @@ function Checkout() {
                   }}
                 >
                   <span>Total:</span>
-                  <span>${Number(totalAmount).toLocaleString('en-US', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                  })}</span>
+                  <span>
+                    $
+                    {Number(totalAmount).toLocaleString("en-US", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                  </span>
                 </div>
               </div>
             </div>
