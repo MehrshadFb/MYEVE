@@ -457,10 +457,43 @@ function Checkout() {
 
   if (authLoading) {
     return (
-      <div style={{ minHeight: "100vh", backgroundColor: "#f8fafc" }}>
+      <div
+        style={{
+          minHeight: "100vh",
+          backgroundColor: "#f8fafc",
+          width: "100vw",
+          overflowX: "hidden",
+        }}
+      >
         <Header />
-        <div style={{ padding: "200px 20px", textAlign: "center" }}>
-          <p style={{ color: "#1e293b", fontSize: "1.1rem" }}>Loading...</p>
+        {/* Header Section */}
+        <section
+          style={{
+            paddingTop: "120px",
+            paddingBottom: "60px",
+            background: "linear-gradient(135deg, #1e293b 0%, #334155 100%)",
+            color: "white",
+            textAlign: "center",
+            width: "100vw",
+            marginLeft: "calc(-50vw + 50%)",
+          }}
+        >
+          <h1
+            style={{
+              fontSize: "3rem",
+              fontWeight: "800",
+              background: "linear-gradient(45deg, #60a5fa, #a78bfa)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
+          >
+            Checkout
+          </h1>
+        </section>
+        <div style={{ maxWidth: "100%", margin: "0 auto", padding: "40px 20px" }}>
+          <div style={{ padding: "200px 20px", textAlign: "center" }}>
+            <p style={{ color: "#1e293b", fontSize: "1.1rem" }}>Loading...</p>
+          </div>
         </div>
       </div>
     );
@@ -468,12 +501,45 @@ function Checkout() {
 
   if (!user?.id) {
     return (
-      <div style={{ minHeight: "100vh", backgroundColor: "#f8fafc" }}>
+      <div
+        style={{
+          minHeight: "100vh",
+          backgroundColor: "#f8fafc",
+          width: "100vw",
+          overflowX: "hidden",
+        }}
+      >
         <Header />
-        <div style={{ padding: "200px 20px", textAlign: "center" }}>
-          <p style={{ color: "#1e293b", fontSize: "1.1rem" }}>
-            Please sign in to proceed with checkout.
-          </p>
+        {/* Header Section */}
+        <section
+          style={{
+            paddingTop: "120px",
+            paddingBottom: "60px",
+            background: "linear-gradient(135deg, #1e293b 0%, #334155 100%)",
+            color: "white",
+            textAlign: "center",
+            width: "100vw",
+            marginLeft: "calc(-50vw + 50%)",
+          }}
+        >
+          <h1
+            style={{
+              fontSize: "3rem",
+              fontWeight: "800",
+              background: "linear-gradient(45deg, #60a5fa, #a78bfa)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
+          >
+            Checkout
+          </h1>
+        </section>
+        <div style={{ maxWidth: "100%", margin: "0 auto", padding: "40px 20px" }}>
+          <div style={{ padding: "200px 20px", textAlign: "center" }}>
+            <p style={{ color: "#1e293b", fontSize: "1.1rem" }}>
+              Please sign in to proceed with checkout.
+            </p>
+          </div>
         </div>
       </div>
     );
@@ -481,12 +547,45 @@ function Checkout() {
 
   if (!Array.isArray(cartItems) || (cartItems.length === 0 && !errors.cart)) {
     return (
-      <div style={{ minHeight: "100vh", backgroundColor: "#f8fafc" }}>
+      <div
+        style={{
+          minHeight: "100vh",
+          backgroundColor: "#f8fafc",
+          width: "100vw",
+          overflowX: "hidden",
+        }}
+      >
         <Header />
-        <div style={{ padding: "200px 20px", textAlign: "center" }}>
-          <p style={{ color: "#1e293b", fontSize: "1.1rem" }}>
-            Your cart is empty. Add some vehicles before checkout.
-          </p>
+        {/* Header Section */}
+        <section
+          style={{
+            paddingTop: "120px",
+            paddingBottom: "60px",
+            background: "linear-gradient(135deg, #1e293b 0%, #334155 100%)",
+            color: "white",
+            textAlign: "center",
+            width: "100vw",
+            marginLeft: "calc(-50vw + 50%)",
+          }}
+        >
+          <h1
+            style={{
+              fontSize: "3rem",
+              fontWeight: "800",
+              background: "linear-gradient(45deg, #60a5fa, #a78bfa)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
+          >
+            Checkout
+          </h1>
+        </section>
+        <div style={{ maxWidth: "100%", margin: "0 auto", padding: "40px 20px" }}>
+          <div style={{ padding: "200px 20px", textAlign: "center" }}>
+            <p style={{ color: "#1e293b", fontSize: "1.1rem" }}>
+              Your cart is empty. Add some vehicles before checkout.
+            </p>
+          </div>
         </div>
       </div>
     );
@@ -494,24 +593,57 @@ function Checkout() {
 
   if (errors.cart) {
     return (
-      <div style={{ minHeight: "100vh", backgroundColor: "#f8fafc" }}>
+      <div
+        style={{
+          minHeight: "100vh",
+          backgroundColor: "#f8fafc",
+          width: "100vw",
+          overflowX: "hidden",
+        }}
+      >
         <Header />
-        <div style={{ padding: "200px 20px", textAlign: "center" }}>
-          <p style={{ color: "#ef4444", fontSize: "1.1rem" }}>{errors.cart}</p>
-          <button
-            onClick={() => window.location.reload()}
+        {/* Header Section */}
+        <section
+          style={{
+            paddingTop: "120px",
+            paddingBottom: "60px",
+            background: "linear-gradient(135deg, #1e293b 0%, #334155 100%)",
+            color: "white",
+            textAlign: "center",
+            width: "100vw",
+            marginLeft: "calc(-50vw + 50%)",
+          }}
+        >
+          <h1
             style={{
-              marginTop: "20px",
-              padding: "10px 20px",
-              backgroundColor: "#059669",
-              color: "white",
-              border: "none",
-              borderRadius: "8px",
-              cursor: "pointer",
+              fontSize: "3rem",
+              fontWeight: "800",
+              background: "linear-gradient(45deg, #60a5fa, #a78bfa)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
             }}
           >
-            Refresh Page
-          </button>
+            Checkout
+          </h1>
+        </section>
+        <div style={{ maxWidth: "100%", margin: "0 auto", padding: "40px 20px" }}>
+          <div style={{ padding: "200px 20px", textAlign: "center" }}>
+            <p style={{ color: "#ef4444", fontSize: "1.1rem" }}>{errors.cart}</p>
+            <button
+              onClick={() => window.location.reload()}
+              style={{
+                marginTop: "20px",
+                padding: "10px 20px",
+                backgroundColor: "#059669",
+                color: "white",
+                border: "none",
+                borderRadius: "8px",
+                cursor: "pointer",
+              }}
+            >
+              Refresh Page
+            </button>
+          </div>
         </div>
       </div>
     );
