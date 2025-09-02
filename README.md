@@ -1,9 +1,24 @@
 # EECS4413 Project - Full Stack Web Application
-Guide by Hamzah Alhafi
+Guide by Hamzah Alhafi and Mehrshad Farahbakhsh
 
 A full-stack web application built with React (frontend) and Node.js/Express (backend) with MySQL database.
 
-### Prerequisites
+## ⚠️ Academic Integrity Notice
+
+This code was created as part of a course assignment.
+
+**If you are currently taking EECS 4413 (or plan to in the future), you must not use this repository for your assignment, project, or any other coursework.**  
+Doing so would be considered academic dishonesty and could result in disciplinary action.
+
+This project is shared publicly **for portfolio and learning purposes only**.
+
+## License & Usage
+
+- You may browse, learn from, and take inspiration from the code.  
+- You may **not** submit it (or any portion of it) as your own work for academic credit.  
+- I will not provide support for course-related use of this project.
+
+## Prerequisites
 
 - **Node.js** (v16 or higher)
 - **Docker** and **Docker Compose** (for MySQL database)
